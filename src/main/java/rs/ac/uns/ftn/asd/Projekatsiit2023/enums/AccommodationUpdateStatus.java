@@ -1,8 +1,9 @@
 package rs.ac.uns.ftn.asd.Projekatsiit2023.enums;
 
-public enum AccommodationUpdateRequestStatus {
+public enum AccommodationUpdateStatus {
     Rejected,
     Accepted,
-    Waiting
+    Waiting,
+    Created
 
 }
