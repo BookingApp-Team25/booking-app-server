@@ -53,7 +53,7 @@ public class HostController {
         }
         return ResponseEntity.ok(accommodationResponse);
     }
-    @GetMapping(value = "{hostId}/viewReservations")
+    @GetMapping(value = "{hostId}/viewReservationsFiltered")
     public ResponseEntity<Collection<ReservationResponse>> getFilteredHostReservations(@PathVariable("hostId") int hostId,
     @RequestParam(required = false) DatePeriod reservationPeriod,
     @RequestParam(required = false) String reservationName,
