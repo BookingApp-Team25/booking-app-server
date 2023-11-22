@@ -1,10 +1,10 @@
-package rs.ac.uns.ftn.asd.Projekatsiit2023.model;
+package rs.ac.uns.ftn.asd.Projekatsiit2023.dto;
 
 import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.ReviewType;
 
 import java.util.UUID;
 
-public class Review {
+public class ReviewResponse {
     UUID id;
     UUID guestId;
     UUID reviewedEntity;
@@ -12,10 +12,10 @@ public class Review {
     double rating;
     ReviewType type;
 
-    public Review() {
+    public ReviewResponse() {
     }
 
-    public Review(String comment, double rating, UUID guestId, UUID reviewedEntity, ReviewType type) {
+    public ReviewResponse(String comment, double rating, UUID guestId, UUID reviewedEntity, ReviewType type) {
         this.comment = comment;
         this.rating = rating;
         this.guestId = guestId;

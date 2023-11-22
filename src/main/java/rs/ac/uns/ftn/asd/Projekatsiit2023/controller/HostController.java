@@ -4,9 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.AccommodationRequest;
-import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.AccommodationResponse;
-import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.ReservationResponse;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.*;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.ReservationStatus;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.model.DatePeriod;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.service.AccommodationService;
@@ -77,6 +75,16 @@ public class HostController {
     public ResponseEntity<ReservationResponse> acceptReservation(@PathVariable("reservationId") int reservationId){
         ReservationResponse reservationResponse = reservationService.acceptReservation(reservationId);
         return ResponseEntity.ok(reservationResponse);
+    }
+    @GetMapping(value = "/generateLogs")
+    public ResponseEntity<Collection<AccommodationLogDataResponse>> generateLogs(@RequestParam(required = false) DatePeriod datePeriod){
+        Collection<AccommodationLogDataResponse>  logs = hostService.getLogsForPeriod(datePeriod);
+        return ResponseEntity.ok(logs);
+    }
+    @PostMapping(value = "/reportReview/{reviewId}")
+    public ResponseEntity<ReviewResponse> reportReview(@PathVariable("reviewId") int reviewId){
+        ReviewResponse reviewResponse = hostService.reportReview(reviewId);
+        return ResponseEntity.ok(reviewResponse);
     }
 
 }
