@@ -36,6 +36,13 @@ public class ReservationServiceImplementation implements ReservationService{
     public Collection<ReservationResponse> getAllGuestReservations(int guestId) {
         return null;
     }
+
+    @Override
+    public boolean deleteReservation(int reservationId) { return false; } //treba namestiti brisanje rezervacije
+
+    @Override
+    public boolean cancelReservation(int reservationId) { return false; } //treba namestiti otkaz rezervacije
+
     public ReservationResponse acceptReservation(int reservationId){
         return null;
     }
