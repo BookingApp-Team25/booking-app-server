@@ -87,4 +87,42 @@ public class HostController {
         return ResponseEntity.ok(reviewResponse);
     }
 
+    @GetMapping(value = "/viewAllAccommodations")
+    public ResponseEntity<Collection<AccommodationResponse>> getAllAccommodations(){
+        Collection<AccommodationResponse> accommodations = accommodationService.getAllAccommodations();
+        return  ResponseEntity.ok(accommodations);
+    }
+
+    @GetMapping(value = "/viewAccommodation/{accommodationId}")
+    public ResponseEntity<AccommodationResponse> getAccommodation(@PathVariable("accommodationId") int accommodationId){
+        AccommodationResponse accommodation = accommodationService.getAccommodation(accommodationId);
+        if(accommodation == null){
+            return new ResponseEntity<AccommodationResponse>(HttpStatus.NOT_FOUND);
+        }
+        return ResponseEntity.ok(accommodation);
+    }
+
+    @GetMapping(value = "/searchAccommodations")
+    public ResponseEntity<Collection<AccommodationResponse>> searchAccommodations(@RequestBody AccommodationSearchRequest accommodationSearchRequest){
+        Collection<AccommodationResponse> accommodations = accommodationService.searchAccommodations(accommodationSearchRequest);
+        if(accommodations == null){
+            return new ResponseEntity<Collection<AccommodationResponse>>(HttpStatus.NOT_FOUND);
+        }
+        return ResponseEntity.ok(accommodations);
+    }
+
+    @GetMapping(value = "/searchAccommodationsFiltered")
+    public ResponseEntity<Collection<AccommodationResponse>> searchAccommodationsFiltered(@RequestBody AccommodationFilteredSearchRequest accommodationFilteredSearchRequest){
+        Collection<AccommodationResponse> accommodations = accommodationService.searchAccommodationsFiltered(accommodationFilteredSearchRequest);
+        if(accommodations == null){
+            return new ResponseEntity<Collection<AccommodationResponse>>(HttpStatus.NOT_FOUND);
+        }
+        return ResponseEntity.ok(accommodations);
+    }
+
+    @PutMapping(value = "{hostId}/editAccount")
+    public ResponseEntity<Boolean> editAccount(@PathVariable("hostId") int hostId, @RequestBody AccountEditRequest accountEditRequest){
+        Boolean status = hostService.editAccount(hostId,accountEditRequest);
+        return ResponseEntity.ok(status);
+    }
 }
