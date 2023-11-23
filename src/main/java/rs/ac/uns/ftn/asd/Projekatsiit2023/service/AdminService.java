@@ -2,6 +2,7 @@ package rs.ac.uns.ftn.asd.Projekatsiit2023.service;
 
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.AccommodationUpdateResponse;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.AccountEditRequest;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.ReportedUserResponse;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.model.User;
 
@@ -15,4 +16,6 @@ public interface AdminService {
     public AccommodationUpdateResponse resolveAccommodationUpdate(int id,int flag);
 
     public UUID blockUser(int id);
+
+    public Boolean editAccount(int adminId,AccountEditRequest accountEditRequest);
 }

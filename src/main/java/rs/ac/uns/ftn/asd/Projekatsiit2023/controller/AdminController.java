@@ -4,11 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.AccommodationResponse;
-import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.AccommodationUpdateResponse;
-import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.ReportedUserResponse;
-import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.ReviewResponse;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.*;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.model.AccommodationUpdate;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.service.AccommodationService;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.service.AccommodationUpdateService;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.service.AdminService;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.service.ReviewService;
@@ -25,6 +23,7 @@ public class AdminController {
     private ReviewService reviewService;
     @Autowired
     private AccommodationUpdateService accommodationUpdateService;
+    private AccommodationService accommodationService;
     @GetMapping(value = "/getAllAccommodationUpdates")
     public ResponseEntity<Collection<AccommodationUpdateResponse>> getAllAccommodationUpdates(){
         Collection<AccommodationUpdateResponse> accommodationUpdateResponses=accommodationUpdateService.getAllAccommodationUpdates();
@@ -77,5 +76,44 @@ public class AdminController {
             return new ResponseEntity<UUID>(HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.ok(blockedUser);
+    }
+
+    @GetMapping(value = "/viewAllAccommodations")
+    public ResponseEntity<Collection<AccommodationResponse>> getAllAccommodations(){
+        Collection<AccommodationResponse> accommodations = accommodationService.getAllAccommodations();
+        return  ResponseEntity.ok(accommodations);
+    }
+
+    @GetMapping(value = "/viewAccommodation/{accommodationId}")
+    public ResponseEntity<AccommodationResponse> getAccommodation(@PathVariable("accommodationId") int accommodationId){
+        AccommodationResponse accommodation = accommodationService.getAccommodation(accommodationId);
+        if(accommodation == null){
+            return new ResponseEntity<AccommodationResponse>(HttpStatus.NOT_FOUND);
+        }
+        return ResponseEntity.ok(accommodation);
+    }
+
+    @GetMapping(value = "/searchAccommodations")
+    public ResponseEntity<Collection<AccommodationResponse>> searchAccommodations(@RequestBody AccommodationSearchRequest accommodationSearchRequest){
+        Collection<AccommodationResponse> accommodations = accommodationService.searchAccommodations(accommodationSearchRequest);
+        if(accommodations == null){
+            return new ResponseEntity<Collection<AccommodationResponse>>(HttpStatus.NOT_FOUND);
+        }
+        return ResponseEntity.ok(accommodations);
+    }
+
+    @GetMapping(value = "/searchAccommodationsFiltered")
+    public ResponseEntity<Collection<AccommodationResponse>> searchAccommodationsFiltered(@RequestBody AccommodationFilteredSearchRequest accommodationFilteredSearchRequest){
+        Collection<AccommodationResponse> accommodations = accommodationService.searchAccommodationsFiltered(accommodationFilteredSearchRequest);
+        if(accommodations == null){
+            return new ResponseEntity<Collection<AccommodationResponse>>(HttpStatus.NOT_FOUND);
+        }
+        return ResponseEntity.ok(accommodations);
+    }
+
+    @PutMapping(value = "{adminId}/editAccount")
+    public ResponseEntity<Boolean> editAccount(@PathVariable("adminId") int adminId, @RequestBody AccountEditRequest accountEditRequest){
+        Boolean status = adminService.editAccount(adminId,accountEditRequest);
+        return ResponseEntity.ok(status);
     }
 }

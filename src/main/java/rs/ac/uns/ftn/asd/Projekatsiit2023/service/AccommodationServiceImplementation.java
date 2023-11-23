@@ -1,8 +1,10 @@
 package rs.ac.uns.ftn.asd.Projekatsiit2023.service;
 
 import org.springframework.stereotype.Service;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.AccommodationFilteredSearchRequest;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.AccommodationRequest;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.AccommodationResponse;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.AccommodationSearchRequest;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -38,4 +40,13 @@ public class AccommodationServiceImplementation implements AccommodationService{
         return new AccommodationResponse();
     }
 
+    @Override
+    public Collection<AccommodationResponse> searchAccommodations(AccommodationSearchRequest accommodationSearchRequest) {
+        return null;
+    }
+
+    @Override
+    public Collection<AccommodationResponse> searchAccommodationsFiltered(AccommodationFilteredSearchRequest accommodationFilteredSearchRequest) {
+        return null;
+    }
 }
