@@ -27,22 +27,22 @@ public class GuestController {
     }
 
     @PutMapping(value = "/viewReservation/deleteReservation/{reservationId}")
-    public ResponseEntity<Void> deleteReservation(@PathVariable("reservationId") int reservationId, @RequestBody ReservationRequest reservationRequest) {
-        boolean isDeleted = reservationService.deleteReservation(reservationId);
+    public ResponseEntity<Boolean> deleteReservation(@PathVariable("reservationId") int reservationId) {//, @RequestBody ReservationRequest reservationRequest) {
+        Boolean isDeleted = reservationService.deleteReservation(reservationId);
 
-        if (isDeleted) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        if (isDeleted != null) {
+            return ResponseEntity.ok(isDeleted);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
     @PutMapping("/viewReservation/cancelReservation/{reservationId}")
-    public ResponseEntity<ReservationResponse> cancelReservation(@PathVariable("reservationId") int reservationId) {
-        boolean isCancelled = reservationService.cancelReservation(reservationId);
+    public ResponseEntity<Boolean> cancelReservation(@PathVariable("reservationId") int reservationId) {
+        Boolean isCancelled = reservationService.cancelReservation(reservationId);
 
-        if (isCancelled) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        if (isCancelled != null) { //isCancelled ne znaci da li je cancelovan ili ne vec proverava da li akomodacija postoji ili ne(true false)
+            return ResponseEntity.ok(isCancelled);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -55,11 +55,11 @@ public class GuestController {
     }
 
     @PutMapping(value = "/viewFavoriteAccommodations/addFavoriteAccommodation/{accommodationId}")
-    public ResponseEntity<Void> addFavoriteAccommodation(@PathVariable("accommodationId") int accommodationId, @RequestBody AccommodationRequest accommodationRequest) {
-        boolean isAdded = guestService.addFavoriteAccommodation(accommodationId);//, accommodationRequest);
+    public ResponseEntity<Boolean> addFavoriteAccommodation(@PathVariable("accommodationId") int accommodationId) {//, @RequestBody AccommodationRequest accommodationRequest) {
+        Boolean isAdded = guestService.addFavoriteAccommodation(accommodationId);//, accommodationRequest);
 
-        if (isAdded) {
-            return new ResponseEntity<>(HttpStatus.CREATED);
+        if (isAdded != null) {
+            return ResponseEntity.ok(isAdded);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

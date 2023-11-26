@@ -10,8 +10,7 @@ import java.util.Collection;
 @Service
 public class ReservationServiceImplementation implements ReservationService{
     @Override
-    public ReservationResponse createReservation(ReservationRequest reservationRequest) {
-        return null;
+    public ReservationResponse createReservation(ReservationRequest reservationRequest) { return new ReservationResponse();
     }
 
     @Override
