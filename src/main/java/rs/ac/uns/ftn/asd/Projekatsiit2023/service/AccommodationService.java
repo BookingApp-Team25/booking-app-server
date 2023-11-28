@@ -1,16 +1,18 @@
 package rs.ac.uns.ftn.asd.Projekatsiit2023.service;
 
-import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.AccommodationRequest;
-import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.AccommodationResponse;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.*;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.model.DatePeriod;
 
 import java.util.Collection;
 
 public interface AccommodationService {
-    public AccommodationResponse createAccommodation(AccommodationRequest accommodationRequest);
-    public Collection<AccommodationResponse> getAllAccommodations();
+    public String createAccommodation(AccommodationRequest accommodationRequest);
+    public Collection<AccommodationSummaryResponse> getAllAccommodations();
     public AccommodationResponse getAccommodation(int accommodationId);
-    public Collection<AccommodationResponse> getHostAccommodations(int hostId);
+    public Collection<AccommodationSummaryResponse> getHostAccommodations(int hostId);
 
+    public Collection<AccommodationSummaryResponse> searchAccommodations(String city, DatePeriod datePeriod, int guestNumber);
 
+    public Collection<AccommodationSummaryResponse> searchAccommodationsFiltered(String city,DatePeriod datePeriod,int guestNumber,AccommodationFilteredSearchRequest accommodationFilteredSearchRequest);
 
 }

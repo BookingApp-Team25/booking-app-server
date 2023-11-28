@@ -23,15 +23,17 @@ public class HostController {
     @Autowired
     private ReservationService reservationService;
     @PostMapping(value = "/createAccommodation")
-    public ResponseEntity<AccommodationResponse> createAccommodation(@RequestBody AccommodationRequest accommodationRequest) {
-        AccommodationResponse createdAccommodationResponse = accommodationService.createAccommodation(accommodationRequest);
-        return new ResponseEntity<AccommodationResponse>(createdAccommodationResponse, HttpStatus.CREATED);
+    public ResponseEntity<String> createAccommodation(@RequestBody AccommodationRequest accommodationRequest) {
+        String response = accommodationService.createAccommodation(accommodationRequest);
+        if (response == null){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
+        return ResponseEntity.ok("Succesfuly created accommodation");
     }
 
     @GetMapping(value = "/{hostId}/viewAccommodations")
-    public ResponseEntity<Collection<AccommodationResponse>> getHostAccommodations(@PathVariable("hostId") int hostId){
-        Collection<AccommodationResponse> accommodations = accommodationService.getHostAccommodations(hostId);
-
+    public ResponseEntity<Collection<AccommodationSummaryResponse>> getHostAccommodations(@PathVariable("hostId") int hostId){
+        Collection<AccommodationSummaryResponse> accommodations = accommodationService.getHostAccommodations(hostId);
         return  ResponseEntity.ok(accommodations);
 
     }
@@ -39,7 +41,7 @@ public class HostController {
     public ResponseEntity<AccommodationResponse> getHostAccommodation(@PathVariable("accommodationId") int accommodationId){
         AccommodationResponse accommodationResponse = accommodationService.getAccommodation(accommodationId);
         if(accommodationResponse == null){
-            return new ResponseEntity<AccommodationResponse>(HttpStatus.NOT_FOUND);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(accommodationResponse);
         }
         return ResponseEntity.ok(accommodationResponse);
     }
@@ -72,8 +74,11 @@ public class HostController {
         return ResponseEntity.ok(reservations);
     }
     @PutMapping(value= "/acceptReservation/{reservationId}")
-    public ResponseEntity<ReservationResponse> acceptReservation(@PathVariable("reservationId") int reservationId){
-        ReservationResponse reservationResponse = reservationService.acceptReservation(reservationId);
+    public ResponseEntity<String> acceptReservation(@PathVariable("reservationId") int reservationId){
+        String reservationResponse = reservationService.acceptReservation(reservationId);
+        if(reservationResponse == null){
+            return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+        }
         return ResponseEntity.ok(reservationResponse);
     }
     @GetMapping(value = "/generateLogs")
@@ -82,9 +87,58 @@ public class HostController {
         return ResponseEntity.ok(logs);
     }
     @PostMapping(value = "/reportReview/{reviewId}")
-    public ResponseEntity<ReviewResponse> reportReview(@PathVariable("reviewId") int reviewId){
-        ReviewResponse reviewResponse = hostService.reportReview(reviewId);
+    public ResponseEntity<String> reportReview(@PathVariable("reviewId") int reviewId){
+        String reviewResponse = hostService.reportReview(reviewId);
+        if(reviewResponse == null){
+            return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+        }
         return ResponseEntity.ok(reviewResponse);
     }
 
+    @GetMapping(value = "/viewAllAccommodations")
+    public ResponseEntity<Collection<AccommodationSummaryResponse>> getAllAccommodations(){
+        Collection<AccommodationSummaryResponse> accommodations = accommodationService.getAllAccommodations();
+        return  ResponseEntity.ok(accommodations);
+    }
+
+    @GetMapping(value = "/viewAccommodation/{accommodationId}")
+    public ResponseEntity<AccommodationResponse> getAccommodation(@PathVariable("accommodationId") int accommodationId){
+        AccommodationResponse accommodation = accommodationService.getAccommodation(accommodationId);
+        if(accommodation == null){
+            return new ResponseEntity<AccommodationResponse>(HttpStatus.NOT_FOUND);
+        }
+        return ResponseEntity.ok(accommodation);
+    }
+
+    @GetMapping(value = "/searchAccommodations")
+    public ResponseEntity<Collection<AccommodationSummaryResponse>> searchAccommodations(
+            @RequestParam String city,
+            @RequestParam DatePeriod datePeriod,
+            @RequestParam int guestNumber){
+        Collection<AccommodationSummaryResponse> accommodations = accommodationService.searchAccommodations(city, datePeriod,guestNumber);
+        if(accommodations == null){
+            return new ResponseEntity<Collection<AccommodationSummaryResponse>>(HttpStatus.NOT_FOUND);
+        }
+        return ResponseEntity.ok(accommodations);
+    }
+
+    @GetMapping(value = "/searchAccommodationsFiltered")
+    public ResponseEntity<Collection<AccommodationSummaryResponse>> searchAccommodationsFiltered(
+            @RequestParam String city,
+            @RequestParam DatePeriod datePeriod,
+            @RequestParam int guestNumber,
+            @RequestBody AccommodationFilteredSearchRequest accommodationFilteredSearchRequest
+    ){
+        Collection<AccommodationSummaryResponse> accommodations = accommodationService.searchAccommodationsFiltered(city,datePeriod,guestNumber,accommodationFilteredSearchRequest);
+        if(accommodations == null){
+            return new ResponseEntity<Collection<AccommodationSummaryResponse>>(HttpStatus.NOT_FOUND);
+        }
+        return ResponseEntity.ok(accommodations);
+    }
+
+    @PutMapping(value = "{hostId}/editAccount")
+    public ResponseEntity<Boolean> editAccount(@PathVariable("hostId") int hostId, @RequestBody AccountEditRequest accountEditRequest){
+        Boolean status = hostService.editAccount(hostId,accountEditRequest);
+        return ResponseEntity.ok(status);
+    }
 }

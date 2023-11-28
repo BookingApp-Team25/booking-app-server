@@ -9,5 +9,7 @@ public interface HostService {
 
     public AccommodationResponse sendEditRequest(int id);
     public Collection<AccommodationLogDataResponse> getLogsForPeriod(DatePeriod period);
-    public ReviewResponse reportReview(int reviewId);
+    public String reportReview(int reviewId);
+
+    public Boolean editAccount(int hostId,AccountEditRequest accountEditRequest);
 }

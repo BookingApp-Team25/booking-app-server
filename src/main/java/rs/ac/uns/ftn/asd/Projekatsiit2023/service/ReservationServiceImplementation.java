@@ -42,7 +42,8 @@ public class ReservationServiceImplementation implements ReservationService{
     @Override
     public boolean cancelReservation(int reservationId) { return false; } //treba namestiti otkaz rezervacije
 
-    public ReservationResponse acceptReservation(int reservationId){
-        return null;
+    @Override
+    public String acceptReservation(int reservationId){
+        return "uspesno izmenjena rezervacija";
     }
 }

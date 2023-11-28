@@ -5,10 +5,16 @@ import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.ReviewRequest;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.ReviewResponse;
 
 import java.util.Collection;
+
 @Service
 public class ReviewServiceImplementation implements ReviewService{
     @Override
     public ReviewResponse getReviewById(int reviewId) {
+        return null;
+    }
+
+    @Override
+    public Collection<ReviewResponse> getAllReportedReviews() {
         return null;
     }
 
@@ -33,7 +39,7 @@ public class ReviewServiceImplementation implements ReviewService{
     }
 
     @Override
-    public ReviewResponse approveReview(int id) {
+    public Boolean deleteReview(int id) {
         return null;
     }
 }

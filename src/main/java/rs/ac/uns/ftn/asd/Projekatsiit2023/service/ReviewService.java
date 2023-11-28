@@ -9,8 +9,9 @@ public interface ReviewService {
     ReviewResponse getReviewById(int reviewId);
     Collection<ReviewResponse> getAllAccommodationReviews(int accommodationId);
     Collection<ReviewResponse> getAllHostReviews(int hostId);
+    Collection<ReviewResponse> getAllReportedReviews();
     ReviewResponse createReview(ReviewRequest reviewRequest);
     ReviewResponse reportReview(int id);
-    ReviewResponse approveReview(int id);
+    Boolean deleteReview(int id);
 
 }

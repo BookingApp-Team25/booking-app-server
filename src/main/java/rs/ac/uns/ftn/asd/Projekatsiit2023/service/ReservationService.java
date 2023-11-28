@@ -17,4 +17,5 @@ public interface ReservationService {
     public ReservationResponse acceptReservation(int reservationId);
     public boolean deleteReservation(int reservationId);
     public boolean cancelReservation(int reservationId);
+    public String acceptReservation(int reservationId);
 }

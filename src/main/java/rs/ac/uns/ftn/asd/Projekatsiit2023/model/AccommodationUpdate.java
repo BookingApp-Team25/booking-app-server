@@ -1,14 +1,17 @@
 package rs.ac.uns.ftn.asd.Projekatsiit2023.model;
 
-import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.AccommodationUpdateRequestStatus;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.AccommodationUpdateStatus;
 
-public class AccommodationUpdateRequest {
+import java.util.UUID;
 
+public class AccommodationUpdate {
+
+    private UUID id;
     private Accommodation accommodation;
 
-    private AccommodationUpdateRequestStatus status;
+    private AccommodationUpdateStatus status;
 
-    public AccommodationUpdateRequest(Accommodation accommodation, AccommodationUpdateRequestStatus status) {
+    public AccommodationUpdate(Accommodation accommodation, AccommodationUpdateStatus status) {
         this.accommodation = accommodation;
         this.status = status;
     }
@@ -17,7 +20,7 @@ public class AccommodationUpdateRequest {
         return accommodation;
     }
 
-    public AccommodationUpdateRequestStatus getStatus() {
+    public AccommodationUpdateStatus getStatus() {
         return status;
     }
 
@@ -25,7 +28,7 @@ public class AccommodationUpdateRequest {
         this.accommodation = accommodation;
     }
 
-    public void setStatus(AccommodationUpdateRequestStatus status) {
+    public void setStatus(AccommodationUpdateStatus status) {
         this.status = status;
     }
 }

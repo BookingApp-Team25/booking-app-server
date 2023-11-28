@@ -6,8 +6,8 @@ import java.util.UUID;
 
 public class ReviewResponse {
     UUID id;
-    UUID guestId;
-    UUID reviewedEntity;
+    String guestName;
+    String reviewedEntityName;
     String comment;
     double rating;
     ReviewType type;
@@ -15,11 +15,11 @@ public class ReviewResponse {
     public ReviewResponse() {
     }
 
-    public ReviewResponse(String comment, double rating, UUID guestId, UUID reviewedEntity, ReviewType type) {
+    public ReviewResponse(String comment, double rating, String guestName, String reviewedEntityName, ReviewType type) {
         this.comment = comment;
         this.rating = rating;
-        this.guestId = guestId;
-        this.reviewedEntity = reviewedEntity;
+        this.guestName = guestName;
+        this.reviewedEntityName = reviewedEntityName;
         this.id = UUID.randomUUID();
         this.type = type;
     }
