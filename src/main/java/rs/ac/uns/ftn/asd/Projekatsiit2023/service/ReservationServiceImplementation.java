@@ -36,7 +36,7 @@ public class ReservationServiceImplementation implements ReservationService{
     public Collection<ReservationResponse> getAllGuestReservations(int guestId) {
         return null;
     }
-    public ReservationResponse acceptReservation(int reservationId){
-        return null;
+    public String acceptReservation(int reservationId){
+        return "uspesno izmenjena rezervacija";
     }
 }

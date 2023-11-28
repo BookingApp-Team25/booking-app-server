@@ -12,6 +12,6 @@ public interface ReviewService {
     Collection<ReviewResponse> getAllReportedReviews();
     ReviewResponse createReview(ReviewRequest reviewRequest);
     ReviewResponse reportReview(int id);
-    ReviewResponse deleteReview(int id);
+    Boolean deleteReview(int id);
 
 }

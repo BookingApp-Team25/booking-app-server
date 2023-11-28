@@ -1,5 +1,7 @@
 package rs.ac.uns.ftn.asd.Projekatsiit2023.dto;
 
+import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.Role;
+
 public class RegistrationRequest {
     private String username;
     private String password;
@@ -7,14 +9,27 @@ public class RegistrationRequest {
     private String lastName;
     private String phoneNumber;
     private String address;
+    private Role role;
 
-    public RegistrationRequest(String username, String password, String firstName, String lastName, String phoneNumber, String address) {
+    public RegistrationRequest() {
+    }
+
+    public RegistrationRequest(String username, String password, String firstName, String lastName, String phoneNumber, String address, Role role) {
         this.username = username;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
         this.address = address;
+        this.role = role;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 
     public String getUsername() {

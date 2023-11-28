@@ -21,8 +21,8 @@ public class HostServiceImplementation implements HostService{
     }
 
     @Override
-    public ReviewResponse reportReview(int reviewId) {
-        return null;
+    public String reportReview(int reviewId) {
+        return "Nesto";
     }
 
     @Override

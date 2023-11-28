@@ -11,7 +11,6 @@ public class Review {
     String comment;
     double rating;
     ReviewType type;
-
     public Review() {
     }
 

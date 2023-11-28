@@ -1,10 +1,8 @@
 package rs.ac.uns.ftn.asd.Projekatsiit2023.service;
 
 import org.springframework.stereotype.Service;
-import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.AccommodationFilteredSearchRequest;
-import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.AccommodationRequest;
-import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.AccommodationResponse;
-import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.AccommodationSearchRequest;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.*;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.model.DatePeriod;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,27 +11,15 @@ import java.util.List;
 @Service
 public class AccommodationServiceImplementation implements AccommodationService{
     @Override
-    public AccommodationResponse createAccommodation(AccommodationRequest accommodationRequest) { // samo za sad vraca response direktno!
-        return new AccommodationResponse(accommodationRequest.getName(),
-                accommodationRequest.getDescription(),
-                accommodationRequest.getLocation(),
-                accommodationRequest.getAmenities(),
-                accommodationRequest.getPhotos(),
-                accommodationRequest.getMinGuests(),
-                accommodationRequest.getMaxGuests(),
-                accommodationRequest.getType(),
-                accommodationRequest.getAvailability(),
-                accommodationRequest.getPrice(),
-                accommodationRequest.getPricelist(),
-                accommodationRequest.getDaysBefore(),
-                accommodationRequest.getPolicy());
+    public String createAccommodation(AccommodationRequest accommodationRequest) { // samo za sad vraca response direktno!
+        return "nesto";
     }
     @Override
-    public List<AccommodationResponse> getAllAccommodations(){
+    public List<AccommodationSummaryResponse> getAllAccommodations(){
         return new ArrayList<>();
     }
     @Override
-    public List<AccommodationResponse> getHostAccommodations(int hostId){
+    public List<AccommodationSummaryResponse> getHostAccommodations(int hostId){
         return new ArrayList<>();
     }
     public AccommodationResponse getAccommodation(int accommodationId){
@@ -41,12 +27,12 @@ public class AccommodationServiceImplementation implements AccommodationService{
     }
 
     @Override
-    public Collection<AccommodationResponse> searchAccommodations(AccommodationSearchRequest accommodationSearchRequest) {
+    public Collection<AccommodationSummaryResponse> searchAccommodations(String city, DatePeriod datePeriod, int guestNumber) {
         return null;
     }
 
     @Override
-    public Collection<AccommodationResponse> searchAccommodationsFiltered(AccommodationFilteredSearchRequest accommodationFilteredSearchRequest) {
+    public Collection<AccommodationSummaryResponse> searchAccommodationsFiltered(String city,DatePeriod datePeriod,int guestNumber,AccommodationFilteredSearchRequest accommodationFilteredSearchRequest) {
         return null;
     }
 }

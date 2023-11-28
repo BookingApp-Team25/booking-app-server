@@ -6,9 +6,7 @@ import rs.ac.uns.ftn.asd.Projekatsiit2023.model.Location;
 import java.util.List;
 
 public class AccommodationFilteredSearchRequest {
-    private DatePeriod datePeriod;
-    private Location location;
-    private int numberOfGuests;
+
 
     private List<AccommodationType> types;
     private List<String> amenities;
@@ -18,38 +16,12 @@ public class AccommodationFilteredSearchRequest {
     public AccommodationFilteredSearchRequest() {
     }
 
-    public AccommodationFilteredSearchRequest(DatePeriod datePeriod, Location location, int numberOfGuests, List<AccommodationType> types, List<String> amenities, double minPrice, double maxPrice) {
-        this.datePeriod = datePeriod;
-        this.location = location;
-        this.numberOfGuests = numberOfGuests;
+    public AccommodationFilteredSearchRequest(List<AccommodationType> types, List<String> amenities, double minPrice, double maxPrice) {
+
         this.types = types;
         this.amenities = amenities;
         this.minPrice = minPrice;
         this.maxPrice = maxPrice;
-    }
-
-    public DatePeriod getDatePeriod() {
-        return datePeriod;
-    }
-
-    public void setDatePeriod(DatePeriod datePeriod) {
-        this.datePeriod = datePeriod;
-    }
-
-    public Location getLocation() {
-        return location;
-    }
-
-    public void setLocation(Location location) {
-        this.location = location;
-    }
-
-    public int getNumberOfGuests() {
-        return numberOfGuests;
-    }
-
-    public void setNumberOfGuests(int numberOfGuests) {
-        this.numberOfGuests = numberOfGuests;
     }
 
     public List<AccommodationType> getTypes() {

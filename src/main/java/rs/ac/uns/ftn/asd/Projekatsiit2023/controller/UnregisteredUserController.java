@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.*;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.model.DatePeriod;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.service.AccommodationService;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.service.UnregisteredUserService;
 
@@ -26,35 +27,43 @@ public class UnregisteredUserController {
         return ResponseEntity.ok(loginResponse);
     }
 
-    @PutMapping(value = "/register")
+    @PostMapping(value = "/register")
     public ResponseEntity<Boolean> registered(@RequestBody RegistrationRequest registrationRequest){
         Boolean registrationResponse = unregisteredUserService.register(registrationRequest);
-        if(registrationResponse == null){
-            return new ResponseEntity<Boolean>(HttpStatus.NOT_FOUND);
+        if(!registrationResponse){
+            return new ResponseEntity<Boolean>(HttpStatus.BAD_REQUEST);
         }
         return ResponseEntity.ok(registrationResponse);
     }
 
     @GetMapping(value = "/viewAllAccommodations")
-    public ResponseEntity<Collection<AccommodationResponse>> getAllAccommodations(){
-        Collection<AccommodationResponse> accommodations = accommodationService.getAllAccommodations();
+    public ResponseEntity<Collection<AccommodationSummaryResponse>> getAllAccommodations(){
+        Collection<AccommodationSummaryResponse> accommodations = accommodationService.getAllAccommodations();
         return  ResponseEntity.ok(accommodations);
     }
 
     @GetMapping(value = "/searchAccommodations")
-    public ResponseEntity<Collection<AccommodationResponse>> searchAccommodations(@RequestBody AccommodationSearchRequest accommodationSearchRequest){
-        Collection<AccommodationResponse> accommodations = accommodationService.searchAccommodations(accommodationSearchRequest);
+    public ResponseEntity<Collection<AccommodationSummaryResponse>> searchAccommodations(
+            @RequestParam String city,
+            @RequestParam DatePeriod datePeriod,
+            @RequestParam int guestNumber){
+        Collection<AccommodationSummaryResponse> accommodations = accommodationService.searchAccommodations(city, datePeriod,guestNumber);
         if(accommodations == null){
-            return new ResponseEntity<Collection<AccommodationResponse>>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<Collection<AccommodationSummaryResponse>>(HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.ok(accommodations);
     }
 
     @GetMapping(value = "/searchAccommodationsFiltered")
-    public ResponseEntity<Collection<AccommodationResponse>> searchAccommodationsFiltered(@RequestBody AccommodationFilteredSearchRequest accommodationFilteredSearchRequest){
-        Collection<AccommodationResponse> accommodations = accommodationService.searchAccommodationsFiltered(accommodationFilteredSearchRequest);
+    public ResponseEntity<Collection<AccommodationSummaryResponse>> searchAccommodationsFiltered(
+            @RequestParam String city,
+            @RequestParam DatePeriod datePeriod,
+            @RequestParam int guestNumber,
+            @RequestBody AccommodationFilteredSearchRequest accommodationFilteredSearchRequest
+    ){
+        Collection<AccommodationSummaryResponse> accommodations = accommodationService.searchAccommodationsFiltered(city,datePeriod,guestNumber,accommodationFilteredSearchRequest);
         if(accommodations == null){
-            return new ResponseEntity<Collection<AccommodationResponse>>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<Collection<AccommodationSummaryResponse>>(HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.ok(accommodations);
     }

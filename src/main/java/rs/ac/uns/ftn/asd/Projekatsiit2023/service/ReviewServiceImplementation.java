@@ -39,7 +39,7 @@ public class ReviewServiceImplementation implements ReviewService{
     }
 
     @Override
-    public ReviewResponse deleteReview(int id) {
+    public Boolean deleteReview(int id) {
         return null;
     }
 }
