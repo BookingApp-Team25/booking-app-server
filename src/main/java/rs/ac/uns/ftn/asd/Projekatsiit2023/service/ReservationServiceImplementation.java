@@ -10,8 +10,7 @@ import java.util.Collection;
 @Service
 public class ReservationServiceImplementation implements ReservationService{
     @Override
-    public ReservationResponse createReservation(ReservationRequest reservationRequest) {
-        return null;
+    public ReservationResponse createReservation(ReservationRequest reservationRequest) { return new ReservationResponse();
     }
 
     @Override
@@ -36,6 +35,14 @@ public class ReservationServiceImplementation implements ReservationService{
     public Collection<ReservationResponse> getAllGuestReservations(int guestId) {
         return null;
     }
+
+    @Override
+    public boolean deleteReservation(int reservationId) { return false; } //treba namestiti brisanje rezervacije
+
+    @Override
+    public boolean cancelReservation(int reservationId) { return false; } //treba namestiti otkaz rezervacije
+
+    @Override
     public String acceptReservation(int reservationId){
         return "uspesno izmenjena rezervacija";
     }
