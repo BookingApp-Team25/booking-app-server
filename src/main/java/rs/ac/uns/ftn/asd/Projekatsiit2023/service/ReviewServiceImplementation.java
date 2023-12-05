@@ -1,6 +1,7 @@
 package rs.ac.uns.ftn.asd.Projekatsiit2023.service;
 
 import org.springframework.stereotype.Service;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.MessageResponse;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.ReviewRequest;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.ReviewResponse;
 
@@ -34,7 +35,7 @@ public class ReviewServiceImplementation implements ReviewService{
     }
 
     @Override
-    public ReviewResponse reportReview(int id) {
+    public MessageResponse reportReview(int reviewId) {
         return null;
     }
 

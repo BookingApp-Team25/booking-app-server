@@ -14,5 +14,5 @@ public interface AccommodationService {
     public Collection<AccommodationSummaryResponse> searchAccommodations(String city, DatePeriod datePeriod, int guestNumber);
 
     public Collection<AccommodationSummaryResponse> searchAccommodationsFiltered(String city,DatePeriod datePeriod,int guestNumber,AccommodationFilteredSearchRequest accommodationFilteredSearchRequest);
-
+    public boolean addFavoriteAccommodation(int accommodationId);
 }

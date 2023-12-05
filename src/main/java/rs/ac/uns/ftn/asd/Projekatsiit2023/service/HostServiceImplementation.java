@@ -20,10 +20,6 @@ public class HostServiceImplementation implements HostService{
         return null;
     }
 
-    @Override
-    public String reportReview(int reviewId) {
-        return "Nesto";
-    }
 
     @Override
     public Boolean editAccount(int hostId, AccountEditRequest accountEditRequest) {

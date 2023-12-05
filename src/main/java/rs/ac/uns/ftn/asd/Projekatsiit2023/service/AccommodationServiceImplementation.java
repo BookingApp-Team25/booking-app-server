@@ -35,4 +35,6 @@ public class AccommodationServiceImplementation implements AccommodationService{
     public Collection<AccommodationSummaryResponse> searchAccommodationsFiltered(String city,DatePeriod datePeriod,int guestNumber,AccommodationFilteredSearchRequest accommodationFilteredSearchRequest) {
         return null;
     }
+    @Override
+    public boolean addFavoriteAccommodation(int accommodationId) { return false; } //mozda treba menjati return tip
 }

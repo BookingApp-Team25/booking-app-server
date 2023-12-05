@@ -6,7 +6,7 @@ import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.LoginResponse;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.RegistrationRequest;
 
 @Service
-public class UnregisteredUserServiceImplementation implements UnregisteredUserService{
+public class AuthorizationServiceImplementation implements AuthorizationService {
     @Override
     public LoginResponse login(LoginRequest loginRequest) {
         return null;
