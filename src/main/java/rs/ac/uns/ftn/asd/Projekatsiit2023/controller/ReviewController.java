@@ -17,9 +17,9 @@ public class ReviewController {
     @Autowired
     private ReviewService reviewService;
     @PostMapping //trebalo bi da pokriva i host review i accommodation review
-    public ResponseEntity<ReviewResponse> createReview(@RequestBody ReviewRequest reviewRequest) {
-        ReviewResponse reviewResponse = reviewService.createReview(reviewRequest);
-        return new ResponseEntity<ReviewResponse>(reviewResponse, HttpStatus.CREATED);
+    public ResponseEntity<MessageResponse> createReview(@RequestBody ReviewRequest reviewRequest) {
+        MessageResponse messageResponse = reviewService.createReview(reviewRequest);
+        return new ResponseEntity<MessageResponse>(messageResponse, HttpStatus.CREATED);
     }
     @DeleteMapping(value = "/{reviewId}")
     public ResponseEntity<Boolean> deleteReview(@PathVariable("reviewId") int id){

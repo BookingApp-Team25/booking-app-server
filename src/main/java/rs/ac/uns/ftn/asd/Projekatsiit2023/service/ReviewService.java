@@ -11,7 +11,7 @@ public interface ReviewService {
     Collection<ReviewResponse> getAllAccommodationReviews(int accommodationId);
     Collection<ReviewResponse> getAllHostReviews(int hostId);
     Collection<ReviewResponse> getAllReportedReviews();
-    ReviewResponse createReview(ReviewRequest reviewRequest);
+    MessageResponse createReview(ReviewRequest reviewRequest);
     MessageResponse reportReview(int reviewId);
     Boolean deleteReview(int id);
 
