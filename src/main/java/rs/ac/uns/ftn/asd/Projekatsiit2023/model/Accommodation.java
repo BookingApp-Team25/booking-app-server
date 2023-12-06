@@ -1,28 +1,55 @@
 package rs.ac.uns.ftn.asd.Projekatsiit2023.model;
 
+import jakarta.persistence.*;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.AccommodationReservationPolicy;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.AccommodationType;
 
 import java.util.List;
 import java.util.UUID;
-
+@Entity
 public class Accommodation {
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id", updatable = false)
     private UUID id;
+    @Column(name = "name", updatable = false)
     private String name;
+    @Column(name = "description", updatable = false)
     private String description;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "location_id", referencedColumnName = "id")
     private Location location;
+    @ElementCollection(targetClass = String.class, fetch = FetchType.EAGER)
+    @CollectionTable(name = "amenities", joinColumns = @JoinColumn(name = "id"))
+    @Column(name = "amenity", nullable = false)
     private List<String> amenities;
+    @ElementCollection(targetClass = String.class, fetch = FetchType.EAGER)
+    @CollectionTable(name = "photos", joinColumns = @JoinColumn(name = "id"))
+    @Column(name = "photo", nullable = false)
     private List<String>  photos;
+    @Column(name = "minGuests", updatable = false)
     private int minGuests;
+    @Column(name = "maxGuests", updatable = false)
     private int maxGuests;
+    @Enumerated(EnumType.STRING)
     private AccommodationType type;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "availability_id", referencedColumnName = "id")
     private AccommodationReservedDates availability;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "pricelist_id", referencedColumnName = "id")
     private AccommodationPricelist pricelist;
+    @Column(name = "price", updatable = false)
     private double price;
+    @Column(name = "daysBefore", updatable = false)
     private int daysBefore;
 
+    @Enumerated(EnumType.STRING)
     private AccommodationReservationPolicy policy;
+
+    public Accommodation() {
+    }
 
     public Accommodation(String name, String description, Location location, List<String> amenities, List<String> photos, int minGuests, int maxGuests, AccommodationType type, AccommodationReservedDates availability, double price, AccommodationPricelist pricelist, int daysBefore, AccommodationReservationPolicy policy) {
         this.id = UUID.randomUUID();

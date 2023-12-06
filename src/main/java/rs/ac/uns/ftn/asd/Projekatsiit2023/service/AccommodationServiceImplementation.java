@@ -1,22 +1,36 @@
 package rs.ac.uns.ftn.asd.Projekatsiit2023.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.Repository.AccommodationRepository;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.*;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.model.Accommodation;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.model.DatePeriod;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class AccommodationServiceImplementation implements AccommodationService{
+    @Autowired
+    private AccommodationRepository accommodationRepository;
     @Override
-    public String createAccommodation(AccommodationRequest accommodationRequest) { // samo za sad vraca response direktno!
-        return "nesto";
+    public String createAccommodation(Accommodation accommodation){
+        accommodationRepository.save(accommodation);
+        return "Accommodation saved";
     }
     @Override
     public List<AccommodationSummaryResponse> getAllAccommodations(){
-        return new ArrayList<>();
+        ArrayList<Accommodation> fullList = new ArrayList<Accommodation>(accommodationRepository.findAll());
+        ArrayList<AccommodationSummaryResponse> summary = new ArrayList<>();
+        for (Accommodation accommodation : fullList){
+            summary.add(new AccommodationSummaryResponse(accommodation.getId(),accommodation.getName(),
+                    accommodation.getPhotos().get(0),accommodation.getDescription(),accommodation.getPrice(),
+                    5));
+        }
+       return summary;
     }
     @Override
     public List<AccommodationSummaryResponse> getHostAccommodations(int hostId){
