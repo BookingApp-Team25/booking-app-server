@@ -28,10 +28,32 @@ public class AccommodationServiceImplementation implements AccommodationService{
         for (Accommodation accommodation : fullList){
             summary.add(new AccommodationSummaryResponse(accommodation.getId(),accommodation.getName(),
                     accommodation.getPhotos().get(0),accommodation.getDescription(),accommodation.getPrice(),
-                    5));
+                    5,accommodation.getOnHoldStatus()));
         }
        return summary;
     }
+
+    @Override
+    public AccommodationResponse getAccommodation(UUID accommodationId) {
+        Accommodation accommodation = accommodationRepository.getReferenceById(accommodationId);
+        return new AccommodationResponse(accommodation.getId(),
+                accommodation.getName(),
+                accommodation.getDescription(),
+                accommodation.getLocation(),
+                accommodation.getAmenities(),
+                accommodation.getPhotos(),
+                accommodation.getMinGuests(),
+                accommodation.getMaxGuests(),
+                accommodation.getType(),
+                accommodation.getAvailability(),
+                accommodation.getPrice(),
+                accommodation.getPricelist(),
+                accommodation.getDaysBefore(),
+                accommodation.getPolicy(),
+                accommodation.getOnHoldStatus());
+    }
+
+
     @Override
     public List<AccommodationSummaryResponse> getHostAccommodations(int hostId){
         return new ArrayList<>();

@@ -37,7 +37,7 @@ public class AccommodationController {
         return  ResponseEntity.ok(accommodations);
     }
     @GetMapping(value = "/{accommodationId}")
-    public ResponseEntity<AccommodationResponse> getAccommodation(@PathVariable("accommodationId") int accommodationId){
+    public ResponseEntity<AccommodationResponse> getAccommodation(@PathVariable("accommodationId")  UUID accommodationId){
         AccommodationResponse accommodation = accommodationService.getAccommodation(accommodationId);
         if(accommodation == null){
             return new ResponseEntity<AccommodationResponse>(HttpStatus.NOT_FOUND);

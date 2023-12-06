@@ -2,6 +2,7 @@ package rs.ac.uns.ftn.asd.Projekatsiit2023.model;
 
 import jakarta.persistence.*;
 
+import java.util.Date;
 import java.util.UUID;
 
 @Entity
@@ -10,17 +11,18 @@ public class AccommodationReservationPair {
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", updatable = false)
     private UUID id;
-    @Column(name = "datePeriod", updatable = false)
-    private UUID datePeriod;
+    @OneToOne
+    @JoinColumn(name = "period_id", referencedColumnName = "id")
+    private DatePeriod datePeriod;
     @Column(name = "guest", updatable = false)
-    private UUID guest;
+    private UUID guest; // nakon dodavanja entiteta gosta ovo se menja
     @ManyToOne
     @JoinColumn(name = "accommodation_id")
     private AccommodationReservedDates accommodationReservedDates;
     public AccommodationReservationPair() {
     }
 
-    public AccommodationReservationPair(UUID id, UUID datePeriod, UUID guest) {
+    public AccommodationReservationPair(UUID id, DatePeriod datePeriod, UUID guest) {
         this.id = id;
         this.datePeriod = datePeriod;
         this.guest = guest;
@@ -30,7 +32,7 @@ public class AccommodationReservationPair {
         return id;
     }
 
-    public UUID getDatePeriod() {
+    public DatePeriod getDatePeriod() {
         return datePeriod;
     }
 
@@ -42,7 +44,7 @@ public class AccommodationReservationPair {
         this.id = id;
     }
 
-    public void setDatePeriod(UUID datePeriod) {
+    public void setDatePeriod(DatePeriod datePeriod) {
         this.datePeriod = datePeriod;
     }
 

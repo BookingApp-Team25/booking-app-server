@@ -1,5 +1,6 @@
 package rs.ac.uns.ftn.asd.Projekatsiit2023.dto;
 
+import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.AccommodationOnHoldStatus;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.AccommodationReservationPolicy;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.AccommodationType;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.model.AccommodationReservedDates;
@@ -25,10 +26,12 @@ public class AccommodationResponse {
     private double price;
     private int daysBefore;
     private AccommodationReservationPolicy policy;
+    private AccommodationOnHoldStatus accommodationOnHoldStatus;
     public AccommodationResponse() {
     }
 
-    public AccommodationResponse(String name, String description, Location location, List<String> amenities, List<String> photos, int minGuests, int maxGuests, AccommodationType type, AccommodationReservedDates availability, double price, AccommodationPricelist pricelist, int daysBefore, AccommodationReservationPolicy policy) {
+    public AccommodationResponse(UUID id,String name, String description, Location location, List<String> amenities, List<String> photos, int minGuests, int maxGuests, AccommodationType type, AccommodationReservedDates availability, double price, AccommodationPricelist pricelist, int daysBefore, AccommodationReservationPolicy policy, AccommodationOnHoldStatus status) {
+        this.id = id;
         this.name = name;
         this.description = description;
         this.location = location;
@@ -42,6 +45,15 @@ public class AccommodationResponse {
         this.pricelist = pricelist;
         this.daysBefore = daysBefore;
         this.policy = policy;
+        this.accommodationOnHoldStatus = status;
+    }
+
+    public AccommodationOnHoldStatus getAccommodationOnHoldStatus() {
+        return accommodationOnHoldStatus;
+    }
+
+    public void setAccommodationOnHoldStatus(AccommodationOnHoldStatus accommodationOnHoldStatus) {
+        this.accommodationOnHoldStatus = accommodationOnHoldStatus;
     }
 
     public String getName() {

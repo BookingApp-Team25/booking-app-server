@@ -8,6 +8,7 @@ import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.*;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.service.AccommodationUpdateService;
 
 import java.util.Collection;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("api/accommodation-request")
@@ -15,31 +16,31 @@ public class AccommodationUpdateController {
     @Autowired
     private AccommodationUpdateService accommodationUpdateService;
     @PostMapping(value = "/{accommodationId}")
-    public  ResponseEntity<MessageResponse> createEditRequest(@PathVariable("accommodationId") int id , @RequestBody AccommodationUpdateRequest accommodationUpdateRequest){
-        MessageResponse accommodationResponse = accommodationUpdateService.createEditRequest(id);
+    public  ResponseEntity<MessageResponse> editAccommodationRequest(@PathVariable("accommodationId") UUID id, @RequestBody AccommodationRequest accommodationRequest){
+        MessageResponse accommodationResponse = accommodationUpdateService.createEditRequest(id,accommodationRequest);
         if(accommodationResponse == null){
             return new ResponseEntity<MessageResponse>(HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.ok(accommodationResponse);
     }
     @PostMapping()
-    public ResponseEntity<MessageResponse> createAccommodationRequest(@RequestBody AccommodationUpdateRequest accommodationUpdateRequest) {
-        MessageResponse response = accommodationUpdateService.createAccommodationUpdate(accommodationUpdateRequest);
+    public ResponseEntity<MessageResponse> createAccommodationRequest(@RequestBody AccommodationRequest accommodationRequest) {
+        MessageResponse response = accommodationUpdateService.createAccommodationUpdate(accommodationRequest);
         if (response == null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
         return ResponseEntity.ok(response);
     }
     @GetMapping
-    public ResponseEntity<Collection<AccommodationSummaryResponse>> getAllAccommodationUpdates(){
-        Collection<AccommodationSummaryResponse> accommodationUpdateResponses=accommodationUpdateService.getAllAccommodationUpdates();
+    public ResponseEntity<Collection<AccommodationUpdateSummaryResponse>> getAllAccommodationUpdates(){
+        Collection<AccommodationUpdateSummaryResponse> accommodationUpdateResponses=accommodationUpdateService.getAllAccommodationUpdates();
         if(accommodationUpdateResponses == null){
             return ResponseEntity.ok(accommodationUpdateResponses);
         }
         return ResponseEntity.ok(accommodationUpdateResponses);
     }
-    @GetMapping(value = "/{accommodation-id}")
-    public ResponseEntity<AccommodationUpdateResponse> getAccommodationUpdate(@PathVariable("accommodationId") int id){
+    @GetMapping(value = "/{update-id}")
+    public ResponseEntity<AccommodationUpdateResponse> getAccommodationUpdate(@PathVariable("update-id") UUID id){
         AccommodationUpdateResponse accommodationUpdateResponse =accommodationUpdateService.getAccommodationUpdate(id);
         if(accommodationUpdateResponse == null){
             return ResponseEntity.ok(accommodationUpdateResponse);
@@ -47,7 +48,7 @@ public class AccommodationUpdateController {
         return ResponseEntity.ok(accommodationUpdateResponse);
     }
     @PutMapping(value = "/{accommodation-update-id}")
-    public ResponseEntity<MessageResponse> resolveAccommodationUpdate(@PathVariable("accommodationUpdateId") int id, @RequestParam int flag){
+    public ResponseEntity<MessageResponse> resolveAccommodationUpdate(@PathVariable("accommodation-update-id") UUID id, @RequestParam int flag){
         MessageResponse accommodationUpdateResponse = accommodationUpdateService.resolveAccommodationUpdate(id,flag);
         if(accommodationUpdateResponse == null){
             return new ResponseEntity<MessageResponse>(HttpStatus.NOT_FOUND);
