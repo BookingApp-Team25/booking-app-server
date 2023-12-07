@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.*;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.ReservationStatus;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.model.DatePeriod;
-import rs.ac.uns.ftn.asd.Projekatsiit2023.service.AccommodationService;
-import rs.ac.uns.ftn.asd.Projekatsiit2023.service.HostService;
-import rs.ac.uns.ftn.asd.Projekatsiit2023.service.ReservationService;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.model.Guest;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.model.User;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.service.*;
 
 import java.util.Collection;
 
@@ -19,10 +19,30 @@ public class HostController {
     @Autowired
     private HostService hostService;
 
+    @Autowired
+    private GuestServiceImplementation guestService;
+
+    @Autowired
+    private UserServiceImplementation userService;
+
     @GetMapping(value = "/log")
     public ResponseEntity<Collection<AccommodationLogDataResponse>> generateLogs(@RequestParam(required = false) DatePeriod datePeriod){
         Collection<AccommodationLogDataResponse>  logs = hostService.getLogsForPeriod(datePeriod);
         return ResponseEntity.ok(logs);
     }
 
+//    @GetMapping(value = "/hosts")
+//    public ResponseEntity allHosts(){
+//        return ResponseEntity.ok(hostService.findAll());
+//    }
+
+    @GetMapping(value = "/guests")
+    public ResponseEntity<Collection<Guest>> allGuests(){
+        return ResponseEntity.ok(guestService.findAll());
+    }
+
+    @GetMapping(value = "/users")
+    public ResponseEntity<Collection<User>> allUsers(){
+        return ResponseEntity.ok(userService.findAll());
+    }
 }

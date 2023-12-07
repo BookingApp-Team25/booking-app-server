@@ -1,16 +1,22 @@
 package rs.ac.uns.ftn.asd.Projekatsiit2023.model;
 
+import jakarta.persistence.*;
+
 import java.util.UUID;
 
+
+@Entity
+@Table(name = "users")
+@Inheritance(strategy = InheritanceType.JOINED)
 public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     private String username;
     private String password;
     private Boolean blocked;
 
-    public User(){
-
-    }
+    public User() {}
 
     public User(UUID id, String username, String password, Boolean blocked) {
         this.id = id;
@@ -23,6 +29,10 @@ public class User {
         return id;
     }
 
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
     public String getUsername() {
         return username;
     }
@@ -33,10 +43,6 @@ public class User {
 
     public Boolean getBlocked() {
         return blocked;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
     }
 
     public void setUsername(String username) {
