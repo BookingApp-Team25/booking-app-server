@@ -8,16 +8,23 @@ import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.AccommodationFilteredSearchRequest
 import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.AccommodationRequest;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.AccommodationResponse;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.AccommodationSummaryResponse;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.model.Accommodation;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.model.DatePeriod;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.service.AccommodationService;
 
 import java.util.Collection;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("api/accommodation")
 public class AccommodationController {
     @Autowired
     private AccommodationService accommodationService;
+    @PostMapping()
+    public ResponseEntity<String> createAccommodation (@RequestBody Accommodation accommodation){
+        String answer = accommodationService.createAccommodation(accommodation);
+        return ResponseEntity.ok(answer);
+    }
     @GetMapping(value = "/{hostId}")
     public ResponseEntity<Collection<AccommodationSummaryResponse>> getHostAccommodations(@PathVariable("hostId") int hostId){
         Collection<AccommodationSummaryResponse> accommodations = accommodationService.getHostAccommodations(hostId);
@@ -30,7 +37,7 @@ public class AccommodationController {
         return  ResponseEntity.ok(accommodations);
     }
     @GetMapping(value = "/{accommodationId}")
-    public ResponseEntity<AccommodationResponse> getAccommodation(@PathVariable("accommodationId") int accommodationId){
+    public ResponseEntity<AccommodationResponse> getAccommodation(@PathVariable("accommodationId")  UUID accommodationId){
         AccommodationResponse accommodation = accommodationService.getAccommodation(accommodationId);
         if(accommodation == null){
             return new ResponseEntity<AccommodationResponse>(HttpStatus.NOT_FOUND);

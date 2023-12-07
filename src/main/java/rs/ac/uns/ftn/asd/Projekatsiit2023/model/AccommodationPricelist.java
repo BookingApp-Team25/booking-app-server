@@ -1,11 +1,25 @@
 package rs.ac.uns.ftn.asd.Projekatsiit2023.model;
 
+import jakarta.persistence.*;
+
+import java.util.UUID;
+
+@Entity
 public class AccommodationPricelist {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id", updatable = false)
+    private UUID id;
+    @Column(name = "dailyPrice", updatable = false)
     private double dailyPrice;
+    @Column(name = "weekendPrice", updatable = false)
     private double weekendPrice;
+    @Column(name = "summerPrice", updatable = false)
     private double summerPrice;
+    @Column(name = "winterPrice", updatable = false)
     private double winterPrice;
 
+    
     public AccommodationPricelist(double dailyPrice, double weekendPrice, double summerPrice, double winterPrice) {
         this.dailyPrice = dailyPrice;
         this.weekendPrice = weekendPrice;

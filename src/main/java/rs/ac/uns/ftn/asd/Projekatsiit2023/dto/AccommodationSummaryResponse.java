@@ -1,5 +1,7 @@
 package rs.ac.uns.ftn.asd.Projekatsiit2023.dto;
 
+import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.AccommodationOnHoldStatus;
+
 import java.util.UUID;
 
 public class AccommodationSummaryResponse {
@@ -9,17 +11,27 @@ public class AccommodationSummaryResponse {
     String description;
     double price;
     double rating;
+    AccommodationOnHoldStatus onHoldStatus;
 
     public AccommodationSummaryResponse() {
     }
 
-    public AccommodationSummaryResponse(UUID accommodationId, String name, String photo, String description, double price, double rating) {
+    public AccommodationSummaryResponse(UUID accommodationId, String name, String photo, String description, double price, double rating, AccommodationOnHoldStatus onHoldStatus) {
         this.accommodationId = accommodationId;
         this.name = name;
         this.photo = photo;
         this.description = description;
         this.price = price;
         this.rating = rating;
+        this.onHoldStatus = onHoldStatus;
+    }
+
+    public AccommodationOnHoldStatus getOnHoldStatus() {
+        return onHoldStatus;
+    }
+
+    public void setOnHoldStatus(AccommodationOnHoldStatus onHoldStatus) {
+        this.onHoldStatus = onHoldStatus;
     }
 
     public UUID getAccommodationId() {

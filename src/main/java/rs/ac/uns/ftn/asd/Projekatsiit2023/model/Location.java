@@ -1,10 +1,26 @@
 package rs.ac.uns.ftn.asd.Projekatsiit2023.model;
 
+import jakarta.persistence.*;
+
+import java.util.UUID;
+
+@Entity
 public class Location {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id", updatable = false)
+    private UUID id;
+    @Column(name = "country", nullable = false)
     private String country;
+    @Column(name = "city", nullable = false)
     private String city;
+    @Column(name = "street", nullable = false)
     private String street;
+    @Column(name = "streetNumber", nullable = false)
     private int streetNumber;
+
+    public Location() {
+    }
 
     public Location(String country, String city, String street, int streetNumber) {
         this.country = country;
