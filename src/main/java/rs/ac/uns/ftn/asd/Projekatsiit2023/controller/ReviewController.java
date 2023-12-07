@@ -10,6 +10,7 @@ import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.ReviewResponse;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.service.ReviewService;
 
 import java.util.Collection;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("api/review")
@@ -44,5 +45,17 @@ public class ReviewController {
             return new ResponseEntity<MessageResponse>(HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.ok(reviewResponse);
+    }
+
+    @GetMapping(value="/{reviewedEntity}")
+    public ResponseEntity<Collection<ReviewResponse>> getAllReviews(@PathVariable("reviewedEntity") UUID reviewedEntity,@RequestParam Boolean flag){
+        Collection<ReviewResponse> reviewResponses;
+        if(flag) {
+            reviewResponses = reviewService.getAllAccommodationReviews(reviewedEntity);
+        }
+        else {
+            reviewResponses = reviewService.getAllHostReviews(reviewedEntity);
+        }
+        return ResponseEntity.ok(reviewResponses);
     }
 }

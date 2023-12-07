@@ -9,7 +9,10 @@ import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.ReviewResponse;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.ReviewType;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.model.*;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.UUID;
 
 @Service
 public class ReviewServiceImplementation implements ReviewService{
@@ -34,13 +37,25 @@ public class ReviewServiceImplementation implements ReviewService{
     }
 
     @Override
-    public Collection<ReviewResponse> getAllAccommodationReviews(int accommodationId) {
-        return null;
+    public Collection<ReviewResponse> getAllAccommodationReviews(UUID accommodationId) {
+        Collection<Review> reviews= reviewRepository.findByAccommodationId(accommodationId);
+        Collection<ReviewResponse> reviewResponses=new ArrayList<ReviewResponse>();
+        for (Review review: reviews) {
+            ReviewResponse reviewResponse=new ReviewResponse(review.getComment(),review.getRating(),review.getGuest().getUsername(),review.getAccommodation().getName(),ReviewType.AccommodationReview);
+            reviewResponses.add(reviewResponse);
+        }
+        return reviewResponses;
     }
 
     @Override
-    public Collection<ReviewResponse> getAllHostReviews(int hostId) {
-        return null;
+    public Collection<ReviewResponse> getAllHostReviews(UUID hostId) {
+        Collection<HostReview> hostReviews= hostReviewRepository.findByHostId(hostId);
+        Collection<ReviewResponse> reviewResponses=new ArrayList<ReviewResponse>();
+        for (HostReview review: hostReviews) {
+            ReviewResponse reviewResponse=new ReviewResponse(review.getComment(),review.getRating(),review.getGuest().getUsername(),review.getHost().getUsername(),ReviewType.HostReview);
+            reviewResponses.add(reviewResponse);
+        }
+        return reviewResponses;
     }
 
     @Override

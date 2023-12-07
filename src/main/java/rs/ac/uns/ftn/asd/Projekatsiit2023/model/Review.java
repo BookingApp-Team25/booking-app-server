@@ -47,6 +47,14 @@ public class Review {
         this.rating = rating;
     }
 
+    public Guest getGuest() {
+        return guest;
+    }
+
+    public Accommodation getAccommodation() {
+        return accommodation;
+    }
+
     public void setGuest(Guest guest) {
         this.guest = guest;
     }

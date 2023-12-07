@@ -29,6 +29,14 @@ public class HostReview {
         this.id = UUID.randomUUID();
     }
 
+    public Guest getGuest() {
+        return guest;
+    }
+
+    public Host getHost() {
+        return host;
+    }
+
     public String getComment() {
         return comment;
     }
