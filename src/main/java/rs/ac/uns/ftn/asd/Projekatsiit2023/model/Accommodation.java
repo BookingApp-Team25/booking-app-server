@@ -52,10 +52,17 @@ public class Accommodation {
     @Enumerated(EnumType.STRING)
     private AccommodationOnHoldStatus onHoldStatus;
 
+    // Inside Accommodation.java
+    @Column(name = "average_rating")
+    private double averageRating;
+
+    @OneToMany(mappedBy = "accommodation", cascade = CascadeType.ALL)
+    private List<AccommodationRating> ratings;
+
     public Accommodation() {
     }
 
-    public Accommodation(String name, String description, Location location, List<String> amenities, List<String> photos, int minGuests, int maxGuests, AccommodationType type, AccommodationReservedDates availability, double price, AccommodationPricelist pricelist, int daysBefore, AccommodationReservationPolicy policy) {
+    public Accommodation(String name, String description, Location location, List<String> amenities, List<String> photos, int minGuests, int maxGuests, AccommodationType type, AccommodationReservedDates availability, double price, AccommodationPricelist pricelist, int daysBefore, AccommodationReservationPolicy policy, double averageRating, List<AccommodationRating> ratings) {
         this.id = UUID.randomUUID();
         this.name = name;
         this.description = description;
@@ -70,6 +77,8 @@ public class Accommodation {
         this.pricelist = pricelist;
         this.daysBefore = daysBefore;
         this.policy = policy;
+        this.averageRating = averageRating;
+        this.ratings = ratings;
     }
 
     public AccommodationOnHoldStatus getOnHoldStatus() {
@@ -184,6 +193,18 @@ public class Accommodation {
         return policy;
     }
 
+    public double getAverageRating() { return averageRating; }
+
+    public void setAverageRating(double averageRating) { this.averageRating = averageRating; }
+
+    public List<AccommodationRating> getRatings() {
+        return ratings;
+    }
+
+    public void setRatings(List<AccommodationRating> ratings) {
+        this.ratings = ratings;
+    }
+
     public void setPolicy(AccommodationReservationPolicy policy) {
         this.policy = policy;
     }
@@ -201,5 +222,7 @@ public class Accommodation {
         this.pricelist = accommodationRequest.getPricelist();
         this.daysBefore = accommodationRequest.getDaysBefore();
         this.policy = accommodationRequest.getPolicy();
+        this.averageRating = accommodationRequest.getAverageRating();
+        this.ratings = accommodationRequest.getRatings();
     }
 }

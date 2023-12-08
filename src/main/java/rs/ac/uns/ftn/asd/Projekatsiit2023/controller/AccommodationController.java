@@ -13,7 +13,10 @@ import rs.ac.uns.ftn.asd.Projekatsiit2023.model.DatePeriod;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.service.AccommodationService;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
+import java.time.LocalDate;
 
 @RestController
 @RequestMapping("api/accommodation")
@@ -39,7 +42,7 @@ public class AccommodationController {
     @GetMapping(value = "/{accommodationId}")
     public ResponseEntity<AccommodationResponse> getAccommodation(@PathVariable("accommodationId")  UUID accommodationId){
         AccommodationResponse accommodation = accommodationService.getAccommodation(accommodationId);
-        if(accommodation == null){
+        if(accommodation == null) {
             return new ResponseEntity<AccommodationResponse>(HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.ok(accommodation);
@@ -47,27 +50,51 @@ public class AccommodationController {
     @GetMapping(value = "/results")
     public ResponseEntity<Collection<AccommodationSummaryResponse>> searchAccommodations(
             @RequestParam String city,
-            @RequestParam DatePeriod datePeriod,
-            @RequestParam int guestNumber){
-        Collection<AccommodationSummaryResponse> accommodations = accommodationService.searchAccommodations(city, datePeriod,guestNumber);
-        if(accommodations == null){
-            return new ResponseEntity<Collection<AccommodationSummaryResponse>>(HttpStatus.NOT_FOUND);
+            //@RequestParam DatePeriod datePeriod,
+            @RequestParam LocalDate dateStart,
+            @RequestParam LocalDate dateEnd,
+            @RequestParam int guestNumber) {
+        Collection<AccommodationSummaryResponse> accommodations = accommodationService.searchAccommodations(city, dateStart, dateEnd, guestNumber);
+        if(accommodations.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.ok(accommodations);
     }
+//    @GetMapping(value = "/filtered")
+//    public ResponseEntity<Collection<AccommodationSummaryResponse>> searchAccommodationsFiltered(
+//            @RequestParam String city,
+//            @RequestParam DatePeriod datePeriod,
+//            @RequestParam int guestNumber,
+//            @RequestBody AccommodationFilteredSearchRequest accommodationFilteredSearchRequest
+//    ){
+//        Collection<AccommodationSummaryResponse> accommodations = accommodationService.searchAccommodationsFiltered(city,datePeriod,guestNumber,accommodationFilteredSearchRequest);
+//        if(accommodations == null) {
+//            return new ResponseEntity<Collection<AccommodationSummaryResponse>>(HttpStatus.NOT_FOUND);
+//        }
+//        return ResponseEntity.ok(accommodations);
+//    }
     @GetMapping(value = "/filtered")
     public ResponseEntity<Collection<AccommodationSummaryResponse>> searchAccommodationsFiltered(
             @RequestParam String city,
-            @RequestParam DatePeriod datePeriod,
+            @RequestParam LocalDate dateStart,
+            @RequestParam LocalDate dateEnd,
             @RequestParam int guestNumber,
-            @RequestBody AccommodationFilteredSearchRequest accommodationFilteredSearchRequest
-    ){
-        Collection<AccommodationSummaryResponse> accommodations = accommodationService.searchAccommodationsFiltered(city,datePeriod,guestNumber,accommodationFilteredSearchRequest);
-        if(accommodations == null){
-            return new ResponseEntity<Collection<AccommodationSummaryResponse>>(HttpStatus.NOT_FOUND);
+            @RequestParam(required = false) List<String> amenities,
+            @RequestParam(required = false) String accommodationType,
+            @RequestParam(required = false) Double minPrice,
+            @RequestParam(required = false) Double maxPrice) {
+
+        double minPriceValue = (minPrice != null) ? minPrice : 0.0;
+        double maxPriceValue = (maxPrice != null) ? maxPrice : 0.0;
+
+        Collection<AccommodationSummaryResponse> accommodations = accommodationService.filterAccommodations(city, dateStart, dateEnd, guestNumber, amenities, accommodationType, minPriceValue, maxPriceValue);
+
+        if (accommodations.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.ok(accommodations);
     }
+
     @PutMapping(value = "/favorite/{accommodationId}")
     public ResponseEntity<Boolean> addFavoriteAccommodation(@PathVariable("accommodationId") int accommodationId) {//, @RequestBody AccommodationRequest accommodationRequest) {
         Boolean isAdded = accommodationService.addFavoriteAccommodation(accommodationId);//, accommodationRequest);

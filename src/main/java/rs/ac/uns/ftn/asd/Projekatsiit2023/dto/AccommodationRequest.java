@@ -2,6 +2,7 @@ package rs.ac.uns.ftn.asd.Projekatsiit2023.dto;
 
 import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.AccommodationReservationPolicy;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.AccommodationType;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.model.AccommodationRating;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.model.AccommodationReservedDates;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.model.AccommodationPricelist;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.model.Location;
@@ -23,8 +24,10 @@ public class AccommodationRequest {
     private double price;
     private int daysBefore;
     private AccommodationReservationPolicy policy;
+    private double averageRating;
+    private List<AccommodationRating> ratings;
 
-    public AccommodationRequest(String name, String description, Location location, List<String> amenities, List<String> photos, int minGuests, int maxGuests, AccommodationType type, AccommodationReservedDates availability, double price, AccommodationPricelist pricelist, int daysBefore, AccommodationReservationPolicy policy) {
+    public AccommodationRequest(String name, String description, Location location, List<String> amenities, List<String> photos, int minGuests, int maxGuests, AccommodationType type, AccommodationReservedDates availability, double price, AccommodationPricelist pricelist, int daysBefore, AccommodationReservationPolicy policy, double averageRating, List<AccommodationRating> ratings) {
         this.name = name;
         this.description = description;
         this.location = location;
@@ -38,6 +41,8 @@ public class AccommodationRequest {
         this.pricelist = pricelist;
         this.daysBefore = daysBefore;
         this.policy = policy;
+        this.averageRating = averageRating;
+        this.ratings = ratings;
     }
 
     public String getName() {
@@ -142,5 +147,17 @@ public class AccommodationRequest {
 
     public void setPolicy(AccommodationReservationPolicy policy) {
         this.policy = policy;
+    }
+
+    public double getAverageRating() { return averageRating; }
+
+    public void setAverageRating(double averageRating) { this.averageRating = averageRating; }
+
+    public List<AccommodationRating> getRatings() {
+        return ratings;
+    }
+
+    public void setRatings(List<AccommodationRating> ratings) {
+        this.ratings = ratings;
     }
 }
