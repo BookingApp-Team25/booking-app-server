@@ -13,19 +13,20 @@ import rs.ac.uns.ftn.asd.Projekatsiit2023.model.DatePeriod;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.service.ReservationServiceImplementation;
 
 import java.util.Collection;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("api/reservation")
 public class ReservationController {
     @Autowired
     private ReservationServiceImplementation reservationService;
-    @PostMapping
+    @PostMapping(value = "/create")
     public ResponseEntity<ReservationResponse> createReservation(@RequestBody ReservationRequest reservationRequest) {
         ReservationResponse reservationResponse = reservationService.createReservation(reservationRequest);
         return new ResponseEntity<ReservationResponse>(reservationResponse, HttpStatus.CREATED);
     }
     @PutMapping(value = "/{reservationId}/delete")
-    public ResponseEntity<Boolean> deleteReservation(@PathVariable("reservationId") int reservationId) {//, @RequestBody ReservationRequest reservationRequest) {
+    public ResponseEntity<Boolean> deleteReservation(@PathVariable("reservationId") UUID reservationId) {//, @RequestBody ReservationRequest reservationRequest) {
         Boolean isDeleted = reservationService.deleteReservation(reservationId);
 
         if (isDeleted != null) {
@@ -35,7 +36,7 @@ public class ReservationController {
         }
     }
     @PutMapping("/{reservationId}/cancel")
-    public ResponseEntity<Boolean> cancelReservation(@PathVariable("reservationId") int reservationId) {
+    public ResponseEntity<Boolean> cancelReservation(@PathVariable("reservationId") UUID reservationId) {
         Boolean isCancelled = reservationService.cancelReservation(reservationId);
 
         if (isCancelled != null) { //isCancelled ne znaci da li je cancelovan ili ne vec proverava da li akomodacija postoji ili ne(true false)
@@ -45,7 +46,7 @@ public class ReservationController {
         }
     }
     @GetMapping(value = "{hostId}/results")
-    public ResponseEntity<Collection<ReservationResponse>> getHostReservations(@PathVariable("hostId") int hostId){
+    public ResponseEntity<Collection<ReservationResponse>> getHostReservations(@PathVariable("hostId") UUID hostId){
         Collection<ReservationResponse> reservations = reservationService.getAllHostReservations(hostId);
         if(reservations == null){
             return new ResponseEntity<Collection<ReservationResponse>>(HttpStatus.NOT_FOUND);

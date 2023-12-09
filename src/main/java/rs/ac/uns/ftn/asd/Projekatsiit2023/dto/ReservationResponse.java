@@ -1,6 +1,7 @@
 package rs.ac.uns.ftn.asd.Projekatsiit2023.dto;
 
 import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.ReservationStatus;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.model.Accommodation;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.model.DatePeriod;
 
 import java.util.UUID;
@@ -10,7 +11,7 @@ public class ReservationResponse {
 
     private UUID hostId;
 
-    private UUID accommodationId;
+    private Accommodation accommodation;
 
     private ReservationStatus reservationStatus;
 
@@ -19,10 +20,10 @@ public class ReservationResponse {
     public ReservationResponse() {
     }
 
-    public ReservationResponse(UUID guestId, UUID hostId, UUID accommodationId, ReservationStatus reservationStatus, DatePeriod reservedDate) {
+    public ReservationResponse(UUID guestId, UUID hostId, Accommodation accommodation, ReservationStatus reservationStatus, DatePeriod reservedDate) {
         this.guestId = guestId;
         this.hostId = hostId;
-        this.accommodationId = accommodationId;
+        this.accommodation = accommodation;
         this.reservationStatus = reservationStatus;
         this.reservedDate = reservedDate;
     }
@@ -35,8 +36,8 @@ public class ReservationResponse {
         return hostId;
     }
 
-    public UUID getAccommodationId() {
-        return accommodationId;
+    public Accommodation getAccommodation() {
+        return accommodation;
     }
 
     public ReservationStatus getReservationStatus() {
@@ -63,7 +64,7 @@ public class ReservationResponse {
         this.hostId = hostId;
     }
 
-    public void setAccommodationId(UUID accommodationId) {
-        this.accommodationId = accommodationId;
+    public void setAccommodation(Accommodation accommodation) {
+        this.accommodation = accommodation;
     }
 }

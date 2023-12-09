@@ -59,10 +59,15 @@ public class Accommodation {
     @OneToMany(mappedBy = "accommodation", cascade = CascadeType.ALL)
     private List<AccommodationRating> ratings;
 
+    // Inside Accommodation.java
+    @OneToMany(mappedBy = "accommodation", cascade = CascadeType.ALL)
+    private List<Reservation> reservations;
+
+
     public Accommodation() {
     }
 
-    public Accommodation(String name, String description, Location location, List<String> amenities, List<String> photos, int minGuests, int maxGuests, AccommodationType type, AccommodationReservedDates availability, double price, AccommodationPricelist pricelist, int daysBefore, AccommodationReservationPolicy policy, double averageRating, List<AccommodationRating> ratings) {
+    public Accommodation(String name, String description, Location location, List<String> amenities, List<String> photos, int minGuests, int maxGuests, AccommodationType type, AccommodationReservedDates availability, double price, AccommodationPricelist pricelist, int daysBefore, AccommodationReservationPolicy policy, double averageRating, List<AccommodationRating> ratings, List<Reservation> reservations) {
         this.id = UUID.randomUUID();
         this.name = name;
         this.description = description;
@@ -79,6 +84,7 @@ public class Accommodation {
         this.policy = policy;
         this.averageRating = averageRating;
         this.ratings = ratings;
+        this.reservations = reservations;
     }
 
     public AccommodationOnHoldStatus getOnHoldStatus() {
@@ -205,6 +211,14 @@ public class Accommodation {
         this.ratings = ratings;
     }
 
+    public List<Reservation> getReservations() {
+        return reservations;
+    }
+
+    public void setReservations(List<Reservation> reservations) {
+        this.reservations = reservations;
+    }
+
     public void setPolicy(AccommodationReservationPolicy policy) {
         this.policy = policy;
     }
@@ -224,5 +238,6 @@ public class Accommodation {
         this.policy = accommodationRequest.getPolicy();
         this.averageRating = accommodationRequest.getAverageRating();
         this.ratings = accommodationRequest.getRatings();
+        this.reservations = accommodationRequest.getReservations();
     }
 }

@@ -1,27 +1,31 @@
 package rs.ac.uns.ftn.asd.Projekatsiit2023.model;
 
+import jakarta.persistence.*;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.controller.AccommodationController;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.ReservationStatus;
 
 import java.util.UUID;
 
+@Entity
 public class Reservation {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
     private UUID guestId;
-
     private UUID hostId;
-
-    private UUID accommodationId;
-
+    @ManyToOne
+    private Accommodation accommodation;
     private ReservationStatus reservationStatus;
-
-    private  DatePeriod reservedDate;
+    @ManyToOne
+    private DatePeriod reservedDate;
 
     public Reservation() {
     }
 
-    public Reservation(UUID guestId, UUID hostId, UUID accommodationId, ReservationStatus reservationStatus, DatePeriod reservedDate) {
+    public Reservation(UUID guestId, UUID hostId, Accommodation accommodation, ReservationStatus reservationStatus, DatePeriod reservedDate) {
         this.guestId = guestId;
         this.hostId = hostId;
-        this.accommodationId = accommodationId;
+        this.accommodation = accommodation;
         this.reservationStatus = reservationStatus;
         this.reservedDate = reservedDate;
     }
@@ -34,8 +38,8 @@ public class Reservation {
         return hostId;
     }
 
-    public UUID getAccommodationId() {
-        return accommodationId;
+    public Accommodation getAccommodation() {
+        return accommodation;
     }
 
     public ReservationStatus getReservationStatus() {
@@ -62,7 +66,7 @@ public class Reservation {
         this.hostId = hostId;
     }
 
-    public void setAccommodationId(UUID accommodationId) {
-        this.accommodationId = accommodationId;
+    public void setAccommodation(Accommodation accommodation) {
+        this.accommodation = accommodation;
     }
 }

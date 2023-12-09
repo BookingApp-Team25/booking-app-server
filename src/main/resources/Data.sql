@@ -43,3 +43,27 @@ VALUES
 INSERT INTO accommodation (id, name, description, location_id, min_guests, max_guests, type, availability_id, pricelist_id, price, days_before, policy, on_hold_status)
 VALUES
     ('323e4567-e89b-12d3-a456-426614174001', 'Mountain Retreat', 'A peaceful retreat in the mountains', '623e4567-e89b-12d3-a456-426614174001', 2, 6, 'House', '523e4567-e89b-12d3-a456-426614174001', '723e4567-e89b-12d3-a456-426614174001', 180.0, 60, 'Manually', 'WAITING_FOR_EDIT_APPROVAL');
+
+---------------------------------------------
+-- DatePeriod 1,2,3
+INSERT INTO date_period (id, start_date, end_date)
+VALUES
+    ('423e4567-e89b-12d3-a456-426614174001', '2023-01-01', '2023-01-10'),
+    ('523e4567-e89b-12d3-a456-426614174001', '2023-02-15', '2023-02-20'),
+    ('623e4567-e89b-12d3-a456-426614174001', '2023-03-10', '2023-03-20');
+
+
+-- Reservation 1
+INSERT INTO reservation (id, guest_id, host_id, accommodation_id, reservation_status, reserved_date_id)
+VALUES
+    ('423e4567-e89b-12d3-a456-426614174001', '823e4567-e89b-12d3-a456-426614174001', '923e4567-e89b-12d3-a456-426614174001', '123e4567-e89b-12d3-a456-426614174001', 'PENDING', '423e4567-e89b-12d3-a456-426614174001');
+
+-- Reservation 2
+INSERT INTO reservation (id, guest_id, host_id, accommodation_id, reservation_status, reserved_date_id)
+VALUES
+    ('523e4567-e89b-12d3-a456-426614174001', '723e4567-e89b-12d3-a456-426614174001', '823e4567-e89b-12d3-a456-426614174001', '223e4567-e89b-12d3-a456-426614174001', 'APPROVED', '523e4567-e89b-12d3-a456-426614174001');
+
+-- Reservation 3
+INSERT INTO reservation (id, guest_id, host_id, accommodation_id, reservation_status, reserved_date_id)
+VALUES
+    ('623e4567-e89b-12d3-a456-426614174001', '523e4567-e89b-12d3-a456-426614174001', '623e4567-e89b-12d3-a456-426614174001', '323e4567-e89b-12d3-a456-426614174001', 'REJECTED', '623e4567-e89b-12d3-a456-426614174001');

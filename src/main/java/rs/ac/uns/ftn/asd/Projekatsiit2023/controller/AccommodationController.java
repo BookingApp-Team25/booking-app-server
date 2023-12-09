@@ -4,17 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.AccommodationFilteredSearchRequest;
-import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.AccommodationRequest;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.AccommodationResponse;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.AccommodationSummaryResponse;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.model.Accommodation;
-import rs.ac.uns.ftn.asd.Projekatsiit2023.model.DatePeriod;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.service.AccommodationService;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 import java.time.LocalDate;
 

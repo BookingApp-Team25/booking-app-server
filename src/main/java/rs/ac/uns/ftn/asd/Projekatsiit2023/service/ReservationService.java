@@ -6,16 +6,17 @@ import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.ReservationStatus;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.model.DatePeriod;
 
 import java.util.Collection;
+import java.util.UUID;
 
 public interface ReservationService {
     public ReservationResponse createReservation(ReservationRequest reservationRequest);
     public ReservationResponse getReservation();
-    public Collection<ReservationResponse> getAllHostReservations(int hostId);
-    public Collection<ReservationResponse> getAllAccommodationReservations(int accommodationId);
+    public Collection<ReservationResponse> getAllHostReservations(UUID hostId);
+    public Collection<ReservationResponse> getAllAccommodationReservations(UUID accommodationId);
     public Collection<ReservationResponse> getAllGuestReservations(int guestId);
     public Collection<ReservationResponse> getFilteredHostReservations(int hostId, DatePeriod reservationPeriod, String reservationName, ReservationStatus reservationStatus);
     public String acceptReservation(int reservationId);
-    public boolean deleteReservation(int reservationId);
-    public boolean cancelReservation(int reservationId);
+    public boolean deleteReservation(UUID reservationId);
+    public boolean cancelReservation(UUID reservationId);
 
 }
