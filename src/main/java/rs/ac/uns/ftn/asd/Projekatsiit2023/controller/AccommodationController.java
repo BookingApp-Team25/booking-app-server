@@ -19,7 +19,7 @@ import java.time.LocalDate;
 public class AccommodationController {
     @Autowired
     private AccommodationService accommodationService;
-    @PostMapping()
+    @PostMapping(value = "/create")
     public ResponseEntity<String> createAccommodation (@RequestBody Accommodation accommodation){
         String answer = accommodationService.createAccommodation(accommodation);
         return ResponseEntity.ok(answer);

@@ -14,9 +14,11 @@ public class Reservation {
     private UUID guestId;
     private UUID hostId;
     @ManyToOne
+    @JoinColumn(name = "accommodation_id")
     private Accommodation accommodation;
     private ReservationStatus reservationStatus;
     @ManyToOne
+    @JoinColumn(name = "reserved_date_id")
     private DatePeriod reservedDate;
 
     public Reservation() {

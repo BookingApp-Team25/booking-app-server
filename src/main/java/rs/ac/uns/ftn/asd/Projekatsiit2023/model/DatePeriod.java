@@ -25,6 +25,14 @@ public class DatePeriod {
         this.endDate = endDate;
     }
 
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
     public LocalDate getStartDate() {
         return startDate;
     }

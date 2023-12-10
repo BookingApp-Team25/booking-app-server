@@ -11,7 +11,7 @@ public class ReservationRequest {
 
     private UUID hostId;
 
-    private Accommodation accommodation;
+    private UUID accommodationId;
 
     private ReservationStatus reservationStatus;
 
@@ -20,10 +20,10 @@ public class ReservationRequest {
     public ReservationRequest() {
     }
 
-    public ReservationRequest(UUID guestId, UUID hostId, Accommodation accommodation, ReservationStatus reservationStatus, DatePeriod reservedDate) {
+    public ReservationRequest(UUID guestId, UUID hostId, UUID accommodationId, ReservationStatus reservationStatus, DatePeriod reservedDate) {
         this.guestId = guestId;
         this.hostId = hostId;
-        this.accommodation = accommodation;
+        this.accommodationId = accommodationId;
         this.reservationStatus = reservationStatus;
         this.reservedDate = reservedDate;
     }
@@ -36,8 +36,8 @@ public class ReservationRequest {
         return hostId;
     }
 
-    public Accommodation getAccommodation() {
-        return accommodation;
+    public UUID getAccommodationId() {
+        return accommodationId;
     }
 
     public ReservationStatus getReservationStatus() {
@@ -64,7 +64,7 @@ public class ReservationRequest {
         this.hostId = hostId;
     }
 
-    public void setAccommodation(Accommodation accommodation) {
-        this.accommodation = accommodation;
+    public void setAccommodationId(UUID accommodationId) {
+        this.accommodationId = accommodationId;
     }
 }
