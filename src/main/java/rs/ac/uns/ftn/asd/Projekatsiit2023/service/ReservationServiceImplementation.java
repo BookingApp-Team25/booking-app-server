@@ -101,7 +101,8 @@ public class ReservationServiceImplementation implements ReservationService{
     }
 
     @Override
-    public boolean deleteReservation(UUID reservationId) { // Check if the reservation exists
+    public boolean deleteReservation(UUID reservationId) {
+        // Check if the reservation exists
         Optional<Reservation> optionalReservation = reservationRepository.findById(reservationId);
         if (optionalReservation.isPresent()) {
             // Delete the reservation
@@ -123,11 +124,20 @@ public class ReservationServiceImplementation implements ReservationService{
             return true;
         }
         return false;
-    } //treba namestiti otkaz rezervacije
+    }
 
     @Override
-    public String acceptReservation(int reservationId){
-        return "uspesno izmenjena rezervacija";
+    public boolean acceptReservation(UUID reservationId){
+        // Check if the reservation exists
+        Optional<Reservation> optionalReservation = reservationRepository.findById(reservationId);
+        if (optionalReservation.isPresent()) {
+            // Accept the reservation (update status to CANCELED, for example)
+            Reservation reservation = optionalReservation.get();
+            reservation.setReservationStatus(ReservationStatus.Accepted);
+            reservationRepository.save(reservation);
+            return true;
+        }
+        return false;
     }
 
     // Helper method to convert Reservation entity to Response DTO

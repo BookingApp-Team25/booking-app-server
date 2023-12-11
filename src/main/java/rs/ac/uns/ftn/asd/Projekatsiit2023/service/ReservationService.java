@@ -15,7 +15,7 @@ public interface ReservationService {
     public Collection<ReservationResponse> getAllAccommodationReservations(UUID accommodationId);
     public Collection<ReservationResponse> getAllGuestReservations(int guestId);
     public Collection<ReservationResponse> getFilteredHostReservations(int hostId, DatePeriod reservationPeriod, String reservationName, ReservationStatus reservationStatus);
-    public String acceptReservation(int reservationId);
+    public boolean acceptReservation(UUID reservationId);
     public boolean deleteReservation(UUID reservationId);
     public boolean cancelReservation(UUID reservationId);
 

@@ -66,10 +66,10 @@ public class ReservationController {
 
     }
     @PutMapping(value= "/{reservationId}/accept")
-    public ResponseEntity<String> acceptReservation(@PathVariable("reservationId") int reservationId){
-        String reservationResponse = reservationService.acceptReservation(reservationId);
-        if(reservationResponse == null){
-            return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+    public ResponseEntity<Boolean> acceptReservation(@PathVariable("reservationId") UUID reservationId){
+        boolean reservationResponse = reservationService.acceptReservation(reservationId);
+        if(!reservationResponse){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.ok(reservationResponse);
     }
