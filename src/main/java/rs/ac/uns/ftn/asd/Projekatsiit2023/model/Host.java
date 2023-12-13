@@ -6,4 +6,5 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "hosts")
 public class Host extends User {
+
 }

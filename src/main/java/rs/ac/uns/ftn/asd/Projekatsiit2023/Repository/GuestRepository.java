@@ -8,5 +8,4 @@ import java.util.UUID;
 
 @Repository
 public interface GuestRepository extends JpaRepository<Guest, UUID> {
-    // You can add custom query methods if needed
 }

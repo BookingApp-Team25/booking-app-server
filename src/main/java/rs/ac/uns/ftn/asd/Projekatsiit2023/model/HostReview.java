@@ -6,29 +6,35 @@ import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.ReviewType;
 import java.util.UUID;
 
 @Entity
-public class AccommodationReview {
-
+public class HostReview {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "id", updatable = false)
     UUID id;
-    UUID guestId;
+    @OneToOne
+    @JoinColumn(name="guest_id",referencedColumnName = "id")
+    Guest guest;
     @ManyToOne
-    @JoinColumn(name = "accommodation_id")
-    private Accommodation accommodation;
+    @JoinColumn(name="host_id",referencedColumnName = "id")
+    Host host;
+    @Column(name="comment",updatable = false)
     String comment;
+    @Column(name="rating",updatable = false)
     double rating;
-    ReviewType type;
-    public AccommodationReview() {
+    public HostReview() {
     }
 
-    public AccommodationReview(String comment, double rating, UUID guestId, Accommodation accommodation, ReviewType type) {
+    public HostReview(String comment, double rating) {
         this.comment = comment;
         this.rating = rating;
-        this.guestId = guestId;
-        this.accommodation = accommodation;
         this.id = UUID.randomUUID();
-        this.type = type;
+    }
+
+    public Guest getGuest() {
+        return guest;
+    }
+
+    public Host getHost() {
+        return host;
     }
 
     public String getComment() {
@@ -45,5 +51,13 @@ public class AccommodationReview {
 
     public void setRating(double rating) {
         this.rating = rating;
+    }
+
+    public void setGuest(Guest guest) {
+        this.guest = guest;
+    }
+
+    public void setHost(Host host) {
+        this.host = host;
     }
 }
