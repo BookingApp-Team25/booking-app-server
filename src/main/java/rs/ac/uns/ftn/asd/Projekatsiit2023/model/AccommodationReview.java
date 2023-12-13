@@ -1,12 +1,20 @@
 package rs.ac.uns.ftn.asd.Projekatsiit2023.model;
 
+import jakarta.persistence.*;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.ReviewType;
 
 import java.util.UUID;
 
+@Entity
 public class Review {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id", updatable = false)
     UUID id;
     UUID guestId;
+    @ManyToOne
+    @JoinColumn(name = "accommodation_id")
     UUID reviewedEntity;
     String comment;
     double rating;
