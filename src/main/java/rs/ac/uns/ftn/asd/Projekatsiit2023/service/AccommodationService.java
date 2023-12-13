@@ -4,7 +4,9 @@ import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.*;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.model.Accommodation;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.model.DatePeriod;
 
+import java.time.LocalDate;
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 public interface AccommodationService {
@@ -13,8 +15,10 @@ public interface AccommodationService {
     public AccommodationResponse getAccommodation(UUID accommodationId);
     public Collection<AccommodationSummaryResponse> getHostAccommodations(int hostId);
 
-    public Collection<AccommodationSummaryResponse> searchAccommodations(String city, DatePeriod datePeriod, int guestNumber);
+    public Collection<AccommodationSummaryResponse> searchAccommodations(String city, LocalDate dateStart, LocalDate dateEnd, int guestNumber);
 
     public Collection<AccommodationSummaryResponse> searchAccommodationsFiltered(String city,DatePeriod datePeriod,int guestNumber,AccommodationFilteredSearchRequest accommodationFilteredSearchRequest);
     public boolean addFavoriteAccommodation(int accommodationId);
+
+    Collection<AccommodationSummaryResponse> filterAccommodations(String city, LocalDate startDate, LocalDate endDate, int guestNumber, List<String> amenities, String accommodationType, double minPrice, double maxPrice);
 }

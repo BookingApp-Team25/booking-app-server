@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import java.util.UUID;
 
 @Entity
+@Table(name = "guest")
 public class Guest extends User {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

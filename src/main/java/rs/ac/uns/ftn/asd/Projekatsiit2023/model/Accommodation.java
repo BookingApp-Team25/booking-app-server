@@ -52,10 +52,22 @@ public class Accommodation {
     @Enumerated(EnumType.STRING)
     private AccommodationOnHoldStatus onHoldStatus;
 
+    // Inside Accommodation.java
+    @Column(name = "average_rating")
+    private double averageRating;
+
+    @OneToMany(mappedBy = "accommodation", cascade = CascadeType.ALL)
+    private List<AccommodationReview> reviews;
+
+//    // Inside Accommodation.java
+//    @OneToMany(mappedBy = "accommodation", cascade = CascadeType.ALL)
+//    private List<Reservation> reservations;
+
+
     public Accommodation() {
     }
 
-    public Accommodation(String name, String description, Location location, List<String> amenities, List<String> photos, int minGuests, int maxGuests, AccommodationType type, AccommodationReservedDates availability, double price, AccommodationPricelist pricelist, int daysBefore, AccommodationReservationPolicy policy) {
+    public Accommodation(String name, String description, Location location, List<String> amenities, List<String> photos, int minGuests, int maxGuests, AccommodationType type, AccommodationReservedDates availability, double price, AccommodationPricelist pricelist, int daysBefore, AccommodationReservationPolicy policy, double averageRating, List<AccommodationReview> reviews){//, List<Reservation> reservations) {
         this.id = UUID.randomUUID();
         this.name = name;
         this.description = description;
@@ -70,6 +82,9 @@ public class Accommodation {
         this.pricelist = pricelist;
         this.daysBefore = daysBefore;
         this.policy = policy;
+        this.averageRating = averageRating;
+        this.reviews = reviews;
+        //this.reservations = reservations;
     }
 
     public AccommodationOnHoldStatus getOnHoldStatus() {
@@ -184,6 +199,26 @@ public class Accommodation {
         return policy;
     }
 
+    public double getAverageRating() { return averageRating; }
+
+    public void setAverageRating(double averageRating) { this.averageRating = averageRating; }
+
+    public List<AccommodationReview> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<AccommodationReview> reviews) {
+        this.reviews = reviews;
+    }
+
+//    public List<Reservation> getReservations() {
+//        return reservations;
+//    }
+//
+//    public void setReservations(List<Reservation> reservations) {
+//        this.reservations = reservations;
+//    }
+
     public void setPolicy(AccommodationReservationPolicy policy) {
         this.policy = policy;
     }
@@ -201,5 +236,8 @@ public class Accommodation {
         this.pricelist = accommodationRequest.getPricelist();
         this.daysBefore = accommodationRequest.getDaysBefore();
         this.policy = accommodationRequest.getPolicy();
+        this.averageRating = accommodationRequest.getAverageRating();
+        this.reviews = accommodationRequest.getReviews();
+       // this.reservations = accommodationRequest.getReservations();
     }
 }

@@ -1,6 +1,7 @@
 package rs.ac.uns.ftn.asd.Projekatsiit2023.dto;
 
 import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.ReservationStatus;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.model.Accommodation;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.model.DatePeriod;
 
 import java.util.UUID;

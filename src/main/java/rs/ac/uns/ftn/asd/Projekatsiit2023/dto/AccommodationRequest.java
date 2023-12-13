@@ -2,9 +2,7 @@ package rs.ac.uns.ftn.asd.Projekatsiit2023.dto;
 
 import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.AccommodationReservationPolicy;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.AccommodationType;
-import rs.ac.uns.ftn.asd.Projekatsiit2023.model.AccommodationReservedDates;
-import rs.ac.uns.ftn.asd.Projekatsiit2023.model.AccommodationPricelist;
-import rs.ac.uns.ftn.asd.Projekatsiit2023.model.Location;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.model.*;
 
 import java.util.List;
 
@@ -23,8 +21,11 @@ public class AccommodationRequest {
     private double price;
     private int daysBefore;
     private AccommodationReservationPolicy policy;
+    private double averageRating;
+    private List<AccommodationReview> reviews;
+//    private List<Reservation> reservations;
 
-    public AccommodationRequest(String name, String description, Location location, List<String> amenities, List<String> photos, int minGuests, int maxGuests, AccommodationType type, AccommodationReservedDates availability, double price, AccommodationPricelist pricelist, int daysBefore, AccommodationReservationPolicy policy) {
+    public AccommodationRequest(String name, String description, Location location, List<String> amenities, List<String> photos, int minGuests, int maxGuests, AccommodationType type, AccommodationReservedDates availability, double price, AccommodationPricelist pricelist, int daysBefore, AccommodationReservationPolicy policy, double averageRating, List<AccommodationReview> reviews){//, List<Reservation> reservations) {
         this.name = name;
         this.description = description;
         this.location = location;
@@ -38,6 +39,9 @@ public class AccommodationRequest {
         this.pricelist = pricelist;
         this.daysBefore = daysBefore;
         this.policy = policy;
+        this.averageRating = averageRating;
+        this.reviews = reviews;
+//        this.reservations = reservations;
     }
 
     public String getName() {
@@ -143,4 +147,23 @@ public class AccommodationRequest {
     public void setPolicy(AccommodationReservationPolicy policy) {
         this.policy = policy;
     }
+
+    public double getAverageRating() { return averageRating; }
+
+    public void setAverageRating(double averageRating) { this.averageRating = averageRating; }
+
+    public List<AccommodationReview> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<AccommodationReview> reviews) {
+        this.reviews = reviews;
+    }
+//    public List<Reservation> getReservations() {
+//        return reservations;
+//    }
+//
+//    public void setReservations(List<Reservation> reservations) {
+//        this.reservations = reservations;
+//    }
 }
