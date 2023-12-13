@@ -6,6 +6,7 @@ import rs.ac.uns.ftn.asd.Projekatsiit2023.Repository.AccommodationRepository;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.*;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.model.Accommodation;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.model.AccommodationRating;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.model.AccommodationReview;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.model.DatePeriod;
 
 import java.util.ArrayList;
@@ -103,13 +104,22 @@ public class AccommodationServiceImplementation implements AccommodationService{
     }
 
     private double calculateAverageRating(Accommodation accommodation) {
-        List<AccommodationRating> ratings = accommodation.getRatings();
+        List<AccommodationReview> reviews = accommodation.getReviews();
+        List<Double> ratings = new ArrayList<Double>(); //accommodation.getRatings();
+
+        for (AccommodationReview review: reviews) {
+            ratings.add(review.getRating());
+        }
 
         if (ratings.isEmpty()) {
             return 0.0; // any default value
         }
 
-        int sum = ratings.stream().mapToInt(AccommodationRating::getRating).sum();
+        //int sum = ratings.stream().mapToInt(AccommodationRating::getRating).sum();
+        double sum = 0.0;
+        for (Double rating: ratings) {
+            sum += rating;
+        }
         return (double) sum / ratings.size();
     }
 

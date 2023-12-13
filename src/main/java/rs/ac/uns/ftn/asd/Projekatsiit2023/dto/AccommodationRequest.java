@@ -22,10 +22,10 @@ public class AccommodationRequest {
     private int daysBefore;
     private AccommodationReservationPolicy policy;
     private double averageRating;
-    private List<AccommodationRating> ratings;
-    private List<Reservation> reservations;
+    private List<AccommodationReview> reviews;
+//    private List<Reservation> reservations;
 
-    public AccommodationRequest(String name, String description, Location location, List<String> amenities, List<String> photos, int minGuests, int maxGuests, AccommodationType type, AccommodationReservedDates availability, double price, AccommodationPricelist pricelist, int daysBefore, AccommodationReservationPolicy policy, double averageRating, List<AccommodationRating> ratings, List<Reservation> reservations) {
+    public AccommodationRequest(String name, String description, Location location, List<String> amenities, List<String> photos, int minGuests, int maxGuests, AccommodationType type, AccommodationReservedDates availability, double price, AccommodationPricelist pricelist, int daysBefore, AccommodationReservationPolicy policy, double averageRating, List<AccommodationReview> reviews){//, List<Reservation> reservations) {
         this.name = name;
         this.description = description;
         this.location = location;
@@ -40,8 +40,8 @@ public class AccommodationRequest {
         this.daysBefore = daysBefore;
         this.policy = policy;
         this.averageRating = averageRating;
-        this.ratings = ratings;
-        this.reservations = reservations;
+        this.reviews = reviews;
+//        this.reservations = reservations;
     }
 
     public String getName() {
@@ -152,19 +152,18 @@ public class AccommodationRequest {
 
     public void setAverageRating(double averageRating) { this.averageRating = averageRating; }
 
-    public List<AccommodationRating> getRatings() {
-        return ratings;
+    public List<AccommodationReview> getReviews() {
+        return reviews;
     }
 
-    public void setRatings(List<AccommodationRating> ratings) {
-        this.ratings = ratings;
+    public void setReviews(List<AccommodationReview> reviews) {
+        this.reviews = reviews;
     }
-
-    public List<Reservation> getReservations() {
-        return reservations;
-    }
-
-    public void setReservations(List<Reservation> reservations) {
-        this.reservations = reservations;
-    }
+//    public List<Reservation> getReservations() {
+//        return reservations;
+//    }
+//
+//    public void setReservations(List<Reservation> reservations) {
+//        this.reservations = reservations;
+//    }
 }

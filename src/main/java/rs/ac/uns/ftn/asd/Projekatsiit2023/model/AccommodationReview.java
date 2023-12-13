@@ -6,7 +6,7 @@ import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.ReviewType;
 import java.util.UUID;
 
 @Entity
-public class Review {
+public class AccommodationReview {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -15,18 +15,18 @@ public class Review {
     UUID guestId;
     @ManyToOne
     @JoinColumn(name = "accommodation_id")
-    UUID reviewedEntity;
+    private Accommodation accommodation;
     String comment;
     double rating;
     ReviewType type;
-    public Review() {
+    public AccommodationReview() {
     }
 
-    public Review(String comment, double rating, UUID guestId, UUID reviewedEntity, ReviewType type) {
+    public AccommodationReview(String comment, double rating, UUID guestId, Accommodation accommodation, ReviewType type) {
         this.comment = comment;
         this.rating = rating;
         this.guestId = guestId;
-        this.reviewedEntity = reviewedEntity;
+        this.accommodation = accommodation;
         this.id = UUID.randomUUID();
         this.type = type;
     }
