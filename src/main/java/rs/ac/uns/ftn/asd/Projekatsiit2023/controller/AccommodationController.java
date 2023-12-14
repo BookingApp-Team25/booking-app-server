@@ -3,6 +3,7 @@ package rs.ac.uns.ftn.asd.Projekatsiit2023.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.AccommodationFilteredSearchRequest;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.AccommodationRequest;
@@ -16,6 +17,7 @@ import java.util.Collection;
 import java.util.UUID;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("api/accommodation")
 public class AccommodationController {
     @Autowired
@@ -31,6 +33,7 @@ public class AccommodationController {
         return  ResponseEntity.ok(accommodations);
 
     }
+
     @GetMapping()
     public ResponseEntity<Collection<AccommodationSummaryResponse>> getAllAccommodations(){
         Collection<AccommodationSummaryResponse> accommodations = accommodationService.getAllAccommodations();

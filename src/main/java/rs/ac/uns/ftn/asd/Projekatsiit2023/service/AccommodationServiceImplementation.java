@@ -2,7 +2,7 @@ package rs.ac.uns.ftn.asd.Projekatsiit2023.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import rs.ac.uns.ftn.asd.Projekatsiit2023.Repository.AccommodationRepository;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.repository.AccommodationRepository;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.*;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.model.Accommodation;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.model.DatePeriod;

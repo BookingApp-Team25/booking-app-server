@@ -1,6 +1,7 @@
 package rs.ac.uns.ftn.asd.Projekatsiit2023.model;
 
 import jakarta.persistence.*;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.Role;
 
 import java.util.UUID;
 
@@ -14,16 +15,26 @@ public class User {
     private String username;
     private String password;
     private Boolean blocked;
-
+    private String firstName;
+    private String lastName;
+    private String address;
+    private String phoneNumber;
+    @Enumerated(EnumType.STRING)
+    private Role role;
     public User(){
 
     }
 
-    public User(UUID id, String username, String password, Boolean blocked) {
-        this.id = id;
+    public User(String username, String password, String firstName, String lastName, String address, String phoneNumber,Role role) {
+        this.id = UUID.randomUUID();
         this.username = username;
         this.password = password;
-        this.blocked = blocked;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.blocked = false;
+        this.role = role;
+        this.address = address;
+        this.phoneNumber = phoneNumber;
     }
 
     public UUID getId() {
@@ -56,5 +67,25 @@ public class User {
 
     public void setBlocked(Boolean blocked) {
         this.blocked = blocked;
+    }
+
+    public Role getRole() {
+        return this.role;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 }
