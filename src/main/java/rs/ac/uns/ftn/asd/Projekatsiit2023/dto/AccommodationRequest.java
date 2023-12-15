@@ -4,6 +4,7 @@ import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.AccommodationReservationPolicy;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.AccommodationType;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.model.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AccommodationRequest {
@@ -16,16 +17,13 @@ public class AccommodationRequest {
     private int minGuests;
     private int maxGuests;
     private AccommodationType type;
-    private AccommodationReservedDates availability;
+    private List<DatePeriod> availability;
     private AccommodationPricelist pricelist;
     private double price;
     private int daysBefore;
     private AccommodationReservationPolicy policy;
-    private double averageRating;
-    private List<AccommodationReview> reviews;
-//    private List<Reservation> reservations;
 
-    public AccommodationRequest(String name, String description, Location location, List<String> amenities, List<String> photos, int minGuests, int maxGuests, AccommodationType type, AccommodationReservedDates availability, double price, AccommodationPricelist pricelist, int daysBefore, AccommodationReservationPolicy policy, double averageRating, List<AccommodationReview> reviews){//, List<Reservation> reservations) {
+    public AccommodationRequest(String name, String description, Location location, List<String> amenities, List<String> photos, int minGuests, int maxGuests, AccommodationType type, double price,List<DatePeriod> datePeriods ,AccommodationPricelist pricelist, int daysBefore, AccommodationReservationPolicy policy) {
         this.name = name;
         this.description = description;
         this.location = location;
@@ -34,14 +32,11 @@ public class AccommodationRequest {
         this.minGuests = minGuests;
         this.maxGuests = maxGuests;
         this.type = type;
-        this.availability = new AccommodationReservedDates();
+        this.availability = datePeriods;
         this.price = price;
         this.pricelist = pricelist;
         this.daysBefore = daysBefore;
         this.policy = policy;
-        this.averageRating = averageRating;
-        this.reviews = reviews;
-//        this.reservations = reservations;
     }
 
     public String getName() {
@@ -112,7 +107,7 @@ public class AccommodationRequest {
         this.type = type;
     }
 
-    public void setAvailability(AccommodationReservedDates availability) {
+    public void setAvailability(List<DatePeriod> availability) {
         this.availability = availability;
     }
 
@@ -120,7 +115,7 @@ public class AccommodationRequest {
         this.price = price;
     }
 
-    public AccommodationReservedDates getAvailability() {
+    public List<DatePeriod> getAvailability() {
         return availability;
     }
 
@@ -147,23 +142,4 @@ public class AccommodationRequest {
     public void setPolicy(AccommodationReservationPolicy policy) {
         this.policy = policy;
     }
-
-    public double getAverageRating() { return averageRating; }
-
-    public void setAverageRating(double averageRating) { this.averageRating = averageRating; }
-
-    public List<AccommodationReview> getReviews() {
-        return reviews;
-    }
-
-    public void setReviews(List<AccommodationReview> reviews) {
-        this.reviews = reviews;
-    }
-//    public List<Reservation> getReservations() {
-//        return reservations;
-//    }
-//
-//    public void setReservations(List<Reservation> reservations) {
-//        this.reservations = reservations;
-//    }
 }

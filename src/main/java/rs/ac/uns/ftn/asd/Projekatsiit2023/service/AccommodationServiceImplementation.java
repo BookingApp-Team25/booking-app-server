@@ -50,7 +50,7 @@ public class AccommodationServiceImplementation implements AccommodationService{
                 accommodation.getMinGuests(),
                 accommodation.getMaxGuests(),
                 accommodation.getType(),
-                accommodation.getAvailability(),
+                accommodation.getAvailabilityDatePeriods(),
                 accommodation.getPrice(),
                 accommodation.getPricelist(),
                 accommodation.getDaysBefore(),
@@ -69,13 +69,14 @@ public class AccommodationServiceImplementation implements AccommodationService{
 
     @Override
     public Collection<AccommodationSummaryResponse> searchAccommodations(String city, LocalDate dateStart, LocalDate dateEnd, int guestNumber) {
-//        LocalDate startDate = datePeriod.getStartDate();
-//        LocalDate endDate = datePeriod.getEndDate();
-
-        List<Accommodation> accommodations =
-                accommodationRepository.searchAccommodations(city, guestNumber, dateStart, dateEnd);
-
-        return mapToSummaryResponse(accommodations);
+////        LocalDate startDate = datePeriod.getStartDate();
+////        LocalDate endDate = datePeriod.getEndDate();
+//
+//        List<Accommodation> accommodations =
+//                accommodationRepository.searchAccommodations(city, guestNumber, dateStart, dateEnd);
+//
+//        return mapToSummaryResponse(accommodations);
+        return null;
     }
 
     @Override
@@ -125,12 +126,13 @@ public class AccommodationServiceImplementation implements AccommodationService{
 
     @Override
     public Collection<AccommodationSummaryResponse> filterAccommodations(String city, LocalDate startDate, LocalDate endDate, int guestNumber, List<String> amenities, String accommodationType, double minPrice, double maxPrice) {
-        // Implement filtering logic based on amenities, type, and price range
-        // ...
-
-        List<Accommodation> filteredAccommodations = accommodationRepository.filterAccommodations(city, guestNumber, startDate, endDate, /*amenities,*/ accommodationType, minPrice, maxPrice);
-
-        return mapToSummaryResponse(filteredAccommodations);
+//        // Implement filtering logic based on amenities, type, and price range
+//        // ...
+//
+//        List<Accommodation> filteredAccommodations = accommodationRepository.filterAccommodations(city, guestNumber, startDate, endDate, /*amenities,*/ accommodationType, minPrice, maxPrice);
+//
+//        return mapToSummaryResponse(filteredAccommodations);
+        return null;
     }
 
 }
