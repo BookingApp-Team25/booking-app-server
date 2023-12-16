@@ -128,7 +128,7 @@ public class AccommodationServiceImplementation implements AccommodationService{
         // Implement filtering logic based on amenities, type, and price range
         // ...
 
-        List<Accommodation> filteredAccommodations = accommodationRepository.filterAccommodations(city, guestNumber, startDate, endDate, amenities, accommodationType, minPrice, maxPrice);
+        List<Accommodation> filteredAccommodations = accommodationRepository.filterAccommodations(city, guestNumber, startDate, endDate,/* amenities,*/ accommodationType, minPrice, maxPrice);
 
         return mapToSummaryResponse(filteredAccommodations);
     }

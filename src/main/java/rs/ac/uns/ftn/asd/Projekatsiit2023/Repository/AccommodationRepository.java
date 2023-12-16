@@ -34,14 +34,14 @@ public interface AccommodationRepository extends JpaRepository<Accommodation, UU
             "AND adp.endDate >= :startDate) " +
             "AND (:accommodationType IS NULL OR a.type = :accommodationType) " +
             "AND (:minPrice IS NULL OR a.price >= :minPrice) " +
-            "AND (:maxPrice IS NULL OR a.price <= :maxPrice) " +
-            "AND (:amenities IS EMPTY OR a.amenities IN :amenities)")
+            "AND (:maxPrice IS NULL OR a.price <= :maxPrice) ") //+
+           // "AND (:amenities IS EMPTY OR a.amenities IN :amenities)")
     List<Accommodation> filterAccommodations(
             @Param("city") String city,
             @Param("guestNumber") int guestNumber,
             @Param("startDate") LocalDate startDate,
             @Param("endDate") LocalDate endDate,
-            @Param("amenities") List<String> amenities,
+            //@Param("amenities") List<String> amenities,
             @Param("accommodationType") String accommodationType,
             @Param("minPrice") Double minPrice,
             @Param("maxPrice") Double maxPrice);
