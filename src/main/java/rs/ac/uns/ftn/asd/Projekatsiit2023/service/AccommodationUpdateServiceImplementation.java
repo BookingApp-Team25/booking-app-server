@@ -26,10 +26,12 @@ public class AccommodationUpdateServiceImplementation implements AccommodationUp
         ArrayList<AccommodationUpdate> requests = new ArrayList<AccommodationUpdate>(accommodationUpdateRepository.findAll());
         ArrayList<AccommodationUpdateSummaryResponse> summary = new ArrayList<>();
         for (AccommodationUpdate request : requests){
-            summary.add(new AccommodationUpdateSummaryResponse(request.getId(),request.getAccommodation().getName(),
-                    request.getAccommodation().getDescription(),
-                    request.getAccommodation().getPhotos().get(0),
-                    request.getUpdateType()));
+            if(request.getUpdateStatus() == AccommodationUpdateStatus.Created){
+                summary.add(new AccommodationUpdateSummaryResponse(request.getId(),request.getAccommodation().getName(),
+                        request.getAccommodation().getDescription(),
+                        request.getAccommodation().getPhotos().get(0),
+                        request.getUpdateType()));
+            }
         }
         return summary;
     }

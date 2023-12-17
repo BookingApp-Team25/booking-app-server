@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.AccommodationResponse;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.AccommodationSummaryCollectionResponse;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.AccommodationSummaryResponse;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.model.Accommodation;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.service.AccommodationService;
@@ -30,6 +31,11 @@ public class AccommodationController {
         Collection<AccommodationSummaryResponse> accommodations = accommodationService.getHostAccommodations(hostId);
         return  ResponseEntity.ok(accommodations);
 
+    }
+    @GetMapping("/approved")
+    public ResponseEntity<AccommodationSummaryCollectionResponse> getAllApprovedAccommodations(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10")int numberOfElements){
+        AccommodationSummaryCollectionResponse accommodations = accommodationService.getAllApprovedAccommodations(page,numberOfElements);
+        return  ResponseEntity.ok(accommodations);
     }
     @GetMapping()
     public ResponseEntity<Collection<AccommodationSummaryResponse>> getAllAccommodations(){

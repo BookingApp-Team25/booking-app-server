@@ -1,9 +1,12 @@
 package rs.ac.uns.ftn.asd.Projekatsiit2023.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.Repository.AccommodationRepository;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.*;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.AccommodationOnHoldStatus;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.model.Accommodation;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.model.AccommodationRating;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.model.AccommodationReview;
@@ -56,6 +59,22 @@ public class AccommodationServiceImplementation implements AccommodationService{
                 accommodation.getDaysBefore(),
                 accommodation.getPolicy(),
                 accommodation.getOnHoldStatus());
+    }
+
+    @Override
+    public AccommodationSummaryCollectionResponse getAllApprovedAccommodations(int page, int numberOfElements) {
+        long totalNumberOfAccommodations = accommodationRepository.count();
+        Pageable pageRequest = PageRequest.of(page, numberOfElements);
+        ArrayList<Accommodation> fullList = new ArrayList<Accommodation>(accommodationRepository.findAll(pageRequest).getContent());
+        ArrayList<AccommodationSummaryResponse> summary = new ArrayList<>();
+        for (Accommodation accommodation : fullList){
+            if(accommodation.getOnHoldStatus() == AccommodationOnHoldStatus.APPROVED){
+                summary.add(new AccommodationSummaryResponse(accommodation.getId(),accommodation.getName(),
+                        accommodation.getPhotos().get(0),accommodation.getDescription(),accommodation.getPrice(),
+                        5,accommodation.getOnHoldStatus()));
+            }
+        }
+        return new AccommodationSummaryCollectionResponse(summary,totalNumberOfAccommodations);
     }
 
 
