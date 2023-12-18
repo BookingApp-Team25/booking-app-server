@@ -3,6 +3,8 @@ package rs.ac.uns.ftn.asd.Projekatsiit2023.model;
 import jakarta.persistence.*;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.Role;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.UUID;
 
 @Entity
@@ -19,6 +21,8 @@ public class User {
     private String lastName;
     private String address;
     private String phoneNumber;
+    private UUID activationCode;
+    private LocalDateTime activationTime;
     @Enumerated(EnumType.STRING)
     private Role role;
     public User(){
@@ -31,10 +35,12 @@ public class User {
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.blocked = false;
+        this.blocked = true;
         this.role = role;
         this.address = address;
         this.phoneNumber = phoneNumber;
+        this.activationCode=UUID.randomUUID();
+        this.activationTime= LocalDateTime.now();
     }
 
     public UUID getId() {
@@ -87,5 +93,29 @@ public class User {
 
     public String getPhoneNumber() {
         return phoneNumber;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public UUID getActivationCode() {
+        return activationCode;
+    }
+
+    public LocalDateTime getActivationTime() {
+        return activationTime;
     }
 }

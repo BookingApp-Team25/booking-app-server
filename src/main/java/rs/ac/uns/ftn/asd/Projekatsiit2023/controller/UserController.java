@@ -7,6 +7,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.AccountDetailsResponse;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.AccountEditRequest;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.MessageResponse;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.ReportedUserResponse;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.service.AccommodationUpdateService;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.service.UserService;
@@ -21,9 +22,11 @@ import static org.springframework.security.authorization.AuthorityReactiveAuthor
 public class UserController {
     @Autowired
     private UserService userService;
-    @PutMapping(value = "/{userId}")
-    public ResponseEntity<Boolean> editAccount(@PathVariable("adminId") int adminId, @RequestBody AccountEditRequest accountEditRequest){
-        Boolean status = userService.editAccount(adminId,accountEditRequest);
+
+    @PreAuthorize("hasAnyAuthority('ROLE_Guest','ROLE_Host','ROLE_Admin')")
+    @PutMapping(value = "/{username}")
+    public ResponseEntity<MessageResponse> editAccount(@PathVariable("username") String username, @RequestBody AccountEditRequest accountEditRequest){
+        MessageResponse status = userService.editAccount(username,accountEditRequest);
         return ResponseEntity.ok(status);
     }
     @GetMapping(value = "/reported")
@@ -43,6 +46,12 @@ public class UserController {
             return new ResponseEntity<AccountDetailsResponse>(HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.ok(adr);
+    }
+
+    @DeleteMapping("/{username}")
+    public ResponseEntity<MessageResponse> deleteAccount(@PathVariable("username") String username){
+        MessageResponse messageResponse=userService.deleteAccount(username);
+        return ResponseEntity.ok(messageResponse);
     }
 
     @PutMapping(value = "/blockUser/{userId}")

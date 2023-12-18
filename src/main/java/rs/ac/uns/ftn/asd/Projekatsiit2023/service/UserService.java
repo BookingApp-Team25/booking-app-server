@@ -7,9 +7,12 @@ import rs.ac.uns.ftn.asd.Projekatsiit2023.model.User;
 import java.util.Collection;
 
 public interface UserService extends UserDetailsService {
-    public Boolean editAccount(int adminId, AccountEditRequest accountEditRequest);
+    public MessageResponse editAccount(String username, AccountEditRequest accountEditRequest);
     public Collection<ReportedUserResponse> getAllReportedUsers();
-    public MessageResponse createAccount(RegistrationRequest registrationRequest);
+    public String createAccount(RegistrationRequest registrationRequest);
     public Boolean blockUser(int id);
     public AccountDetailsResponse getAccountDetails(String username);
+    public MessageResponse activateAccount(String code);
+    public MessageResponse deleteAccount(String username);
+    public Boolean isBlocked(String username);
 }
