@@ -14,7 +14,7 @@ public interface AccommodationService {
     public Collection<AccommodationSummaryResponse> getAllAccommodations();
     public AccommodationResponse getAccommodation(UUID accommodationId);
     public AccommodationSummaryCollectionResponse getAllApprovedAccommodations(int page, int numberOfElements);
-    public Collection<AccommodationSummaryResponse> getHostAccommodations(int hostId);
+    public AccommodationSummaryCollectionResponse getHostAccommodations(UUID hostId, int page, int numberOfElements);
 
     public Collection<AccommodationSummaryResponse> searchAccommodations(String city, LocalDate dateStart, LocalDate dateEnd, int guestNumber);
 

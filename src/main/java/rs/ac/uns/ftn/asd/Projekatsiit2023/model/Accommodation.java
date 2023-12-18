@@ -16,6 +16,9 @@ public class Accommodation {
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", updatable = false)
     private UUID id;
+    @ManyToOne
+    @JoinColumn(name = "host_id", referencedColumnName = "id")
+    private Host host;
     @Column(name = "name",nullable = false)
     private String name;
     @Column(name = "description", nullable = false)
@@ -85,6 +88,14 @@ public class Accommodation {
         this.pricelist = pricelist;
         this.daysBefore = daysBefore;
         this.policy = policy;
+    }
+
+    public Host getHost() {
+        return host;
+    }
+
+    public void setHost(Host host) {
+        this.host = host;
     }
 
     public AccommodationOnHoldStatus getOnHoldStatus() {

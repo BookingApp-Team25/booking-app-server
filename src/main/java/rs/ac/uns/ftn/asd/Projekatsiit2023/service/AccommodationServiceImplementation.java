@@ -79,8 +79,17 @@ public class AccommodationServiceImplementation implements AccommodationService{
 
 
     @Override
-    public List<AccommodationSummaryResponse> getHostAccommodations(int hostId){
-        return new ArrayList<>();
+    public AccommodationSummaryCollectionResponse getHostAccommodations(UUID hostId,int page, int numberOfElements){
+        long totalNumberOfAccommodations = accommodationRepository.countAllHostAccommodations(hostId);
+        Pageable pageRequest = PageRequest.of(page, numberOfElements);
+        ArrayList<Accommodation> fullList = new ArrayList<Accommodation>(accommodationRepository.findAllHostAccommodations(hostId,pageRequest).getContent());
+        ArrayList<AccommodationSummaryResponse> summary = new ArrayList<>();
+        for (Accommodation accommodation : fullList){
+                summary.add(new AccommodationSummaryResponse(accommodation.getId(),accommodation.getName(),
+                        accommodation.getPhotos().get(0),accommodation.getDescription(),accommodation.getPrice(),
+                        5,accommodation.getOnHoldStatus()));
+        }
+        return new AccommodationSummaryCollectionResponse(summary,totalNumberOfAccommodations);
     }
     public AccommodationResponse getAccommodation(int accommodationId){
         return new AccommodationResponse();

@@ -1,5 +1,7 @@
 package rs.ac.uns.ftn.asd.Projekatsiit2023.Repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,6 +14,22 @@ import java.util.Set;
 import java.util.UUID;
 @Repository
 public interface AccommodationRepository extends JpaRepository<Accommodation, UUID> {
+    @Query(
+            "SELECT COUNT(a) FROM Accommodation a " +
+            "WHERE a.host.id = :hostId"
+    )
+
+    long countAllHostAccommodations(
+            @Param("hostId") UUID hostId
+    );
+    @Query(
+            "SELECT a FROM Accommodation a " +  // Add space after 'a'
+                    "WHERE a.host.id = :hostId"
+    )
+    Page<Accommodation> findAllHostAccommodations(
+            @Param("hostId") UUID hostId,
+            Pageable pageable
+    );
     @Query("SELECT a FROM Accommodation a " +
             "WHERE a.location.city = :city " +
             "AND :guestNumber BETWEEN a.minGuests AND a.maxGuests " +

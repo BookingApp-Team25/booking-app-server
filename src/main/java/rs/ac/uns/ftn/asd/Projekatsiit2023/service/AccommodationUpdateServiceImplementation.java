@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.Repository.AccommodationRepository;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.Repository.AccommodationUpdateRepository;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.Repository.HostRepository;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.*;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.AccommodationOnHoldStatus;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.AccommodationUpdateStatus;
@@ -21,6 +22,8 @@ public class AccommodationUpdateServiceImplementation implements AccommodationUp
     AccommodationUpdateRepository accommodationUpdateRepository;
     @Autowired
     AccommodationRepository accommodationRepository;
+    @Autowired
+    HostRepository hostRepository;
     @Override
     public Collection<AccommodationUpdateSummaryResponse> getAllAccommodationUpdates(){
         ArrayList<AccommodationUpdate> requests = new ArrayList<AccommodationUpdate>(accommodationUpdateRepository.findAll());
@@ -89,6 +92,7 @@ public class AccommodationUpdateServiceImplementation implements AccommodationUp
     public MessageResponse createAccommodationUpdate(AccommodationRequest accommodationRequest) {
         Accommodation newAccommodation = new Accommodation();
         newAccommodation.processAccommodationRequest(accommodationRequest);
+        newAccommodation.setHost(hostRepository.getReferenceById(accommodationRequest.getHostId()));
         newAccommodation.setOnHoldStatus(AccommodationOnHoldStatus.WAITING_FOR_CREATE_APPROVAL);
         accommodationRepository.save(newAccommodation);
         AccommodationUpdate createRequest = new AccommodationUpdate(newAccommodation,AccommodationUpdateType.CREATE_REQUEST, AccommodationUpdateStatus.Created);

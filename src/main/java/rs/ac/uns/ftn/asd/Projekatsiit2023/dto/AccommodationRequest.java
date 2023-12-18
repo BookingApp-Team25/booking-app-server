@@ -6,9 +6,11 @@ import rs.ac.uns.ftn.asd.Projekatsiit2023.model.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class AccommodationRequest {
 
+    private UUID hostId;
     private String name;
     private String description;
     private Location location;
@@ -23,7 +25,8 @@ public class AccommodationRequest {
     private int daysBefore;
     private AccommodationReservationPolicy policy;
 
-    public AccommodationRequest(String name, String description, Location location, List<String> amenities, List<String> photos, int minGuests, int maxGuests, AccommodationType type, double price,List<DatePeriod> datePeriods ,AccommodationPricelist pricelist, int daysBefore, AccommodationReservationPolicy policy) {
+    public AccommodationRequest(UUID hostId,String name, String description, Location location, List<String> amenities, List<String> photos, int minGuests, int maxGuests, AccommodationType type, double price,List<DatePeriod> datePeriods ,AccommodationPricelist pricelist, int daysBefore, AccommodationReservationPolicy policy) {
+        this.hostId = hostId;
         this.name = name;
         this.description = description;
         this.location = location;
@@ -37,6 +40,14 @@ public class AccommodationRequest {
         this.pricelist = pricelist;
         this.daysBefore = daysBefore;
         this.policy = policy;
+    }
+
+    public UUID getHostId() {
+        return hostId;
+    }
+
+    public void setHostId(UUID hostId) {
+        this.hostId = hostId;
     }
 
     public String getName() {

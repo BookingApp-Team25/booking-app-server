@@ -26,9 +26,9 @@ public class AccommodationController {
         String answer = accommodationService.createAccommodation(accommodation);
         return ResponseEntity.ok(answer);
     }
-    @GetMapping(value = "/{hostId}")
-    public ResponseEntity<Collection<AccommodationSummaryResponse>> getHostAccommodations(@PathVariable("hostId") int hostId){
-        Collection<AccommodationSummaryResponse> accommodations = accommodationService.getHostAccommodations(hostId);
+    @GetMapping(value = "/host/{hostId}")
+    public ResponseEntity<AccommodationSummaryCollectionResponse> getHostAccommodations(@PathVariable("hostId") UUID hostId, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10")int numberOfElements){
+        AccommodationSummaryCollectionResponse accommodations = accommodationService.getHostAccommodations(hostId,page,numberOfElements);
         return  ResponseEntity.ok(accommodations);
 
     }
