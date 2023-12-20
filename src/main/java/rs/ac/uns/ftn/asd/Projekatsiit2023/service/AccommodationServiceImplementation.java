@@ -70,7 +70,7 @@ public class AccommodationServiceImplementation implements AccommodationService{
         for (Accommodation accommodation : fullList){
             if(accommodation.getOnHoldStatus() == AccommodationOnHoldStatus.APPROVED){
                 summary.add(new AccommodationSummaryResponse(accommodation.getId(),accommodation.getName(),
-                        accommodation.getPhotos().get(0),accommodation.getDescription(),accommodation.getPrice(),
+                        accommodation.getPhotos().get(0),accommodation.getDescription(),accommodation.getPricelist().getDailyPrice(),
                         5,accommodation.getOnHoldStatus()));
             }
         }
