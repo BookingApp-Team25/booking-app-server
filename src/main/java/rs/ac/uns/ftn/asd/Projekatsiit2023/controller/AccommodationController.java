@@ -27,6 +27,7 @@ public class AccommodationController {
         String answer = accommodationService.createAccommodation(accommodation);
         return ResponseEntity.ok(answer);
     }
+    @PreAuthorize("hasAuthority('ROLE_Host')")
     @GetMapping(value = "/host/{hostId}")
     public ResponseEntity<AccommodationSummaryCollectionResponse> getHostAccommodations(@PathVariable("hostId") UUID hostId, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10")int numberOfElements){
         AccommodationSummaryCollectionResponse accommodations = accommodationService.getHostAccommodations(hostId,page,numberOfElements);
@@ -66,19 +67,7 @@ public class AccommodationController {
         }
         return ResponseEntity.ok(accommodations);
     }
-//    @GetMapping(value = "/filtered")
-//    public ResponseEntity<Collection<AccommodationSummaryResponse>> searchAccommodationsFiltered(
-//            @RequestParam String city,
-//            @RequestParam DatePeriod datePeriod,
-//            @RequestParam int guestNumber,
-//            @RequestBody AccommodationFilteredSearchRequest accommodationFilteredSearchRequest
-//    ){
-//        Collection<AccommodationSummaryResponse> accommodations = accommodationService.searchAccommodationsFiltered(city,datePeriod,guestNumber,accommodationFilteredSearchRequest);
-//        if(accommodations == null) {
-//            return new ResponseEntity<Collection<AccommodationSummaryResponse>>(HttpStatus.NOT_FOUND);
-//        }
-//        return ResponseEntity.ok(accommodations);
-//    }
+
     @GetMapping(value = "/filtered")
     public ResponseEntity<Collection<AccommodationSummaryResponse>> searchAccommodationsFiltered(
             @RequestParam String city,
@@ -101,6 +90,7 @@ public class AccommodationController {
         return ResponseEntity.ok(accommodations);
     }
 
+    @PreAuthorize("hasAuthority('ROLE_Guest')")
     @PutMapping(value = "/favorite/{accommodationId}")
     public ResponseEntity<Boolean> addFavoriteAccommodation(@PathVariable("accommodationId") int accommodationId) {//, @RequestBody AccommodationRequest accommodationRequest) {
         Boolean isAdded = accommodationService.addFavoriteAccommodation(accommodationId);//, accommodationRequest);

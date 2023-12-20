@@ -36,7 +36,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 response.setStatus(HttpServletResponse.SC_OK);
                 response.setHeader("Access-Control-Allow-Origin", "http://localhost:4200"); // Replace with your frontend origin
                 response.setHeader("Access-Control-Allow-Methods", "POST, PUT, GET, OPTIONS, DELETE"); // Add the HTTP methods your API supports
-                response.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type"); // Add the headers your API supports
+                response.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type, skip"); // Add the headers your API supports
                 return;
             }
             String username = null;
@@ -71,10 +71,13 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     }
 
     private boolean isPermitted(HttpServletRequest request){
-        String rq=request.getRequestURL().toString();
-        String[] permitted={"api/auth/register","api/auth/login","api/auth/activation","api/accommodation"};
+        String rq=request.getMethod()+","+request.getRequestURL().toString();
+        String[] permitted={"POST,api/auth/register","POST,api/auth/login","PUT,api/auth/activation","GET,api/accommodation/approved"
+        ,"GET,api/accommodation/results","GET,api/accommodation/filtered"};
         for(String s : permitted){
-            if(rq.contains(s)){
+            String[] sentRequest=rq.split(",");
+            String[] permittedURL=s.split(",");
+            if(sentRequest[0].equals(permittedURL[0]) && sentRequest[1].contains(permittedURL[1])){
                 return true;
             }
         }
