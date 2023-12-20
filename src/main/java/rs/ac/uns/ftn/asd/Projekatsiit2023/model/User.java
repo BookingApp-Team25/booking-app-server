@@ -47,6 +47,10 @@ public class User {
         return id;
     }
 
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
     public String getUsername() {
         return username;
     }
@@ -57,10 +61,6 @@ public class User {
 
     public Boolean getBlocked() {
         return blocked;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
     }
 
     public void setUsername(String username) {

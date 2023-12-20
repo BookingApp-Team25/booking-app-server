@@ -3,10 +3,9 @@ package rs.ac.uns.ftn.asd.Projekatsiit2023.dto;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.AccommodationOnHoldStatus;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.AccommodationReservationPolicy;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.AccommodationType;
-import rs.ac.uns.ftn.asd.Projekatsiit2023.model.AccommodationReservedDates;
-import rs.ac.uns.ftn.asd.Projekatsiit2023.model.AccommodationPricelist;
-import rs.ac.uns.ftn.asd.Projekatsiit2023.model.Location;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.model.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -21,7 +20,7 @@ public class AccommodationResponse {
     private int minGuests;
     private int maxGuests;
     private AccommodationType type;
-    private AccommodationReservedDates availability;
+    private List<DatePeriod> availability;
     private AccommodationPricelist pricelist;
     private double price;
     private int daysBefore;
@@ -30,7 +29,7 @@ public class AccommodationResponse {
     public AccommodationResponse() {
     }
 
-    public AccommodationResponse(UUID id,String name, String description, Location location, List<String> amenities, List<String> photos, int minGuests, int maxGuests, AccommodationType type, AccommodationReservedDates availability, double price, AccommodationPricelist pricelist, int daysBefore, AccommodationReservationPolicy policy, AccommodationOnHoldStatus status) {
+    public AccommodationResponse(UUID id,String name, String description, Location location, List<String> amenities, List<String> photos, int minGuests, int maxGuests, AccommodationType type, List<DatePeriod> availability, double price, AccommodationPricelist pricelist, int daysBefore, AccommodationReservationPolicy policy, AccommodationOnHoldStatus status) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -40,7 +39,7 @@ public class AccommodationResponse {
         this.minGuests = minGuests;
         this.maxGuests = maxGuests;
         this.type = type;
-        this.availability = new AccommodationReservedDates();
+        this.availability = availability;
         this.price = price;
         this.pricelist = pricelist;
         this.daysBefore = daysBefore;
@@ -124,7 +123,7 @@ public class AccommodationResponse {
         this.type = type;
     }
 
-    public void setAvailability(AccommodationReservedDates availability) {
+    public void setAvailability(List<DatePeriod> availability) {
         this.availability = availability;
     }
 
@@ -132,7 +131,7 @@ public class AccommodationResponse {
         this.price = price;
     }
 
-    public AccommodationReservedDates getAvailability() {
+    public List<DatePeriod> getAvailability() {
         return availability;
     }
 

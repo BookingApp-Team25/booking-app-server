@@ -7,17 +7,17 @@ import java.util.UUID;
 public class AccommodationUpdateSummaryResponse {
     private UUID id;
     private String accommodationName;
-    private String accommodationDescritpion;
+    private String accommodationDescription;
     private String accommodationPhoto;
     private AccommodationUpdateType type;
 
     public AccommodationUpdateSummaryResponse() {
     }
 
-    public AccommodationUpdateSummaryResponse(UUID id, String accommodationName, String accommodationDescritpion, String accommodationPhoto, AccommodationUpdateType type) {
+    public AccommodationUpdateSummaryResponse(UUID id, String accommodationName, String accommodationDescription, String accommodationPhoto, AccommodationUpdateType type) {
         this.id = id;
         this.accommodationName = accommodationName;
-        this.accommodationDescritpion = accommodationDescritpion;
+        this.accommodationDescription = accommodationDescription;
         this.accommodationPhoto = accommodationPhoto;
         this.type = type;
     }
@@ -34,8 +34,8 @@ public class AccommodationUpdateSummaryResponse {
         return accommodationName;
     }
 
-    public String getAccommodationDescritpion() {
-        return accommodationDescritpion;
+    public String getAccommodationDescription() {
+        return accommodationDescription;
     }
 
     public String getAccommodationPhoto() {
@@ -50,8 +50,8 @@ public class AccommodationUpdateSummaryResponse {
         this.accommodationName = accommodationName;
     }
 
-    public void setAccommodationDescritpion(String accommodationDescritpion) {
-        this.accommodationDescritpion = accommodationDescritpion;
+    public void setAccommodationDescription(String accommodationDescription) {
+        this.accommodationDescription = accommodationDescription;
     }
 
     public void setAccommodationPhoto(String accommodationPhoto) {

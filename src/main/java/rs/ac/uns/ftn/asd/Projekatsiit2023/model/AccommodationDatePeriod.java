@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 @Entity
-public class DatePeriod {
+public class AccommodationDatePeriod {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", updatable = false)
@@ -15,22 +15,25 @@ public class DatePeriod {
     private LocalDate startDate;
     @Column(name="endDate",columnDefinition = "DATE")
     private LocalDate endDate;
+    @ManyToOne
+    @JoinColumn(name = "accommodation_id", referencedColumnName = "id")
+    private Accommodation accommodation;
 
-
-    public DatePeriod() {
+    public AccommodationDatePeriod() {
     }
 
-    public DatePeriod(LocalDate startDate, LocalDate endDate) {
+    public AccommodationDatePeriod(LocalDate startDate, LocalDate endDate, Accommodation accommodation) {
         this.startDate = startDate;
         this.endDate = endDate;
+        this.accommodation = accommodation;
     }
 
-    public UUID getId() {
-        return id;
+    public Accommodation getAccommodation() {
+        return accommodation;
     }
 
-    public void setId(UUID id) {
-        this.id = id;
+    public void setAccommodation(Accommodation accommodation) {
+        this.accommodation = accommodation;
     }
 
     public LocalDate getStartDate() {

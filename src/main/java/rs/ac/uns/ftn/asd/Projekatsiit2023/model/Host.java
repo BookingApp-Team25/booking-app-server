@@ -9,6 +9,7 @@ import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.Role;
 import java.util.List;
 
 @Entity
+@Table(name = "host")
 public class Host extends User{
 
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)

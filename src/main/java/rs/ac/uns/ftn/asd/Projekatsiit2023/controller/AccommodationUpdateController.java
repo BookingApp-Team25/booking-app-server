@@ -11,6 +11,7 @@ import java.util.Collection;
 import java.util.UUID;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("api/accommodation-request")
 public class AccommodationUpdateController {
     @Autowired

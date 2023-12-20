@@ -14,7 +14,6 @@ import rs.ac.uns.ftn.asd.Projekatsiit2023.model.Host;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.model.User;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.repository.UserRepository;
 
-
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Optional;
@@ -49,8 +48,14 @@ public class UserServiceImplementation implements UserService {
     public Collection<ReportedUserResponse> getAllReportedUsers() {
         return null;
     }
+  
     public Boolean blockUser(int id) {
         return null;
+    }
+
+    public Collection<User> findAll() {
+        Collection<User> users = userRepository.findAll();
+        return users;
     }
 
     @Override

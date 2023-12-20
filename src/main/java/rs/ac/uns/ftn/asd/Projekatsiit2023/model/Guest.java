@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
+@Table(name = "guest")
 public class Guest extends User {
 
     public Guest() {
