@@ -1,4 +1,4 @@
-package rs.ac.uns.ftn.asd.Projekatsiit2023.Repository;
+package rs.ac.uns.ftn.asd.Projekatsiit2023.repository;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,7 +10,6 @@ import rs.ac.uns.ftn.asd.Projekatsiit2023.model.Accommodation;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 @Repository
 public interface AccommodationRepository extends JpaRepository<Accommodation, UUID> {

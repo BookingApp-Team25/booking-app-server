@@ -2,9 +2,9 @@ package rs.ac.uns.ftn.asd.Projekatsiit2023.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import rs.ac.uns.ftn.asd.Projekatsiit2023.Repository.AccommodationRepository;
-import rs.ac.uns.ftn.asd.Projekatsiit2023.Repository.AccommodationUpdateRepository;
-import rs.ac.uns.ftn.asd.Projekatsiit2023.Repository.HostRepository;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.repository.AccommodationRepository;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.repository.AccommodationUpdateRepository;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.repository.HostRepository;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.*;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.AccommodationOnHoldStatus;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.AccommodationUpdateStatus;

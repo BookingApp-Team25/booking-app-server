@@ -8,7 +8,7 @@ import rs.ac.uns.ftn.asd.Projekatsiit2023.model.DatePeriod;
 import java.util.Collection;
 
 import rs.ac.uns.ftn.asd.Projekatsiit2023.model.Host;
-import rs.ac.uns.ftn.asd.Projekatsiit2023.Repository.HostRepository;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.repository.HostRepository;
 
 @Service
 public class HostServiceImplementation implements HostService{

@@ -2,7 +2,7 @@ package rs.ac.uns.ftn.asd.Projekatsiit2023.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import rs.ac.uns.ftn.asd.Projekatsiit2023.Repository.*;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.repository.*;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.MessageResponse;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.ReviewRequest;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.ReviewResponse;
@@ -11,7 +11,6 @@ import rs.ac.uns.ftn.asd.Projekatsiit2023.model.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.UUID;
 
 @Service
