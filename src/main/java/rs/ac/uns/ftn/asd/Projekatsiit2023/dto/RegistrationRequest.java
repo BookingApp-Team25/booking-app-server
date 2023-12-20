@@ -5,6 +5,7 @@ import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.Role;
 public class RegistrationRequest {
     private String username;
     private String password;
+    private String passwordRepeat;
     private String firstName;
     private String lastName;
     private String phoneNumber;
@@ -14,9 +15,10 @@ public class RegistrationRequest {
     public RegistrationRequest() {
     }
 
-    public RegistrationRequest(String username, String password, String firstName, String lastName, String phoneNumber, String address, Role role) {
+    public RegistrationRequest(String username, String password, String passwordRepeat, String firstName, String lastName, String phoneNumber, String address, Role role) {
         this.username = username;
         this.password = password;
+        this.passwordRepeat = passwordRepeat;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
@@ -46,6 +48,10 @@ public class RegistrationRequest {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getPasswordRepeat() {
+        return passwordRepeat;
     }
 
     public String getFirstName() {

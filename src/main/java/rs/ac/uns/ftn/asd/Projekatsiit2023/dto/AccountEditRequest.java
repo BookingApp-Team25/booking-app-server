@@ -4,12 +4,17 @@ import java.util.UUID;
 
 public class AccountEditRequest {
     private String password;
+    private String passwordRepeat;
     private String firstName;
     private String lastName;
     private String phoneNumber;
     private String address;
 
     public AccountEditRequest() {
+    }
+
+    public String getPasswordRepeat() {
+        return passwordRepeat;
     }
 
     public String getPassword() {

@@ -3,6 +3,7 @@ package rs.ac.uns.ftn.asd.Projekatsiit2023.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.AccommodationResponse;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.AccommodationSummaryCollectionResponse;
@@ -32,11 +33,13 @@ public class AccommodationController {
         return  ResponseEntity.ok(accommodations);
 
     }
+
     @GetMapping("/approved")
     public ResponseEntity<AccommodationSummaryCollectionResponse> getAllApprovedAccommodations(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10")int numberOfElements){
         AccommodationSummaryCollectionResponse accommodations = accommodationService.getAllApprovedAccommodations(page,numberOfElements);
         return  ResponseEntity.ok(accommodations);
     }
+
     @GetMapping()
     public ResponseEntity<Collection<AccommodationSummaryResponse>> getAllAccommodations(){
         Collection<AccommodationSummaryResponse> accommodations = accommodationService.getAllAccommodations();
