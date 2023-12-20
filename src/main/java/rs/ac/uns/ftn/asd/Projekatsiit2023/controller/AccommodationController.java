@@ -46,7 +46,7 @@ public class AccommodationController {
         Collection<AccommodationSummaryResponse> accommodations = accommodationService.getAllAccommodations();
         return  ResponseEntity.ok(accommodations);
     }
-    @GetMapping(value = "/{accommodationId}")
+    @GetMapping(value = "details/{accommodationId}")
     public ResponseEntity<AccommodationResponse> getAccommodation(@PathVariable("accommodationId")  UUID accommodationId){
         AccommodationResponse accommodation = accommodationService.getAccommodation(accommodationId);
         if(accommodation == null) {
