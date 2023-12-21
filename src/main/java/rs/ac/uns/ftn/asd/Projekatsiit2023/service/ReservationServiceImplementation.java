@@ -3,6 +3,7 @@ package rs.ac.uns.ftn.asd.Projekatsiit2023.service;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.MessageResponse;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.repository.AccommodationRepository;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.repository.ReservationRepository;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.repository.DatePeriodRepository;
@@ -23,7 +24,7 @@ import java.util.stream.Collectors;
 public class ReservationServiceImplementation implements ReservationService{
 
     private final ReservationRepository reservationRepository;
-    private final AccommodationRepository accommodationRepository;  // Assuming you have an Accommodation repository
+    private final AccommodationRepository accommodationRepository;
 
     private final DatePeriodRepository datePeriodRepository;
 
@@ -35,34 +36,29 @@ public class ReservationServiceImplementation implements ReservationService{
     }
 
     @Override
-    public ReservationResponse createReservation(ReservationRequest reservationRequest) {
-        // Create DatePeriod entity
+    public MessageResponse createReservation(ReservationRequest reservationRequest) {
         DatePeriod datePeriod = new DatePeriod(
                 reservationRequest.getReservedDate().getStartDate(),
                 reservationRequest.getReservedDate().getEndDate()
         );
 
-        // Save DatePeriod entity to the database
         datePeriodRepository.save(datePeriod);
 
-        // Fetch the Accommodation entity from the database based on the provided accommodationId
         Accommodation accommodation = accommodationRepository.findById(reservationRequest.getAccommodationId())
                 .orElseThrow(() -> new EntityNotFoundException("Accommodation not found with id: " + reservationRequest.getAccommodationId()));
 
-        // Convert DTO to entity
         Reservation reservation = new Reservation(
                 reservationRequest.getGuestId(),
                 reservationRequest.getHostId(),
-                accommodation,  // Use the fetched Accommodation entity
-                ReservationStatus.Ongoing,  // Set initial status
-                datePeriod  // Use the persisted DatePeriod entity
+                accommodation,
+                ReservationStatus.Ongoing,
+                datePeriod
         );
 
-        // Save the reservation entity to the database
         reservationRepository.save(reservation);
 
-        // Convert the created reservation entity to a response DTO
-        return convertToDto(reservation);
+        //return convertToDto(reservation);
+        return new MessageResponse(true,"succesfuly added new reservation");
     }
 
     @Override
@@ -72,10 +68,8 @@ public class ReservationServiceImplementation implements ReservationService{
 
     @Override
     public Collection<ReservationResponse> getAllHostReservations(UUID hostId) {
-        // Retrieve all reservations for the given host
         List<Reservation> hostReservations = reservationRepository.findAllByHostId(hostId);
 
-        // Convert the list of reservation entities to a list of response DTOs
         return hostReservations.stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
@@ -86,10 +80,8 @@ public class ReservationServiceImplementation implements ReservationService{
 
     @Override
     public Collection<ReservationResponse> getAllAccommodationReservations(UUID accommodationId) {
-        // Retrieve all reservations for the given accommodation
         List<Reservation> accommodationReservations = reservationRepository.findAllByAccommodationId(accommodationId);
 
-        // Convert the list of reservation entities to a list of response DTOs
         return accommodationReservations.stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
@@ -102,22 +94,18 @@ public class ReservationServiceImplementation implements ReservationService{
 
     @Override
     public boolean deleteReservation(UUID reservationId) {
-        // Check if the reservation exists
         Optional<Reservation> optionalReservation = reservationRepository.findById(reservationId);
         if (optionalReservation.isPresent()) {
-            // Delete the reservation
             reservationRepository.deleteById(reservationId);
             return true;
         }
         return false;
-    } //treba namestiti brisanje rezervacije
+    }
 
     @Override
     public boolean cancelReservation(UUID reservationId) {
-        // Check if the reservation exists
         Optional<Reservation> optionalReservation = reservationRepository.findById(reservationId);
         if (optionalReservation.isPresent()) {
-            // Cancel the reservation (update status to CANCELED, for example)
             Reservation reservation = optionalReservation.get();
             reservation.setReservationStatus(ReservationStatus.Canceled);
             reservationRepository.save(reservation);
@@ -128,10 +116,8 @@ public class ReservationServiceImplementation implements ReservationService{
 
     @Override
     public boolean acceptReservation(UUID reservationId){
-        // Check if the reservation exists
         Optional<Reservation> optionalReservation = reservationRepository.findById(reservationId);
         if (optionalReservation.isPresent()) {
-            // Accept the reservation (update status to CANCELED, for example)
             Reservation reservation = optionalReservation.get();
             reservation.setReservationStatus(ReservationStatus.Accepted);
             reservationRepository.save(reservation);

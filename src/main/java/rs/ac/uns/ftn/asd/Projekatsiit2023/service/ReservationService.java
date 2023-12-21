@@ -1,5 +1,6 @@
 package rs.ac.uns.ftn.asd.Projekatsiit2023.service;
 
+import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.MessageResponse;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.ReservationRequest;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.ReservationResponse;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.ReservationStatus;
@@ -9,7 +10,7 @@ import java.util.Collection;
 import java.util.UUID;
 
 public interface ReservationService {
-    public ReservationResponse createReservation(ReservationRequest reservationRequest);
+    public MessageResponse createReservation(ReservationRequest reservationRequest);
     public ReservationResponse getReservation();
     public Collection<ReservationResponse> getAllHostReservations(UUID hostId);
     public Collection<ReservationResponse> getAllAccommodationReservations(UUID accommodationId);

@@ -3,11 +3,9 @@ package rs.ac.uns.ftn.asd.Projekatsiit2023.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.ReservationRequest;
-import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.ReservationResponse;
-import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.ReviewRequest;
-import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.ReviewResponse;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.*;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.ReservationStatus;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.model.DatePeriod;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.service.ReservationServiceImplementation;
@@ -21,9 +19,10 @@ public class ReservationController {
     @Autowired
     private ReservationServiceImplementation reservationService;
     @PostMapping(value = "/create")
-    public ResponseEntity<ReservationResponse> createReservation(@RequestBody ReservationRequest reservationRequest) {
-        ReservationResponse reservationResponse = reservationService.createReservation(reservationRequest);
-        return new ResponseEntity<ReservationResponse>(reservationResponse, HttpStatus.CREATED);
+    @PreAuthorize("hasAuthority('ROLE_Guest')")
+    public ResponseEntity<MessageResponse> createReservation(@RequestBody ReservationRequest reservationRequest) {
+        MessageResponse reservationResponse = reservationService.createReservation(reservationRequest);
+        return ResponseEntity.ok(reservationResponse);
     }
     @PutMapping(value = "/{reservationId}/delete")
     public ResponseEntity<Boolean> deleteReservation(@PathVariable("reservationId") UUID reservationId) {//, @RequestBody ReservationRequest reservationRequest) {
@@ -36,6 +35,7 @@ public class ReservationController {
         }
     }
     @PutMapping("/{reservationId}/cancel")
+    @PreAuthorize("hasAuthority('ROLE_Guest')")
     public ResponseEntity<Boolean> cancelReservation(@PathVariable("reservationId") UUID reservationId) {
         Boolean isCancelled = reservationService.cancelReservation(reservationId);
 
