@@ -11,6 +11,9 @@ import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.AccommodationSummaryResponse;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.model.Accommodation;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.service.AccommodationService;
 
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -58,10 +61,17 @@ public class AccommodationController {
     public ResponseEntity<Collection<AccommodationSummaryResponse>> searchAccommodations(
             @RequestParam String city,
             //@RequestParam DatePeriod datePeriod,
-            @RequestParam LocalDate dateStart,
-            @RequestParam LocalDate dateEnd,
+            @RequestParam String dateStart,
+            @RequestParam String dateEnd,
             @RequestParam int guestNumber) {
-        Collection<AccommodationSummaryResponse> accommodations = accommodationService.searchAccommodations(city, dateStart, dateEnd, guestNumber);
+
+        OffsetDateTime offsetDateTimeStart = OffsetDateTime.parse(dateStart, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+        OffsetDateTime offsetDateTimeEnd = OffsetDateTime.parse(dateEnd, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+
+        LocalDate localDateStart = offsetDateTimeStart.toLocalDate();
+        LocalDate localDateEnd = offsetDateTimeEnd.toLocalDate();
+
+        Collection<AccommodationSummaryResponse> accommodations = accommodationService.searchAccommodations(city, localDateStart, localDateEnd, guestNumber);
         if(accommodations.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -71,18 +81,28 @@ public class AccommodationController {
     @GetMapping(value = "/filtered")
     public ResponseEntity<Collection<AccommodationSummaryResponse>> searchAccommodationsFiltered(
             @RequestParam String city,
-            @RequestParam LocalDate dateStart,
-            @RequestParam LocalDate dateEnd,
+            @RequestParam String dateStart,
+            @RequestParam String dateEnd,
             @RequestParam int guestNumber,
-            @RequestParam(required = false) List<String> amenities,
+            @RequestParam(required = false) String amenities,
             @RequestParam(required = false) String accommodationType,
             @RequestParam(required = false) Double minPrice,
             @RequestParam(required = false) Double maxPrice) {
+        OffsetDateTime offsetDateTimeStart = OffsetDateTime.parse(dateStart, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+        OffsetDateTime offsetDateTimeEnd = OffsetDateTime.parse(dateEnd, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+
+        LocalDate localDateStart = offsetDateTimeStart.toLocalDate();
+        LocalDate localDateEnd = offsetDateTimeEnd.toLocalDate();
+
+        List<String> amenitiesList = new ArrayList<String>();
+        if (amenities != null) {
+            amenitiesList = List.of(amenities.split(","));
+        }
 
         double minPriceValue = (minPrice != null) ? minPrice : 0.0;
         double maxPriceValue = (maxPrice != null) ? maxPrice : 0.0;
 
-        Collection<AccommodationSummaryResponse> accommodations = accommodationService.filterAccommodations(city, dateStart, dateEnd, guestNumber, amenities, accommodationType, minPriceValue, maxPriceValue);
+        Collection<AccommodationSummaryResponse> accommodations = accommodationService.filterAccommodations(city, localDateStart, localDateEnd, guestNumber, amenitiesList, accommodationType, minPriceValue, maxPriceValue);
 
         if (accommodations.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

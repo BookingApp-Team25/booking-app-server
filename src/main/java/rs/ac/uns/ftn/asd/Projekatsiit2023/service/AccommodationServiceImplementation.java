@@ -130,30 +130,28 @@ public class AccommodationServiceImplementation implements AccommodationService{
     }
 
     private double calculateAverageRating(Accommodation accommodation) {
-        List<AccommodationReview> reviews = accommodation.getReviews();
-        List<Double> ratings = new ArrayList<Double>(); //accommodation.getRatings();
-
-        for (AccommodationReview review: reviews) {
-            ratings.add(review.getRating());
-        }
-
-        if (ratings.isEmpty()) {
-            return 0.0; // any default value
-        }
-
-        //int sum = ratings.stream().mapToInt(AccommodationRating::getRating).sum();
-        double sum = 0.0;
-        for (Double rating: ratings) {
-            sum += rating;
-        }
-        return (double) sum / ratings.size();
+//        List<AccommodationReview> reviews = accommodation.getReviews();
+//        List<Double> ratings = new ArrayList<Double>(); //accommodation.getRatings();
+//
+//        for (AccommodationReview review: reviews) {
+//            ratings.add(review.getRating());
+//        }
+//
+//        if (ratings.isEmpty()) {
+//            return 0.0; // any default value
+//        }
+//
+//        //int sum = ratings.stream().mapToInt(AccommodationRating::getRating).sum();
+//        double sum = 0.0;
+//        for (Double rating: ratings) {
+//            sum += rating;
+//        }
+//        return (double) sum / ratings.size();
+        return 0.0; //nesto ovde ne radi - popraviti
     }
 
     @Override
     public Collection<AccommodationSummaryResponse> filterAccommodations(String city, LocalDate startDate, LocalDate endDate, int guestNumber, List<String> amenities, String accommodationType, double minPrice, double maxPrice) {
-        // Implement filtering logic based on amenities, type, and price range
-        // ...
-
         List<Accommodation> filteredAccommodations = accommodationRepository.filterAccommodations(city, guestNumber, startDate, endDate,/* amenities,*/ accommodationType, minPrice, maxPrice);
 
         return mapToSummaryResponse(filteredAccommodations);
