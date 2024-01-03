@@ -3,6 +3,7 @@ package rs.ac.uns.ftn.asd.Projekatsiit2023.model;
 import jakarta.persistence.*;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.ReviewType;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity
@@ -20,6 +21,10 @@ public class HostReview {
     String comment;
     @Column(name="rating",updatable = false)
     double rating;
+
+    @Column(name="date",updatable = false)
+    LocalDate date;
+
     public HostReview() {
     }
 
@@ -27,6 +32,18 @@ public class HostReview {
         this.comment = comment;
         this.rating = rating;
         this.id = UUID.randomUUID();
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 
     public Guest getGuest() {

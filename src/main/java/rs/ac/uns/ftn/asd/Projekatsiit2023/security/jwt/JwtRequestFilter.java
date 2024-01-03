@@ -73,7 +73,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     private boolean isPermitted(HttpServletRequest request){
         String rq=request.getMethod()+","+request.getRequestURL().toString();
         String[] permitted={"POST,api/auth/register","POST,api/auth/login","PUT,api/auth/activation","GET,api/accommodation/approved"
-        ,"GET,api/accommodation/results","GET,api/accommodation/filtered","GET,api/accommodation/details"};
+        ,"GET,api/accommodation/results","GET,api/accommodation/filtered","GET,api/accommodation/details","GET,api/review"};
         for(String s : permitted){
             String[] sentRequest=rq.split(",");
             String[] permittedURL=s.split(",");

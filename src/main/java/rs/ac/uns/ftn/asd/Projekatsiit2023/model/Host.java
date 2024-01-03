@@ -11,7 +11,7 @@ import java.util.List;
 @Entity
 public class Host extends User{
 
-    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "host")
     private List<Accommodation> accommodations;
 
     public Host() {

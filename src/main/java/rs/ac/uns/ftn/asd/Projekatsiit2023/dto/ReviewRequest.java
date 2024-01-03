@@ -5,7 +5,7 @@ import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.ReviewType;
 import java.util.UUID;
 
 public class ReviewRequest {
-    UUID guestId;
+    String guestUsername;
     UUID reviewedEntity;
     String comment;
     double rating;
@@ -14,10 +14,10 @@ public class ReviewRequest {
     public ReviewRequest() {
     }
 
-    public ReviewRequest(String comment, double rating, UUID guestId, UUID reviewedEntity, ReviewType type) {
+    public ReviewRequest(String comment, double rating, String guestId, UUID reviewedEntity, ReviewType type) {
         this.comment = comment;
         this.rating = rating;
-        this.guestId = guestId;
+        this.guestUsername = guestUsername;
         this.reviewedEntity = reviewedEntity;
         this.type = type;
     }
@@ -38,8 +38,8 @@ public class ReviewRequest {
         this.rating = rating;
     }
 
-    public UUID getGuestId() {
-        return guestId;
+    public String getGuestUsername() {
+        return guestUsername;
     }
 
     public UUID getReviewedEntity() {

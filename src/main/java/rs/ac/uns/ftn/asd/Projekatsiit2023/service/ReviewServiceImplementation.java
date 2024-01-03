@@ -2,6 +2,7 @@ package rs.ac.uns.ftn.asd.Projekatsiit2023.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.ReservationStatus;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.repository.*;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.MessageResponse;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.ReviewRequest;
@@ -9,8 +10,10 @@ import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.ReviewResponse;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.ReviewType;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.model.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -18,13 +21,15 @@ public class ReviewServiceImplementation implements ReviewService{
     @Autowired
     private AccommodationRepository accommodationRepository;
     @Autowired
-    private GuestRepository guestRepository;
+    private UserRepository userRepository;
     @Autowired
     private ReviewRepository reviewRepository;
     @Autowired
     private HostRepository hostRepository;
     @Autowired
     private HostReviewRepository hostReviewRepository;
+    @Autowired
+    private ReservationRepository reservationRepository;
     @Override
     public ReviewResponse getReviewById(int reviewId) {
         return null;
@@ -37,10 +42,12 @@ public class ReviewServiceImplementation implements ReviewService{
 
     @Override
     public Collection<ReviewResponse> getAllAccommodationReviews(UUID accommodationId) {
-        Collection<Review> reviews= reviewRepository.findByAccommodationId(accommodationId);
+        Accommodation accommodation=accommodationRepository.getReferenceById(accommodationId);
         Collection<ReviewResponse> reviewResponses=new ArrayList<ReviewResponse>();
-        for (Review review: reviews) {
-            ReviewResponse reviewResponse=new ReviewResponse(review.getComment(),review.getRating(),review.getGuest().getUsername(),review.getAccommodation().getName(),ReviewType.AccommodationReview);
+        Collection<AccommodationReview> reviews=accommodation.getReviews();
+        for (AccommodationReview review: reviews) {
+            ReviewResponse reviewResponse=new ReviewResponse(review.getId(),review.getComment(),review.getRating(),review.getGuest().getFirstName()
+                    ,review.getAccommodation().getName(),ReviewType.AccommodationReview,review.getDate());
             reviewResponses.add(reviewResponse);
         }
         return reviewResponses;
@@ -51,7 +58,8 @@ public class ReviewServiceImplementation implements ReviewService{
         Collection<HostReview> hostReviews= hostReviewRepository.findByHostId(hostId);
         Collection<ReviewResponse> reviewResponses=new ArrayList<ReviewResponse>();
         for (HostReview review: hostReviews) {
-            ReviewResponse reviewResponse=new ReviewResponse(review.getComment(),review.getRating(),review.getGuest().getUsername(),review.getHost().getUsername(),ReviewType.HostReview);
+            ReviewResponse reviewResponse=new ReviewResponse(review.getId(),review.getComment(),review.getRating(),
+                    review.getGuest().getFirstName(),review.getHost().getUsername(),ReviewType.HostReview,review.getDate());
             reviewResponses.add(reviewResponse);
         }
         return reviewResponses;
@@ -59,13 +67,15 @@ public class ReviewServiceImplementation implements ReviewService{
 
     @Override
     public MessageResponse createReview(ReviewRequest reviewRequest) {
-        Guest guest= guestRepository.getReferenceById(reviewRequest.getGuestId());
+        Optional<User> ret= userRepository.findByUsername(reviewRequest.getGuestUsername());
+        Guest guest= (Guest) ret.get();
         if(reviewRequest.getType().equals(ReviewType.AccommodationReview)){
-            Review review=new Review(reviewRequest.getComment(),reviewRequest.getRating());
+            AccommodationReview review=new AccommodationReview(reviewRequest.getComment(),reviewRequest.getRating());
             Accommodation accommodation=accommodationRepository.getReferenceById(reviewRequest.getReviewedEntity());
             review.setGuest(guest);
             review.setAccommodation(accommodation);
-            reviewRepository.save(review);
+            accommodation.addReview(review);
+            accommodationRepository.save(accommodation);
         } else {
             HostReview hostReview=new HostReview(reviewRequest.getComment(),reviewRequest.getRating());
             Host host=hostRepository.getReferenceById(reviewRequest.getReviewedEntity());
@@ -84,5 +94,24 @@ public class ReviewServiceImplementation implements ReviewService{
     @Override
     public Boolean deleteReview(int id) {
         return null;
+    }
+
+    @Override
+    public Boolean checkPermission(String username,String accommodationId) {
+        Optional<User> ret=userRepository.findByUsername(username);
+        if(ret.isPresent()){
+            Guest guest= (Guest) ret.get();
+            UUID guestId=guest.getId();
+            Collection<Reservation> reservations=reservationRepository.findAllByGuestAndAccommodationId(guestId,UUID.fromString(accommodationId));
+            if(reservations.isEmpty())
+                return false;
+            for(Reservation r : reservations){
+                if(r.isFinished() && r.getReservedDate().getEndDate().plusDays(7).isBefore(LocalDate.now())){
+                    return true;
+                }
+            }
+            return false;
+        }
+        return false;
     }
 }

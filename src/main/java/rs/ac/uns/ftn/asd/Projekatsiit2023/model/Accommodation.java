@@ -7,7 +7,6 @@ import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.AccommodationReservationPolicy;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.AccommodationType;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 @Entity
@@ -51,6 +50,9 @@ public class Accommodation {
     @Column(name = "daysBefore", nullable = false)
     private int daysBefore;
 
+    @OneToMany(mappedBy = "accommodation",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    private List<AccommodationReview> reviews;
+
     @Enumerated(EnumType.STRING)
     private AccommodationReservationPolicy policy;
     @Enumerated(EnumType.STRING)
@@ -88,6 +90,7 @@ public class Accommodation {
         this.pricelist = pricelist;
         this.daysBefore = daysBefore;
         this.policy = policy;
+        this.reviews=new ArrayList<AccommodationReview>();
     }
 
     public Host getHost() {
@@ -230,6 +233,10 @@ public class Accommodation {
     }
 
     public List<AccommodationReview> getReviews() {
-        return null;
+        return this.reviews;
+    }
+
+    public void addReview(AccommodationReview review){
+        this.reviews.add(review);
     }
 }

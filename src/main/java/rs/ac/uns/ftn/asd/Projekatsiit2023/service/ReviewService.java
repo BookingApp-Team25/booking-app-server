@@ -15,6 +15,5 @@ public interface ReviewService {
     MessageResponse createReview(ReviewRequest reviewRequest);
     MessageResponse reportReview(int reviewId);
     Boolean deleteReview(int id);
-
-
+    Boolean checkPermission(String username,String accommodationId);
 }
