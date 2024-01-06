@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.AccommodationType;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.model.Accommodation;
 
 import java.time.LocalDate;
@@ -59,7 +60,7 @@ public interface AccommodationRepository extends JpaRepository<Accommodation, UU
             @Param("startDate") LocalDate startDate,
             @Param("endDate") LocalDate endDate,
             //@Param("amenities") List<String> amenities,
-            @Param("accommodationType") String accommodationType,
+            @Param("accommodationType") AccommodationType accommodationType,
             @Param("minPrice") Double minPrice,
             @Param("maxPrice") Double maxPrice);
 }

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.AccommodationResponse;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.AccommodationSummaryCollectionResponse;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.AccommodationSummaryResponse;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.AccommodationType;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.model.Accommodation;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.service.AccommodationService;
 
@@ -72,9 +73,9 @@ public class AccommodationController {
         LocalDate localDateEnd = offsetDateTimeEnd.toLocalDate();
 
         Collection<AccommodationSummaryResponse> accommodations = accommodationService.searchAccommodations(city, localDateStart, localDateEnd, guestNumber);
-        if(accommodations.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+//        if(accommodations.isEmpty()) {
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        }
         return ResponseEntity.ok(accommodations);
     }
 
@@ -102,11 +103,11 @@ public class AccommodationController {
         double minPriceValue = (minPrice != null) ? minPrice : 0.0;
         double maxPriceValue = (maxPrice != null) ? maxPrice : 0.0;
 
-        Collection<AccommodationSummaryResponse> accommodations = accommodationService.filterAccommodations(city, localDateStart, localDateEnd, guestNumber, amenitiesList, accommodationType, minPriceValue, maxPriceValue);
+        Collection<AccommodationSummaryResponse> accommodations = accommodationService.filterAccommodations(city, localDateStart, localDateEnd, guestNumber, amenitiesList, AccommodationType.valueOf(accommodationType), minPriceValue, maxPriceValue);
 
-        if (accommodations.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+//        if (accommodations.isEmpty()) {
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        }
         return ResponseEntity.ok(accommodations);
     }
 
