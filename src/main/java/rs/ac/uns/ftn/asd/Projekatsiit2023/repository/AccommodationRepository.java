@@ -52,8 +52,9 @@ public interface AccommodationRepository extends JpaRepository<Accommodation, UU
             "AND adp.endDate >= :startDate) " +
             "AND (:accommodationType IS NULL OR a.type = :accommodationType) " +
             "AND (:minPrice IS NULL OR a.price >= :minPrice) " +
-            "AND (:maxPrice IS NULL OR a.price <= :maxPrice) ") //+
-           // "AND (:amenities IS EMPTY OR a.amenities IN :amenities)")
+            "AND (:maxPrice IS NULL OR a.price <= :maxPrice) ")// +
+//            "AND (COALESCE(:amenities, null) IS NULL OR SIZE(:amenities) = 0 OR SIZE(:amenities) = " +
+//            "(SELECT COUNT(DISTINCT amen) FROM Accommodation a1 JOIN a1.amenities amen WHERE a1 = a AND amen IN :amenities))")
     List<Accommodation> filterAccommodations(
             @Param("city") String city,
             @Param("guestNumber") int guestNumber,
@@ -63,4 +64,5 @@ public interface AccommodationRepository extends JpaRepository<Accommodation, UU
             @Param("accommodationType") AccommodationType accommodationType,
             @Param("minPrice") Double minPrice,
             @Param("maxPrice") Double maxPrice);
+
 }
