@@ -18,6 +18,7 @@ import java.util.UUID;
 public class ReservationController {
     @Autowired
     private ReservationServiceImplementation reservationService;
+    @CrossOrigin(origins = "http://localhost:4200")
     @PostMapping(value = "/create")
     @PreAuthorize("hasAuthority('ROLE_Guest')")
     public ResponseEntity<MessageResponse> createReservation(@RequestBody ReservationRequest reservationRequest) {
