@@ -13,6 +13,7 @@ import rs.ac.uns.ftn.asd.Projekatsiit2023.service.AccommodationUpdateService;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.service.UserService;
 
 import java.util.Collection;
+import java.util.UUID;
 
 import static org.springframework.security.authorization.AuthorityReactiveAuthorizationManager.hasAnyAuthority;
 
@@ -48,12 +49,36 @@ public class UserController {
         return ResponseEntity.ok(adr);
     }
 
+    @GetMapping(value="/host-details/{hostId}")
+    public ResponseEntity<AccountDetailsResponse> getHostDetails(@PathVariable("hostId") String hostId){
+        AccountDetailsResponse adr=userService.getHostDetails(UUID.fromString(hostId));
+        if(adr==null){
+            return new ResponseEntity<AccountDetailsResponse>(HttpStatus.NOT_FOUND);
+        }
+        return ResponseEntity.ok(adr);
+    }
+
     @DeleteMapping("/{username}")
     public ResponseEntity<MessageResponse> deleteAccount(@PathVariable("username") String username){
         MessageResponse messageResponse=userService.deleteAccount(username);
         return ResponseEntity.ok(messageResponse);
     }
 
+    @PreAuthorize("hasAnyAuthority('ROLE_Guest','ROLE_Host')")
+    @PutMapping(value="/report/{username}")
+    public ResponseEntity<MessageResponse> reportHost(@PathVariable("username") String username){
+        MessageResponse messageResponse=userService.report(username);
+        return  ResponseEntity.ok(messageResponse);
+    }
+
+    @PreAuthorize("hasAnyAuthority('ROLE_Guest','ROLE_Host')")
+    @GetMapping(value="/check/{guestUsername}/{hostUsername}")
+    public ResponseEntity<Boolean> check(@PathVariable("guestUsername") String guestUsername,@PathVariable("hostUsername") String hostUsername){
+        Boolean status=userService.checkReportPermission(guestUsername,hostUsername);
+        return ResponseEntity.ok(status);
+    }
+
+    @PreAuthorize("hasAuthority('ROLE_Admin')")
     @PutMapping(value = "/blockUser/{userId}")
     public ResponseEntity<Boolean> blockUser(@PathVariable("userId") int id){
         Boolean blockedUser= userService.blockUser(id);

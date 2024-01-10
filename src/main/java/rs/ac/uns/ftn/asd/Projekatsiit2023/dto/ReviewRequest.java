@@ -6,7 +6,7 @@ import java.util.UUID;
 
 public class ReviewRequest {
     String guestUsername;
-    UUID reviewedEntity;
+    String reviewedEntity;
     String comment;
     double rating;
     ReviewType type;
@@ -14,7 +14,7 @@ public class ReviewRequest {
     public ReviewRequest() {
     }
 
-    public ReviewRequest(String comment, double rating, String guestId, UUID reviewedEntity, ReviewType type) {
+    public ReviewRequest(String comment, double rating, String guestId, String reviewedEntity, ReviewType type) {
         this.comment = comment;
         this.rating = rating;
         this.guestUsername = guestUsername;
@@ -42,7 +42,7 @@ public class ReviewRequest {
         return guestUsername;
     }
 
-    public UUID getReviewedEntity() {
+    public String getReviewedEntity() {
         return reviewedEntity;
     }
 

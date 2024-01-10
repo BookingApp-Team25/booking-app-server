@@ -25,6 +25,7 @@ public class User {
     private LocalDateTime activationTime;
     @Enumerated(EnumType.STRING)
     private Role role;
+    private Boolean reported;
     public User(){
 
     }
@@ -41,6 +42,15 @@ public class User {
         this.phoneNumber = phoneNumber;
         this.activationCode=UUID.randomUUID();
         this.activationTime= LocalDateTime.now();
+        this.reported=false;
+    }
+
+    public Boolean getReported() {
+        return reported;
+    }
+
+    public void setReported(Boolean reported) {
+        this.reported = reported;
     }
 
     public UUID getId() {

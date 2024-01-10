@@ -6,6 +6,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.Role;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -14,11 +15,14 @@ public class Host extends User{
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "host")
     private List<Accommodation> accommodations;
 
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "host")
+    private List<HostReview> reviews;
     public Host() {
     }
 
     public Host(String username, String password, String firstName, String lastName, String address, String phoneNumber, Role role) {
         super(username, password, firstName, lastName, address, phoneNumber, role);
+        this.reviews=new ArrayList<HostReview>();
     }
 
     public List<Accommodation> getAccommodations() {

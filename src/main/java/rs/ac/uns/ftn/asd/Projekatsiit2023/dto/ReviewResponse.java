@@ -13,10 +13,13 @@ public class ReviewResponse {
     double rating;
     ReviewType type;
     String date;
+    String guestUsername;
+    boolean reported;
     public ReviewResponse() {
     }
 
-    public ReviewResponse(UUID id,String comment, double rating, String guestName, String reviewedEntityName, ReviewType type,LocalDate date) {
+    public ReviewResponse(UUID id,String comment, double rating, String guestName,
+                          String reviewedEntityName, ReviewType type,LocalDate date,String guestUsername,boolean reported) {
         this.comment = comment;
         this.rating = rating;
         this.guestName = guestName;
@@ -24,6 +27,16 @@ public class ReviewResponse {
         this.id = id;
         this.type = type;
         this.date=date.toString();
+        this.guestUsername=guestUsername;
+        this.reported=reported;
+    }
+
+    public String getGuestUsername() {
+        return guestUsername;
+    }
+
+    public boolean isReported() {
+        return reported;
     }
 
     public UUID getId() {

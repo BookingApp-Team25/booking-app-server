@@ -10,8 +10,9 @@ import java.util.UUID;
 public class HostReview {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id", updatable = false)
     UUID id;
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name="guest_id",referencedColumnName = "id")
     Guest guest;
     @ManyToOne
@@ -21,9 +22,10 @@ public class HostReview {
     String comment;
     @Column(name="rating",updatable = false)
     double rating;
-
     @Column(name="date",updatable = false)
     LocalDate date;
+    @Column(name="reported",updatable = true)
+    Boolean reported;
 
     public HostReview() {
     }
@@ -32,6 +34,8 @@ public class HostReview {
         this.comment = comment;
         this.rating = rating;
         this.id = UUID.randomUUID();
+        this.reported=false;
+        this.date=LocalDate.now();
     }
 
     public UUID getId() {
@@ -76,5 +80,13 @@ public class HostReview {
 
     public void setHost(Host host) {
         this.host = host;
+    }
+
+    public void setReported(boolean reported) {
+        this.reported = reported;
+    }
+
+    public Boolean isReported() {
+        return this.reported;
     }
 }

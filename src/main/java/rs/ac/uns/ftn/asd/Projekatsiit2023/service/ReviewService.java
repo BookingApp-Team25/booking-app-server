@@ -13,7 +13,7 @@ public interface ReviewService {
     Collection<ReviewResponse> getAllHostReviews(UUID hostId);
     Collection<ReviewResponse> getAllReportedReviews();
     MessageResponse createReview(ReviewRequest reviewRequest);
-    MessageResponse reportReview(int reviewId);
-    Boolean deleteReview(int id);
+    MessageResponse reportReview(String reviewId,Boolean flag);
+    Boolean deleteReview(String id,Boolean flag);
     Boolean checkPermission(String username,String accommodationId);
 }

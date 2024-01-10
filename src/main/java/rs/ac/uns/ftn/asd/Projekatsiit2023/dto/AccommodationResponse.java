@@ -26,10 +26,12 @@ public class AccommodationResponse {
     private int daysBefore;
     private AccommodationReservationPolicy policy;
     private AccommodationOnHoldStatus accommodationOnHoldStatus;
+    private UUID hostId;
+    private String hostUsername;
     public AccommodationResponse() {
     }
 
-    public AccommodationResponse(UUID id,String name, String description, Location location, List<String> amenities, List<String> photos, int minGuests, int maxGuests, AccommodationType type, List<DatePeriod> availability, double price, AccommodationPricelist pricelist, int daysBefore, AccommodationReservationPolicy policy, AccommodationOnHoldStatus status) {
+    public AccommodationResponse(UUID id,String name, String description, Location location, List<String> amenities, List<String> photos, int minGuests, int maxGuests, AccommodationType type, List<DatePeriod> availability, double price, AccommodationPricelist pricelist, int daysBefore, AccommodationReservationPolicy policy, AccommodationOnHoldStatus status,UUID hostId,String hostUsername) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -45,6 +47,12 @@ public class AccommodationResponse {
         this.daysBefore = daysBefore;
         this.policy = policy;
         this.accommodationOnHoldStatus = status;
+        this.hostId=hostId;
+        this.hostUsername=hostUsername;
+    }
+
+    public String getHostUsername() {
+        return hostUsername;
     }
 
     public AccommodationOnHoldStatus getAccommodationOnHoldStatus() {
@@ -89,6 +97,10 @@ public class AccommodationResponse {
 
     public double getPrice() {
         return price;
+    }
+
+    public UUID getHostId() {
+        return hostId;
     }
 
     public void setName(String name) {
