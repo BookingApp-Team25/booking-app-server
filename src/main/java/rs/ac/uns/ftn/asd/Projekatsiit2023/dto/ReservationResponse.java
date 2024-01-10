@@ -7,25 +7,50 @@ import rs.ac.uns.ftn.asd.Projekatsiit2023.model.DatePeriod;
 import java.util.UUID;
 
 public class ReservationResponse {
+    private UUID id;
     private UUID guestId;
+
+    private String guestName;
 
     private UUID hostId;
 
     private UUID accommodationId;
 
+    private String accommodationName;
+
     private ReservationStatus reservationStatus;
 
     private DatePeriod reservedDate;
 
+    private long price;
+
     public ReservationResponse() {
     }
 
-    public ReservationResponse(UUID guestId, UUID hostId, UUID accommodationId, ReservationStatus reservationStatus, DatePeriod reservedDate) {
+    public ReservationResponse(UUID id,UUID guestId, UUID hostId, UUID accommodationId, ReservationStatus reservationStatus, DatePeriod reservedDate, long price) {
+        this.id = id;
         this.guestId = guestId;
         this.hostId = hostId;
         this.accommodationId = accommodationId;
         this.reservationStatus = reservationStatus;
         this.reservedDate = reservedDate;
+        this.price = price;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public long getPrice() {
+        return price;
+    }
+
+    public void setPrice(long price) {
+        this.price = price;
     }
 
     public UUID getGuestId() {

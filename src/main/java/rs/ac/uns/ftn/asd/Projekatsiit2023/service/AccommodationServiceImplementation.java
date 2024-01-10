@@ -12,6 +12,7 @@ import rs.ac.uns.ftn.asd.Projekatsiit2023.model.Accommodation;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.model.AccommodationReview;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.model.DatePeriod;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -29,26 +30,26 @@ public class AccommodationServiceImplementation implements AccommodationService{
         return "Accommodation saved";
     }
     @Override
-    public List<AccommodationSummaryResponse> getAllAccommodations(){
+    public List<AccommodationSummaryResponse> getAllAccommodations() throws IOException {
         ArrayList<Accommodation> fullList = new ArrayList<Accommodation>(accommodationRepository.findAll());
         ArrayList<AccommodationSummaryResponse> summary = new ArrayList<>();
         for (Accommodation accommodation : fullList){
             summary.add(new AccommodationSummaryResponse(accommodation.getId(),accommodation.getName(),
-                    accommodation.getPhotos().get(0),accommodation.getDescription(),accommodation.getPrice(),
+                    accommodation.getPhotos().get(0).getEncodedImage(),accommodation.getDescription(),accommodation.getPrice(),
                     5,accommodation.getOnHoldStatus()));
         }
        return summary;
     }
 
     @Override
-    public AccommodationResponse getAccommodation(UUID accommodationId) {
+    public AccommodationResponse getAccommodation(UUID accommodationId) throws IOException {
         Accommodation accommodation = accommodationRepository.getReferenceById(accommodationId);
         return new AccommodationResponse(accommodation.getId(),
                 accommodation.getName(),
                 accommodation.getDescription(),
                 accommodation.getLocation(),
                 accommodation.getAmenities(),
-                accommodation.getPhotos(),
+                accommodation.getPhotosEncoded(),
                 accommodation.getMinGuests(),
                 accommodation.getMaxGuests(),
                 accommodation.getType(),
@@ -61,7 +62,7 @@ public class AccommodationServiceImplementation implements AccommodationService{
     }
 
     @Override
-    public AccommodationSummaryCollectionResponse getAllApprovedAccommodations(int page, int numberOfElements) {
+    public AccommodationSummaryCollectionResponse getAllApprovedAccommodations(int page, int numberOfElements) throws IOException {
         long totalNumberOfAccommodations = accommodationRepository.count();
         Pageable pageRequest = PageRequest.of(page, numberOfElements);
         ArrayList<Accommodation> fullList = new ArrayList<Accommodation>(accommodationRepository.findAll(pageRequest).getContent());
@@ -69,7 +70,7 @@ public class AccommodationServiceImplementation implements AccommodationService{
         for (Accommodation accommodation : fullList){
             if(accommodation.getOnHoldStatus() == AccommodationOnHoldStatus.APPROVED){
                 summary.add(new AccommodationSummaryResponse(accommodation.getId(),accommodation.getName(),
-                        accommodation.getPhotos().get(0),accommodation.getDescription(),accommodation.getPricelist().getDailyPrice(),
+                        accommodation.getPhotos().get(0).getEncodedImage(),accommodation.getDescription(),accommodation.getPricelist().getDailyPrice(),
                         5,accommodation.getOnHoldStatus()));
             }
         }
@@ -78,14 +79,14 @@ public class AccommodationServiceImplementation implements AccommodationService{
 
 
     @Override
-    public AccommodationSummaryCollectionResponse getHostAccommodations(UUID hostId,int page, int numberOfElements){
+    public AccommodationSummaryCollectionResponse getHostAccommodations(UUID hostId,int page, int numberOfElements) throws IOException {
         long totalNumberOfAccommodations = accommodationRepository.countAllHostAccommodations(hostId);
         Pageable pageRequest = PageRequest.of(page, numberOfElements);
         ArrayList<Accommodation> fullList = new ArrayList<Accommodation>(accommodationRepository.findAllHostAccommodations(hostId,pageRequest).getContent());
         ArrayList<AccommodationSummaryResponse> summary = new ArrayList<>();
         for (Accommodation accommodation : fullList){
                 summary.add(new AccommodationSummaryResponse(accommodation.getId(),accommodation.getName(),
-                        accommodation.getPhotos().get(0),accommodation.getDescription(),accommodation.getPrice(),
+                        accommodation.getPhotos().get(0).getEncodedImage(),accommodation.getDescription(),accommodation.getPrice(),
                         5,accommodation.getOnHoldStatus()));
         }
         return new AccommodationSummaryCollectionResponse(summary,totalNumberOfAccommodations);
@@ -120,7 +121,7 @@ public class AccommodationServiceImplementation implements AccommodationService{
                     return new AccommodationSummaryResponse(
                             accommodation.getId(),
                             accommodation.getName(),
-                            accommodation.getPhotos().get(0),
+                            accommodation.getPhotos().get(0).getImagePath(),
                             accommodation.getDescription(),
                             accommodation.getPrice(),
                             averageRating,

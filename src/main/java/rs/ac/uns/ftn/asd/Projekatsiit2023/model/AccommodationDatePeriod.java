@@ -19,6 +19,13 @@ public class AccommodationDatePeriod {
     @JoinColumn(name = "accommodation_id", referencedColumnName = "id")
     private Accommodation accommodation;
 
+    private boolean appliedWeekend;
+    private boolean appliedSummer;
+    private boolean appliedHoliday;
+    private boolean appliedWinter;
+
+    private boolean isTaken; //da li je period rezervisan
+
     public AccommodationDatePeriod() {
     }
 
@@ -26,6 +33,30 @@ public class AccommodationDatePeriod {
         this.startDate = startDate;
         this.endDate = endDate;
         this.accommodation = accommodation;
+        this.appliedHoliday = this.appliedSummer = this.appliedWeekend = this.appliedWinter = false;
+        this.isTaken = false;
+    }
+
+    public AccommodationDatePeriod(AccommodationDatePeriod accommodationDatePeriod){
+        this.startDate = accommodationDatePeriod.startDate;
+        this.endDate = accommodationDatePeriod.endDate;
+        this.accommodation = accommodationDatePeriod.accommodation;
+        this.isTaken = accommodationDatePeriod.isTaken;
+        this.appliedHoliday = accommodationDatePeriod.appliedHoliday;
+        this.appliedSummer = accommodationDatePeriod.appliedSummer;
+        this.appliedWinter = accommodationDatePeriod.appliedWinter;
+        this.appliedWeekend = accommodationDatePeriod.appliedWeekend;
+    }
+
+    public AccommodationDatePeriod(LocalDate startDate, LocalDate endDate, Accommodation accommodation, boolean appliedWeekend, boolean appliedSummer, boolean appliedHoliday, boolean appliedWinter) {
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.accommodation = accommodation;
+        this.appliedWeekend = appliedWeekend;
+        this.appliedSummer = appliedSummer;
+        this.appliedHoliday = appliedHoliday;
+        this.appliedWinter = appliedWinter;
+        this.isTaken = false;
     }
 
     public Accommodation getAccommodation() {
@@ -54,4 +85,38 @@ public class AccommodationDatePeriod {
     public long calculateDurationInDays() {
         return ChronoUnit.DAYS.between(startDate, endDate) + 1;
     }
+
+    public boolean isAppliedWeekend() {
+        return appliedWeekend;
+    }
+
+    public boolean isAppliedSummer() {
+        return appliedSummer;
+    }
+
+    public boolean isAppliedHoliday() {
+        return appliedHoliday;
+    }
+
+    public boolean isAppliedWinter() {
+        return appliedWinter;
+    }
+
+    public void setAppliedWeekend(boolean appliedWeekend) {
+        this.appliedWeekend = appliedWeekend;
+    }
+
+    public void setAppliedSummer(boolean appliedSummer) {
+        this.appliedSummer = appliedSummer;
+    }
+
+    public void setAppliedHoliday(boolean appliedHoliday) {
+        this.appliedHoliday = appliedHoliday;
+    }
+
+    public void setAppliedWinter(boolean appliedWinter) {
+        this.appliedWinter = appliedWinter;
+    }
+
+
 }

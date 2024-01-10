@@ -12,6 +12,7 @@ import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.AccommodationType;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.model.Accommodation;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.service.AccommodationService;
 
+import java.io.IOException;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -33,25 +34,25 @@ public class AccommodationController {
     }
     @PreAuthorize("hasAuthority('ROLE_Host')")
     @GetMapping(value = "/host/{hostId}")
-    public ResponseEntity<AccommodationSummaryCollectionResponse> getHostAccommodations(@PathVariable("hostId") UUID hostId, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10")int numberOfElements){
+    public ResponseEntity<AccommodationSummaryCollectionResponse> getHostAccommodations(@PathVariable("hostId") UUID hostId, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10")int numberOfElements) throws IOException {
         AccommodationSummaryCollectionResponse accommodations = accommodationService.getHostAccommodations(hostId,page,numberOfElements);
         return  ResponseEntity.ok(accommodations);
 
     }
 
     @GetMapping("/approved")
-    public ResponseEntity<AccommodationSummaryCollectionResponse> getAllApprovedAccommodations(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10")int numberOfElements){
+    public ResponseEntity<AccommodationSummaryCollectionResponse> getAllApprovedAccommodations(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10")int numberOfElements) throws IOException {
         AccommodationSummaryCollectionResponse accommodations = accommodationService.getAllApprovedAccommodations(page,numberOfElements);
         return  ResponseEntity.ok(accommodations);
     }
 
     @GetMapping()
-    public ResponseEntity<Collection<AccommodationSummaryResponse>> getAllAccommodations(){
+    public ResponseEntity<Collection<AccommodationSummaryResponse>> getAllAccommodations() throws IOException {
         Collection<AccommodationSummaryResponse> accommodations = accommodationService.getAllAccommodations();
         return  ResponseEntity.ok(accommodations);
     }
-    @GetMapping(value = "details/{accommodationId}")
-    public ResponseEntity<AccommodationResponse> getAccommodation(@PathVariable("accommodationId")  UUID accommodationId){
+    @PostMapping(value = "details/{accommodationId}")
+    public ResponseEntity<AccommodationResponse> getAccommodation(@PathVariable("accommodationId")  UUID accommodationId) throws IOException {
         AccommodationResponse accommodation = accommodationService.getAccommodation(accommodationId);
         if(accommodation == null) {
             return new ResponseEntity<AccommodationResponse>(HttpStatus.NOT_FOUND);

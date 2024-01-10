@@ -11,8 +11,13 @@ public class Reservation {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-    private UUID guestId;
-    private UUID hostId;
+    @ManyToOne
+    @JoinColumn(name = "host_id", referencedColumnName = "id")
+    private Host host;
+    @ManyToOne
+    @JoinColumn(name = "guest_id", referencedColumnName = "id")
+    private Guest guest;
+
     @ManyToOne
     @JoinColumn(name = "accommodation_id")
     private Accommodation accommodation;
@@ -21,23 +26,37 @@ public class Reservation {
     @JoinColumn(name = "reserved_date_id")
     private DatePeriod reservedDate;
 
+    private long price;
     public Reservation() {
     }
 
-    public Reservation(UUID guestId, UUID hostId, Accommodation accommodation, ReservationStatus reservationStatus, DatePeriod reservedDate) {
-        this.guestId = guestId;
-        this.hostId = hostId;
+    public Reservation(Guest guest, Host host, Accommodation accommodation, ReservationStatus reservationStatus, DatePeriod reservedDate, long price) {
+        this.guest = guest;
+        this.host = host;
         this.accommodation = accommodation;
         this.reservationStatus = reservationStatus;
         this.reservedDate = reservedDate;
+        this.price = price;
     }
 
-    public UUID getGuestId() {
-        return guestId;
+    public long getPrice() {
+        return price;
     }
 
-    public UUID getHostId() {
-        return hostId;
+    public void setPrice(long price) {
+        this.price = price;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public Guest getGuest() {
+        return guest;
+    }
+
+    public Host getHost() {
+        return host;
     }
 
     public Accommodation getAccommodation() {
@@ -58,14 +77,6 @@ public class Reservation {
 
     public void setReservedDate(DatePeriod reservedDate) {
         this.reservedDate = reservedDate;
-    }
-
-    public void setGuestId(UUID guestId) {
-        this.guestId = guestId;
-    }
-
-    public void setHostId(UUID hostId) {
-        this.hostId = hostId;
     }
 
     public void setAccommodation(Accommodation accommodation) {
