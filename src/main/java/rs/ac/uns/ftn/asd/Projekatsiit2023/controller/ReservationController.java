@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.UUID;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("api/reservation")
 public class ReservationController {
     @Autowired
@@ -45,11 +46,21 @@ public class ReservationController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-    @GetMapping(value = "{hostId}/results")
-    public ResponseEntity<Collection<ReservationResponse>> getHostReservations(@PathVariable("hostId") UUID hostId){
-        Collection<ReservationResponse> reservations = reservationService.getAllHostReservations(hostId);
+    @GetMapping(value = "{hostId}/unresolved")
+    @PreAuthorize("hasAuthority('ROLE_Host')")
+    public ResponseEntity<HostReservationCollectionResponse> getUnresolvedHostReservations(@PathVariable("hostId") UUID hostId, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10")int numberOfElements){
+        HostReservationCollectionResponse reservations = reservationService.getAllUnresolvedHostReservations(hostId,page,numberOfElements);
         if(reservations == null){
-            return new ResponseEntity<Collection<ReservationResponse>>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<HostReservationCollectionResponse>(HttpStatus.NOT_FOUND);
+        }
+        return ResponseEntity.ok(reservations);
+    }
+    @GetMapping(value = "{hostId}/results")
+    @PreAuthorize("hasAuthority('ROLE_Host')")
+    public ResponseEntity<HostReservationCollectionResponse> getHostReservations(@PathVariable("hostId") UUID hostId, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10")int numberOfElements){
+        HostReservationCollectionResponse reservations = reservationService.getAllHostReservations(hostId,page,numberOfElements);
+        if(reservations == null){
+            return new ResponseEntity<HostReservationCollectionResponse>(HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.ok(reservations);
     }
@@ -64,6 +75,11 @@ public class ReservationController {
         }
         return ResponseEntity.ok(reservations);
 
+    }
+    @PostMapping(value = "/{reservationId}/resolve")
+    public ResponseEntity<MessageResponse> resolveReservationRequest(@PathVariable("reservationId") UUID reservationId, @RequestParam boolean isAccepted){
+        MessageResponse message = reservationService.resolveReservation(reservationId,isAccepted);
+        return ResponseEntity.ok(message);
     }
     @PutMapping(value= "/{reservationId}/accept")
     public ResponseEntity<Boolean> acceptReservation(@PathVariable("reservationId") UUID reservationId){

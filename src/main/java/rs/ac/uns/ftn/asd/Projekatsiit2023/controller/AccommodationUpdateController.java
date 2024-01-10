@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.*;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.service.AccommodationUpdateService;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.UUID;
 
@@ -19,7 +20,7 @@ public class AccommodationUpdateController {
     private AccommodationUpdateService accommodationUpdateService;
     @PostMapping(value = "/{accommodationId}")
     @PreAuthorize("hasAuthority('ROLE_Host')")
-    public  ResponseEntity<MessageResponse> editAccommodationRequest(@PathVariable("accommodationId") UUID id, @RequestBody AccommodationRequest accommodationRequest){
+    public  ResponseEntity<MessageResponse> editAccommodationRequest(@PathVariable("accommodationId") UUID id, @RequestBody AccommodationRequest accommodationRequest) throws IOException {
         MessageResponse accommodationResponse = accommodationUpdateService.createEditRequest(id,accommodationRequest);
         if(accommodationResponse == null){
             return new ResponseEntity<MessageResponse>(HttpStatus.NOT_FOUND);
@@ -28,7 +29,7 @@ public class AccommodationUpdateController {
     }
     @PostMapping()
     @PreAuthorize("hasAuthority('ROLE_Host')")
-    public ResponseEntity<MessageResponse> createAccommodationRequest(@RequestBody AccommodationRequest accommodationRequest) {
+    public ResponseEntity<MessageResponse> createAccommodationRequest(@RequestBody AccommodationRequest accommodationRequest) throws IOException {
         MessageResponse response = accommodationUpdateService.createAccommodationUpdate(accommodationRequest);
         if (response == null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
@@ -37,7 +38,7 @@ public class AccommodationUpdateController {
     }
     @GetMapping
     @PreAuthorize("hasAuthority('ROLE_Admin')")
-    public ResponseEntity<Collection<AccommodationUpdateSummaryResponse>> getAllAccommodationUpdates(){
+    public ResponseEntity<Collection<AccommodationUpdateSummaryResponse>> getAllAccommodationUpdates() throws IOException {
         Collection<AccommodationUpdateSummaryResponse> accommodationUpdateResponses=accommodationUpdateService.getAllAccommodationUpdates();
         if(accommodationUpdateResponses == null){
             return ResponseEntity.ok(accommodationUpdateResponses);

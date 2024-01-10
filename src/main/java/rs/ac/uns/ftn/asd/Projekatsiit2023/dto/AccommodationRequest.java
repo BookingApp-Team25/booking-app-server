@@ -1,7 +1,9 @@
 package rs.ac.uns.ftn.asd.Projekatsiit2023.dto;
 
+import org.springframework.web.multipart.MultipartFile;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.AccommodationReservationPolicy;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.AccommodationType;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.PriceCalculationMethod;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.model.*;
 
 import java.util.ArrayList;
@@ -19,27 +21,32 @@ public class AccommodationRequest {
     private int minGuests;
     private int maxGuests;
     private AccommodationType type;
-    private List<DatePeriod> availability;
+    private List<AccommodationDatePeriod> availability;
     private AccommodationPricelist pricelist;
     private double price;
     private int daysBefore;
     private AccommodationReservationPolicy policy;
+    private PriceCalculationMethod priceCalculationMethod;
 
-    public AccommodationRequest(UUID hostId,String name, String description, Location location, List<String> amenities, List<String> photos, int minGuests, int maxGuests, AccommodationType type, double price,List<DatePeriod> datePeriods ,AccommodationPricelist pricelist, int daysBefore, AccommodationReservationPolicy policy) {
+    public AccommodationRequest() {
+    }
+
+    public AccommodationRequest(UUID hostId, String name, String description, Location location, List<String> amenities, List<String> photos, int minGuests, int maxGuests, AccommodationType type, double price, List<AccommodationDatePeriod> datePeriods , AccommodationPricelist pricelist, int daysBefore, AccommodationReservationPolicy policy, PriceCalculationMethod priceCalculationMethod) {
         this.hostId = hostId;
         this.name = name;
         this.description = description;
         this.location = location;
         this.amenities = amenities;
-        this.photos = photos;
         this.minGuests = minGuests;
         this.maxGuests = maxGuests;
         this.type = type;
+        this.photos = photos;
         this.availability = datePeriods;
         this.price = price;
         this.pricelist = pricelist;
         this.daysBefore = daysBefore;
         this.policy = policy;
+        this.priceCalculationMethod = priceCalculationMethod;
     }
 
     public UUID getHostId() {
@@ -118,7 +125,7 @@ public class AccommodationRequest {
         this.type = type;
     }
 
-    public void setAvailability(List<DatePeriod> availability) {
+    public void setAvailability(List<AccommodationDatePeriod> availability) {
         this.availability = availability;
     }
 
@@ -126,7 +133,7 @@ public class AccommodationRequest {
         this.price = price;
     }
 
-    public List<DatePeriod> getAvailability() {
+    public List<AccommodationDatePeriod> getAvailability() {
         return availability;
     }
 
@@ -152,5 +159,13 @@ public class AccommodationRequest {
 
     public void setPolicy(AccommodationReservationPolicy policy) {
         this.policy = policy;
+    }
+
+    public PriceCalculationMethod getPriceCalculationMethod() {
+        return priceCalculationMethod;
+    }
+
+    public void setPriceCalculationMethod(PriceCalculationMethod priceCalculationMethod) {
+        this.priceCalculationMethod = priceCalculationMethod;
     }
 }
