@@ -44,7 +44,8 @@ public class AccommodationServiceImplementation implements AccommodationService{
     @Override
     public AccommodationResponse getAccommodation(UUID accommodationId) throws IOException {
         Accommodation accommodation = accommodationRepository.getReferenceById(accommodationId);
-        return new AccommodationResponse(accommodation.getId(),
+        return new AccommodationResponse(accommodation.getHost().getId(),
+                accommodation.getId(),
                 accommodation.getName(),
                 accommodation.getDescription(),
                 accommodation.getLocation(),
@@ -118,15 +119,20 @@ public class AccommodationServiceImplementation implements AccommodationService{
                 .map(accommodation -> {
                     // Calculate average rating
                     double averageRating = calculateAverageRating(accommodation);
-                    return new AccommodationSummaryResponse(
-                            accommodation.getId(),
-                            accommodation.getName(),
-                            accommodation.getPhotos().get(0).getImagePath(),
-                            accommodation.getDescription(),
-                            accommodation.getPrice(),
-                            averageRating,
-                            accommodation.getOnHoldStatus()
-                    );
+                    try {
+                        return new AccommodationSummaryResponse(
+                                accommodation.getId(),
+                                accommodation.getName(),
+                                accommodation.getPhotos().get(0).getEncodedImage(),
+                                accommodation.getDescription(),
+                                //accommodation.getPrice(),
+                                accommodation.getPricelist().getDailyPrice(),
+                                averageRating,
+                                accommodation.getOnHoldStatus()
+                        );
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                 })
                 .collect(Collectors.toList());
     }

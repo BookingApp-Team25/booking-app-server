@@ -8,9 +8,11 @@ import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.AccommodationResponse;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.AccommodationSummaryCollectionResponse;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.AccommodationSummaryResponse;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.HostData;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.AccommodationType;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.model.Accommodation;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.service.AccommodationService;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.service.UserServiceImplementation;
 
 import java.io.IOException;
 import java.time.OffsetDateTime;
@@ -27,6 +29,10 @@ import java.time.LocalDate;
 public class AccommodationController {
     @Autowired
     private AccommodationService accommodationService;
+
+    @Autowired
+    private UserServiceImplementation userService;
+
     @PostMapping(value = "/create")
     public ResponseEntity<String> createAccommodation (@RequestBody Accommodation accommodation){
         String answer = accommodationService.createAccommodation(accommodation);
@@ -122,5 +128,11 @@ public class AccommodationController {
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
+
+    @GetMapping(value = "/data/{hostId}") //morao sam u ovaj controller staviti jer nije drugde zbog corsa hteo nzm zasto cak i kad se doda cors da treba da radi on ne radi
+    public ResponseEntity<HostData> findHostById(@PathVariable("hostId") String hostIdString){
+        UUID hostId = UUID.fromString(hostIdString);
+        return ResponseEntity.ok(userService.getHostById(hostId));
     }
 }

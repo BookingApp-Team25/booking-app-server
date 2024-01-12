@@ -11,6 +11,7 @@ import java.util.UUID;
 
 public class AccommodationResponse {
 
+    private UUID hostId;
     private UUID id;
     private String name;
     private String description;
@@ -29,7 +30,8 @@ public class AccommodationResponse {
     public AccommodationResponse() {
     }
 
-    public AccommodationResponse(UUID id,String name, String description, Location location, List<String> amenities, List<String> photos, int minGuests, int maxGuests, AccommodationType type, List<DatePeriod> availability, double price, AccommodationPricelist pricelist, int daysBefore, AccommodationReservationPolicy policy, AccommodationOnHoldStatus status) {
+    public AccommodationResponse(UUID hostId,UUID id,String name, String description, Location location, List<String> amenities, List<String> photos, int minGuests, int maxGuests, AccommodationType type, List<DatePeriod> availability, double price, AccommodationPricelist pricelist, int daysBefore, AccommodationReservationPolicy policy, AccommodationOnHoldStatus status) {
+        this.hostId = hostId;
         this.id = id;
         this.name = name;
         this.description = description;
@@ -54,6 +56,8 @@ public class AccommodationResponse {
     public void setAccommodationOnHoldStatus(AccommodationOnHoldStatus accommodationOnHoldStatus) {
         this.accommodationOnHoldStatus = accommodationOnHoldStatus;
     }
+
+    public UUID getHostId() { return hostId; }
 
     public String getName() {
         return name;

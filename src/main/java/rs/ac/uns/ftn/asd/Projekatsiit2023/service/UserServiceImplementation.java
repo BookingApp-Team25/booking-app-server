@@ -142,4 +142,18 @@ public class UserServiceImplementation implements UserService {
         }
         return null;
     }
+
+    public HostData getHostById(UUID hostId) {
+        User user = userRepository.findUserById(hostId);
+        return mapToHostData(user);
+    }
+
+    public HostData mapToHostData(User user) {
+        return new HostData(
+                user.getUsername(),
+                user.getPassword(),
+                user.getFirstName(),
+                user.getLastName()
+        );
+    }
 }
