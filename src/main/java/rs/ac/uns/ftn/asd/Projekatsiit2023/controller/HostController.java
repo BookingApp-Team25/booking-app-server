@@ -11,9 +11,15 @@ import rs.ac.uns.ftn.asd.Projekatsiit2023.model.Guest;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.model.User;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.service.*;
 
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Collection;
+import java.util.UUID;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/api/host")
 public class HostController {
     @Autowired
@@ -25,10 +31,23 @@ public class HostController {
     @Autowired
     private UserServiceImplementation userService;
 
-    @GetMapping(value = "/log")
-    public ResponseEntity<Collection<AccommodationLogDataResponse>> generateLogs(@RequestParam(required = false) DatePeriod datePeriod){
-        Collection<AccommodationLogDataResponse>  logs = hostService.getLogsForPeriod(datePeriod);
+    @GetMapping(value = "{hostUsername}/log")
+    public ResponseEntity<AccommodationLogCollection> generateLogs(@RequestParam(required = true) String startDateStr,@RequestParam(required = true) String endDateStr, @PathVariable("hostUsername")String hostUsername) throws IOException {
+
+        ZonedDateTime startDateTime = ZonedDateTime.parse(startDateStr, DateTimeFormatter.ISO_DATE_TIME);
+        ZonedDateTime endDateTime = ZonedDateTime.parse(endDateStr, DateTimeFormatter.ISO_DATE_TIME);
+
+        LocalDate startDate = startDateTime.toLocalDate();
+        LocalDate endDate = endDateTime.toLocalDate();
+
+        DatePeriod datePeriod = new DatePeriod(startDate,endDate);
+        AccommodationLogCollection  logs = hostService.getLogsForPeriod(datePeriod,hostUsername);
         return ResponseEntity.ok(logs);
+    }
+    @GetMapping(value = "{accommodationId}/annual-log")
+    public ResponseEntity<AccommodationMonthlyLogCollection> generateAnnualLog(@PathVariable("accommodationId") UUID accommodationId) throws IOException {
+        AccommodationMonthlyLogCollection annualLog = hostService.getAnnualLog(accommodationId);
+        return ResponseEntity.ok(annualLog);
     }
 
 //    @GetMapping(value = "/hosts")
