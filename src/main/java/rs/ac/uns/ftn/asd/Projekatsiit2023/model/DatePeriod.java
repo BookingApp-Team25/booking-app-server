@@ -40,6 +40,9 @@ public class DatePeriod {
     public LocalDate getEndDate() {
         return endDate;
     }
+    public long getDuration(){
+        return ChronoUnit.DAYS.between(startDate,endDate);
+    }
 
     public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;

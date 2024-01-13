@@ -46,7 +46,7 @@ public class ReservationServiceImplementation implements ReservationService{
         Accommodation accommodation = accommodationRepository.findById(reservationRequest.getAccommodationId())
                 .orElseThrow(() -> new EntityNotFoundException("Accommodation not found with id: " + reservationRequest.getAccommodationId()));
 
-        DateManagementService dateManagementService = new DateManagementService();
+        DateManagementService dateManagementService = new DateManagementService(reservationRepository,accommodationRepository);
         if(!dateManagementService.isReservationPossible(datePeriod, accommodation.getAvailability())){
             return new MessageResponse(false,"Reservation at that period is not possible");
         }
