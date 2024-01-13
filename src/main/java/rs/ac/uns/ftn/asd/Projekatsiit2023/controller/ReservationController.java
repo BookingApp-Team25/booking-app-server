@@ -10,6 +10,10 @@ import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.ReservationStatus;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.model.DatePeriod;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.service.ReservationServiceImplementation;
 
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.UUID;
 
@@ -49,7 +53,7 @@ public class ReservationController {
     }
     @GetMapping(value = "{hostId}/unresolved")
     @PreAuthorize("hasAuthority('ROLE_Host')")
-    public ResponseEntity<HostReservationCollectionResponse> getUnresolvedHostReservations(@PathVariable("hostId") UUID hostId, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10")int numberOfElements){
+    public ResponseEntity<HostReservationCollectionResponse> getUnresolvedHostReservations(@PathVariable("hostId") UUID hostId, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10")int numberOfElements) throws IOException {
         HostReservationCollectionResponse reservations = reservationService.getAllUnresolvedHostReservations(hostId,page,numberOfElements);
         if(reservations == null){
             return new ResponseEntity<HostReservationCollectionResponse>(HttpStatus.NOT_FOUND);
@@ -58,7 +62,7 @@ public class ReservationController {
     }
     @GetMapping(value = "{hostId}/results")
     @PreAuthorize("hasAuthority('ROLE_Host')")
-    public ResponseEntity<HostReservationCollectionResponse> getHostReservations(@PathVariable("hostId") UUID hostId, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10")int numberOfElements){
+    public ResponseEntity<HostReservationCollectionResponse> getHostReservations(@PathVariable("hostId") UUID hostId, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10")int numberOfElements) throws IOException {
         HostReservationCollectionResponse reservations = reservationService.getAllHostReservations(hostId,page,numberOfElements);
         if(reservations == null){
             return new ResponseEntity<HostReservationCollectionResponse>(HttpStatus.NOT_FOUND);
@@ -66,14 +70,28 @@ public class ReservationController {
         return ResponseEntity.ok(reservations);
     }
     @GetMapping(value = "{hostId}/filtered")
-    public ResponseEntity<Collection<ReservationResponse>> getFilteredHostReservations(@PathVariable("hostId") int hostId,
-                                                                                       @RequestParam(required = false) DatePeriod reservationPeriod,
-                                                                                       @RequestParam(required = false) String reservationName,
-                                                                                       @RequestParam(required = false) ReservationStatus reservationStatus){
-        Collection<ReservationResponse> reservations = reservationService.getFilteredHostReservations(hostId,reservationPeriod,reservationName,reservationStatus);
-        if(reservations == null){
-            return new ResponseEntity<Collection<ReservationResponse>>(HttpStatus.NOT_FOUND);
+    public ResponseEntity<HostReservationCollectionResponse> getFilteredHostReservations(@PathVariable("hostId") UUID hostId,
+                                                                                         @RequestParam(required = false) String startDateStr,
+                                                                                         @RequestParam(required = false) String endDateStr,
+                                                                                         @RequestParam(required = false) String reservationName,
+                                                                                         @RequestParam ReservationStatus reservationStatus, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10")int numberOfElements) throws IOException {
+        if(reservationName == null){
+            reservationName = "";
         }
+        LocalDate startDate;
+        LocalDate endDate;
+        if(startDateStr == null || endDateStr == null){
+            startDate = LocalDate.MIN;
+            endDate = LocalDate.MAX;
+        }else{
+            ZonedDateTime startDateTime = ZonedDateTime.parse(startDateStr, DateTimeFormatter.ISO_DATE_TIME);
+            ZonedDateTime endDateTime = ZonedDateTime.parse(endDateStr, DateTimeFormatter.ISO_DATE_TIME);
+
+            startDate = startDateTime.toLocalDate().plusDays(1);
+            endDate = endDateTime.toLocalDate().plusDays(1);
+        }
+        DatePeriod reservationPeriod= new DatePeriod(startDate,endDate);
+        HostReservationCollectionResponse reservations = reservationService.getFilteredHostReservations(hostId,reservationPeriod,reservationName,reservationStatus,page,numberOfElements);
         return ResponseEntity.ok(reservations);
 
     }

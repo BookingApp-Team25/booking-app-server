@@ -4,29 +4,29 @@ import java.util.Collection;
 
 public class HostReservationCollectionResponse {
     Collection<HostReservationResponse> hostReservationResponses;
-    long totalNumberOfReservations;
+    long totalNumberOfElements;
 
     public HostReservationCollectionResponse() {
     }
 
-    public HostReservationCollectionResponse(Collection<HostReservationResponse> hostReservationResponses, long totalNumberOfReservations) {
+    public HostReservationCollectionResponse(Collection<HostReservationResponse> hostReservationResponses, long totalNumberOfElements) {
         this.hostReservationResponses = hostReservationResponses;
-        this.totalNumberOfReservations = totalNumberOfReservations;
+        this.totalNumberOfElements = totalNumberOfElements;
     }
 
     public Collection<HostReservationResponse> getHostReservationResponses() {
         return hostReservationResponses;
     }
 
-    public long getTotalNumberOfReservations() {
-        return totalNumberOfReservations;
+    public long getTotalNumberOfElements() {
+        return totalNumberOfElements;
     }
 
     public void setHostReservationResponses(Collection<HostReservationResponse> hostReservationResponses) {
         this.hostReservationResponses = hostReservationResponses;
     }
 
-    public void setTotalNumberOfReservations(long totalNumberOfReservations) {
-        this.totalNumberOfReservations = totalNumberOfReservations;
+    public void setTotalNumberOfElements(long totalNumberOfElements) {
+        this.totalNumberOfElements = totalNumberOfElements;
     }
 }
