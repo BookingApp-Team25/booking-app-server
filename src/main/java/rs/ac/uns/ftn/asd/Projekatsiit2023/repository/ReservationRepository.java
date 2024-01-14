@@ -48,8 +48,17 @@ public interface ReservationRepository extends JpaRepository<Reservation, UUID> 
             @Param("hostId") UUID hostId,
             Pageable pageable
     );
-
-
+    @Query("SELECT r FROM Reservation r WHERE " +
+            "(:prefix IS NULL OR r.accommodation.name LIKE CONCAT('%', :prefix, '%')) " +
+            "AND (r.host.id = :id)")
+    Page<Reservation> findByIdAndAccommodationName(@Param("prefix") String prefix,
+                                                   @Param("id") UUID id,
+                                                   Pageable pageable);
+    @Query("SELECT COUNT(r) FROM Reservation r WHERE " +
+            "(:prefix IS NULL OR r.accommodation.name LIKE :prefix%) " +
+            "AND (r.host.id = :id)")
+    long countByIdAndAccommodationName(@Param("prefix") String prefix,
+                                       @Param("id") UUID id);
     @Query("SELECT r FROM Reservation r WHERE r.accommodation.id = :accommodationId")
     List<Reservation> findAllByAccommodationId(@Param("accommodationId") UUID accommodationId);
 }
