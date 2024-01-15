@@ -8,10 +8,18 @@ import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.*;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.ReservationStatus;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.model.DatePeriod;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.repository.AccommodationRepository;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.service.AccommodationServiceImplementation;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.service.DateManagementService;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.service.ReservationServiceImplementation;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeParseException;
 import java.util.Collection;
+import java.util.Date;
 import java.util.UUID;
+import java.time.Instant;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
@@ -19,6 +27,11 @@ import java.util.UUID;
 public class ReservationController {
     @Autowired
     private ReservationServiceImplementation reservationService;
+    @Autowired
+    private DateManagementService dateManagementService;
+    @Autowired
+    private AccommodationRepository accommodationRepository;
+
     @CrossOrigin(origins = "http://localhost:4200")
     @PostMapping(value = "/create")
     @PreAuthorize("hasAuthority('ROLE_Guest')")
@@ -36,10 +49,10 @@ public class ReservationController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-    @PutMapping("/{reservationId}/cancel")
+    @PutMapping("/cancel/{reservationId}")
     @PreAuthorize("hasAuthority('ROLE_Guest')")
-    public ResponseEntity<Boolean> cancelReservation(@PathVariable("reservationId") UUID reservationId) {
-        Boolean isCancelled = reservationService.cancelReservation(reservationId);
+    public ResponseEntity<Boolean> cancelReservation(@PathVariable("reservationId") String reservationId) {
+        Boolean isCancelled = reservationService.cancelReservation(UUID.fromString(reservationId));
 
         if (isCancelled != null) { //isCancelled ne znaci da li je cancelovan ili ne vec proverava da li akomodacija postoji ili ne(true false)
             return ResponseEntity.ok(isCancelled);
@@ -89,5 +102,31 @@ public class ReservationController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.ok(reservationResponse);
+    }
+
+    @GetMapping(value = "/price")
+    public ResponseEntity<Long> calculatePrice(
+            @RequestParam("startDate") String startDate,
+            @RequestParam("endDate") String endDate,
+            @RequestParam("accommodationId") String accommodationId) {
+
+        try {
+            Date startDateObj = Date.from(Instant.parse(startDate));
+            Date endDateObj = Date.from(Instant.parse(endDate));
+
+            LocalDate localDateStart = startDateObj.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            LocalDate localDateEnd = endDateObj.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+            UUID accommodationUUID = UUID.fromString(accommodationId);
+
+            long price = dateManagementService.calculatePriceForPeriod(
+                    new DatePeriod(localDateStart, localDateEnd),
+                    accommodationRepository.findAccommodationById(accommodationUUID)
+            );
+
+            return ResponseEntity.ok(price);
+        } catch (DateTimeParseException e) {
+            return ResponseEntity.badRequest().body(-1L);
+        }
     }
 }

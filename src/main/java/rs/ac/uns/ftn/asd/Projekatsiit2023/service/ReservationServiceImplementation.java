@@ -50,7 +50,7 @@ public class ReservationServiceImplementation implements ReservationService{
         if(!dateManagementService.isReservationPossible(datePeriod, accommodation.getAvailability())){
             return new MessageResponse(false,"Reservation at that period is not possible");
         }
-        long reservationPrice = dateManagementService.calculatePriceForPeriod(datePeriod,accommodation);
+        long reservationPrice = reservationRequest.getPrice();//dateManagementService.calculatePriceForPeriod(datePeriod,accommodation);
         ReservationStatus reservationStatus;
         if(accommodation.getPolicy() == AccommodationReservationPolicy.Auto){
             reservationStatus = ReservationStatus.ACCEPTED;

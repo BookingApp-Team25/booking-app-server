@@ -24,4 +24,5 @@ public interface AccommodationService {
     public boolean addFavoriteAccommodation(int accommodationId);
 
     Collection<AccommodationSummaryResponse> filterAccommodations(String city, LocalDate startDate, LocalDate endDate, int guestNumber, List<String> amenities, AccommodationType accommodationType, double minPrice, double maxPrice);
+    public ReservationSummaryCollectionResponse getGuestReservations(UUID guestId,int page, int numberOfElements) throws IOException;
 }

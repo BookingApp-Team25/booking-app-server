@@ -1,5 +1,6 @@
 package rs.ac.uns.ftn.asd.Projekatsiit2023.service;
 
+import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.config.UniqueDates;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.model.Accommodation;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.model.AccommodationDatePeriod;
@@ -9,7 +10,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
+@Service
 public class DateManagementService {
     private boolean isHoliday(LocalDate date){
         for(LocalDate holiday : UniqueDates.HOLIDAYS){
