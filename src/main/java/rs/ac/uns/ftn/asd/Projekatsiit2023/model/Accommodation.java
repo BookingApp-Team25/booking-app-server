@@ -1,14 +1,25 @@
 package rs.ac.uns.ftn.asd.Projekatsiit2023.model;
 
 import jakarta.persistence.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.multipart.MultipartFile;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.AccommodationRequest;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.AccommodationOnHoldStatus;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.AccommodationReservationPolicy;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.AccommodationType;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.PriceCalculationMethod;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.repository.ImageRepository;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.*;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
 @Entity
 public class Accommodation {
     @Id
@@ -31,18 +42,17 @@ public class Accommodation {
     @CollectionTable(name = "amenities", joinColumns = @JoinColumn(name = "id"))
     @Column(name = "amenity", nullable = false)
     private List<String> amenities;
-    @ElementCollection(targetClass = String.class, fetch = FetchType.EAGER)
-    @CollectionTable(name = "photos", joinColumns = @JoinColumn(name = "id"))
-    @Column(name = "photo", nullable = false)
-    private List<String>  photos;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "accommodation_id")
+    public List<Image>  photos;
     @Column(name = "minGuests", nullable = false)
     private int minGuests;
     @Column(name = "maxGuests", nullable = false)
     private int maxGuests;
     @Enumerated(EnumType.STRING)
     private AccommodationType type;
-    @OneToMany(mappedBy = "accommodation", cascade = CascadeType.ALL)
-    private List<AccommodationDatePeriod> availability;
+    @OneToMany(mappedBy = "accommodation", cascade = CascadeType.ALL, orphanRemoval = true)
+    public List<AccommodationDatePeriod> availability;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "pricelist_id", referencedColumnName = "id")
@@ -61,10 +71,13 @@ public class Accommodation {
     private AccommodationReservationPolicy policy;
     @Enumerated(EnumType.STRING)
     private AccommodationOnHoldStatus onHoldStatus;
-    private List<AccommodationDatePeriod> createAccommodationDatePeriods(List<DatePeriod> datePeriods){
+
+    @Enumerated(EnumType.STRING)
+    private PriceCalculationMethod priceCalculationMethod;
+    private List<AccommodationDatePeriod> createAccommodationDatePeriods(List<AccommodationDatePeriod> datePeriods){
         List<AccommodationDatePeriod> periods = new ArrayList<AccommodationDatePeriod>();
-        for ( DatePeriod datePeriod : datePeriods){
-            periods.add(new AccommodationDatePeriod(datePeriod.getStartDate(),datePeriod.getEndDate(),this));
+        for (AccommodationDatePeriod datePeriod : datePeriods){
+            periods.add(new AccommodationDatePeriod(datePeriod.getStartDate(),datePeriod.getEndDate(),this, datePeriod.isAppliedWeekend(),datePeriod.isAppliedSummer(),datePeriod.isAppliedHoliday(),datePeriod.isAppliedWinter()));
         }
         return periods;
     }
@@ -79,7 +92,7 @@ public class Accommodation {
     public Accommodation() {
     }
 
-    public Accommodation(String name, String description, Location location, List<String> amenities, List<String> photos, int minGuests, int maxGuests, AccommodationType type, double price, AccommodationPricelist pricelist, int daysBefore, AccommodationReservationPolicy policy) {
+    public Accommodation(String name, String description, Location location, List<String> amenities, List<Image> photos, int minGuests, int maxGuests, AccommodationType type, double price, AccommodationPricelist pricelist, int daysBefore, AccommodationReservationPolicy policy) {
         this.id = UUID.randomUUID();
         this.name = name;
         this.description = description;
@@ -96,6 +109,17 @@ public class Accommodation {
         this.policy = policy;
         this.reviews=new ArrayList<AccommodationReview>();
         this.rating=0;
+    }
+    public List<String> getPhotosEncoded() throws IOException {
+        List<String> encodedPhotos = new ArrayList<String>();
+        for(Image image : this.photos){
+           String imagePath = image.getImagePath();
+           byte[] imageBytes = Files.readAllBytes(Path.of(imagePath));
+           String base64Image = Base64.getEncoder().encodeToString(imageBytes);
+           String fullImage = "data:image/png;base64," + base64Image;
+           encodedPhotos.add(fullImage);
+        }
+        return encodedPhotos;
     }
 
     public Host getHost() {
@@ -134,7 +158,7 @@ public class Accommodation {
         return amenities;
     }
 
-    public List<String> getPhotos() {
+    public List<Image> getPhotos() {
         return photos;
     }
 
@@ -170,7 +194,7 @@ public class Accommodation {
         this.amenities = amenities;
     }
 
-    public void setPhotos(List<String> photos) {
+    public void setPhotos(List<Image> photos) {
         this.photos = photos;
     }
 
@@ -225,12 +249,12 @@ public class Accommodation {
     public void setPolicy(AccommodationReservationPolicy policy) {
         this.policy = policy;
     }
-    public void processAccommodationRequest(AccommodationRequest accommodationRequest){
+    public void processAccommodationRequest(AccommodationRequest accommodationRequest) throws IOException {
         this.name = accommodationRequest.getName();
         this.description = accommodationRequest.getDescription();
         this.location = accommodationRequest.getLocation();
         this.amenities = accommodationRequest.getAmenities();
-        this.photos = accommodationRequest.getPhotos();
+        //this.photos = accommodationRequest.getPhotos();
         this.minGuests = accommodationRequest.getMinGuests();
         this.maxGuests = accommodationRequest.getMaxGuests();
         this.type = accommodationRequest.getType();
@@ -240,6 +264,15 @@ public class Accommodation {
         this.daysBefore = accommodationRequest.getDaysBefore();
         this.policy = accommodationRequest.getPolicy();
         this.rating=0;
+        this.priceCalculationMethod = accommodationRequest.getPriceCalculationMethod();
+    }
+
+    public PriceCalculationMethod getPriceCalculationMethod() {
+        return priceCalculationMethod;
+    }
+
+    public void setPriceCalculationMethod(PriceCalculationMethod priceCalculationMethod) {
+        this.priceCalculationMethod = priceCalculationMethod;
     }
 
     public List<AccommodationReview> getReviews() {

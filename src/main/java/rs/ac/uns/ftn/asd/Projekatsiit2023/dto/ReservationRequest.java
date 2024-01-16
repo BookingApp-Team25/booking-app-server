@@ -17,15 +17,26 @@ public class ReservationRequest {
 
     private DatePeriod reservedDate;
 
+    private long price;
+
     public ReservationRequest() {
     }
 
-    public ReservationRequest(UUID guestId, UUID hostId, UUID accommodationId, ReservationStatus reservationStatus, DatePeriod reservedDate) {
+    public ReservationRequest(UUID guestId, UUID hostId, UUID accommodationId, ReservationStatus reservationStatus, DatePeriod reservedDate, long price) {
         this.guestId = guestId;
         this.hostId = hostId;
         this.accommodationId = accommodationId;
         this.reservationStatus = reservationStatus;
         this.reservedDate = reservedDate;
+        this.price = price;
+    }
+
+    public long getPrice() {
+        return price;
+    }
+
+    public void setPrice(long price) {
+        this.price = price;
     }
 
     public UUID getGuestId() {
