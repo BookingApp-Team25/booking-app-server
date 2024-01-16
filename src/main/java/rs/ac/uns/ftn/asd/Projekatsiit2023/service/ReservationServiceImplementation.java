@@ -47,11 +47,11 @@ public class ReservationServiceImplementation implements ReservationService{
         Accommodation accommodation = accommodationRepository.findById(reservationRequest.getAccommodationId())
                 .orElseThrow(() -> new EntityNotFoundException("Accommodation not found with id: " + reservationRequest.getAccommodationId()));
 
-        DateManagementService dateManagementService = new DateManagementService(reservationRepository,accommodationRepository);
+        DateManagementService dateManagementService = new DateManagementService(reservationRepository, accommodationRepository);
         if(!dateManagementService.isReservationPossible(datePeriod, accommodation.getAvailability())){
             return new MessageResponse(false,"Reservation at that period is not possible");
         }
-        long reservationPrice = dateManagementService.calculatePriceForPeriod(datePeriod,accommodation);
+        long reservationPrice = reservationRequest.getPrice();//dateManagementService.calculatePriceForPeriod(datePeriod,accommodation);
         ReservationStatus reservationStatus;
         if(accommodation.getPolicy() == AccommodationReservationPolicy.Auto){
             reservationStatus = ReservationStatus.ACCEPTED;
@@ -146,6 +146,26 @@ public class ReservationServiceImplementation implements ReservationService{
             hostReservationResponse.setAccommodationName(reservation.getAccommodation().getName());
         }
         return new HostReservationCollectionResponse(hostReservationResponses,totalNumberOfReservations);
+    }
+
+    public ReservationSummaryCollectionResponse getFilteredGuestReservations(UUID guestId, DatePeriod reservationPeriod, String reservationName, ReservationStatus reservationStatus, int page, int numberOfElements) throws IOException {
+        Pageable pageRequest = PageRequest.of(page, numberOfElements);
+        List<Reservation> reservationsFilteredOnce = reservationRepository.findByIdAndAccommodationName(reservationName,guestId,pageRequest).getContent();
+        DateManagementService dateManagementService = new DateManagementService(reservationRepository,accommodationRepository);
+        List<Reservation> reservationsFilteredTwice = new ArrayList<>();
+        for(Reservation reservation : reservationsFilteredOnce){
+            if(dateManagementService.isPeriodInside(reservation.getReservedDate(),reservationPeriod) && reservation.getReservationStatus() == reservationStatus){
+                reservationsFilteredTwice.add(reservation);
+            }
+        }
+        long totalNumberOfReservations = reservationsFilteredTwice.size();
+        List<ReservationRequest> guestReservationResponses = new ArrayList<>();
+        for(Reservation reservation: reservationsFilteredTwice){
+            ReservationRequest guestReservationResponse = new ReservationRequest(reservation.getId() , reservation.getGuest().getId(), reservation.getHost().getId(),
+                    reservation.getAccommodation().getId(), reservation.getReservationStatus(), reservation.getReservedDate(), reservation.getPrice());
+            guestReservationResponses.add(guestReservationResponse);
+        }
+        return new ReservationSummaryCollectionResponse(guestReservationResponses,totalNumberOfReservations);
     }
 
     @Override

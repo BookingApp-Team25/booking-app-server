@@ -103,7 +103,7 @@ public class Accommodation {
         this.maxGuests = maxGuests;
         this.type = type;
         this.availability = new ArrayList<AccommodationDatePeriod>();
-        this.price = price;
+        this.price = price; //ne koristiti/ukloniti
         this.pricelist = pricelist;
         this.daysBefore = daysBefore;
         this.policy = policy;

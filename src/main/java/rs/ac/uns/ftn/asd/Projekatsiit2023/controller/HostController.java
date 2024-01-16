@@ -70,4 +70,5 @@ public class HostController {
     public ResponseEntity<Collection<User>> allUsers(){
         return ResponseEntity.ok(userService.findAll());
     }
+
 }

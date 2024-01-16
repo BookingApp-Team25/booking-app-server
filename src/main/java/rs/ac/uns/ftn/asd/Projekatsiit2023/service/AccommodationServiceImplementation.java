@@ -5,6 +5,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.AccommodationType;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.model.Reservation;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.repository.AccommodationRepository;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.*;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.AccommodationOnHoldStatus;
@@ -43,7 +44,8 @@ public class AccommodationServiceImplementation implements AccommodationService{
     @Override
     public AccommodationResponse getAccommodation(UUID accommodationId) throws IOException {
         Accommodation accommodation = accommodationRepository.getReferenceById(accommodationId);
-        return new AccommodationResponse(accommodation.getId(),
+        return new AccommodationResponse(accommodation.getHost().getId(),
+                accommodation.getId(),
                 accommodation.getName(),
                 accommodation.getDescription(),
                 accommodation.getLocation(),
@@ -117,15 +119,20 @@ public class AccommodationServiceImplementation implements AccommodationService{
                 .map(accommodation -> {
                     // Calculate average rating
                     double averageRating = calculateAverageRating(accommodation);
-                    return new AccommodationSummaryResponse(
-                            accommodation.getId(),
-                            accommodation.getName(),
-                            accommodation.getPhotos().get(0).getImagePath(),
-                            accommodation.getDescription(),
-                            accommodation.getPrice(),
-                            averageRating,
-                            accommodation.getOnHoldStatus()
-                    );
+                    try {
+                        return new AccommodationSummaryResponse(
+                                accommodation.getId(),
+                                accommodation.getName(),
+                                accommodation.getPhotos().get(0).getEncodedImage(),
+                                accommodation.getDescription(),
+                                //accommodation.getPrice(),
+                                accommodation.getPricelist().getDailyPrice(),
+                                averageRating,
+                                accommodation.getOnHoldStatus()
+                        );
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                 })
                 .collect(Collectors.toList());
     }
@@ -158,4 +165,16 @@ public class AccommodationServiceImplementation implements AccommodationService{
         return mapToSummaryResponse(filteredAccommodations);
     }
 
+    @Override
+    public ReservationSummaryCollectionResponse getGuestReservations(UUID guestId,int page, int numberOfElements) throws IOException {
+        long totalNumberOfAccommodations = accommodationRepository.countAllGuestReservations(guestId);
+        Pageable pageRequest = PageRequest.of(page, numberOfElements);
+        ArrayList<Reservation> fullList = new ArrayList<Reservation>(accommodationRepository.findAllGuestReservations(guestId,pageRequest).getContent());
+        ArrayList<ReservationRequest> summary = new ArrayList<>();
+        for (Reservation reservation : fullList){
+            summary.add(new ReservationRequest(reservation.getId() , reservation.getGuest().getId(), reservation.getHost().getId(),
+                    reservation.getAccommodation().getId(), reservation.getReservationStatus(), reservation.getReservedDate(), reservation.getPrice()));
+        }
+        return new ReservationSummaryCollectionResponse(summary,totalNumberOfAccommodations);
+    }
 }

@@ -18,8 +18,12 @@ import java.io.IOException;
 import java.lang.reflect.Array;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.time.format.TextStyle;
 import java.util.*;
+
+@Service
 public class DateManagementService {
     ReservationRepository reservationRepository;
     AccommodationRepository accommodationRepository;
@@ -27,6 +31,7 @@ public class DateManagementService {
         this.accommodationRepository = accommodationRepository;
         this.reservationRepository = reservationRepository;
     }
+
     private boolean isHoliday(LocalDate date){
         for(LocalDate holiday : UniqueDates.HOLIDAYS){
             if(date.getDayOfMonth() == holiday.getDayOfMonth() && date.getMonth() == holiday.getMonth()){

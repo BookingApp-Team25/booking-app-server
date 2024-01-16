@@ -159,6 +159,36 @@ public class UserServiceImplementation implements UserService {
         return null;
     }
 
+
+    public HostData getHostById(UUID hostId) {
+        User user = userRepository.findUserById(hostId);
+        return mapToHostData(user);
+    }
+
+    @Override
+    public GuestData getGuestByUsername(String username) {
+        User guest = userRepository.findGuestByUsername(username);
+        return mapToGuestData(guest);
+    }
+
+    public HostData mapToHostData(User user) {
+        return new HostData(
+                user.getUsername(),
+                user.getPassword(),
+                user.getFirstName(),
+                user.getLastName()
+        );
+    }
+
+    public GuestData mapToGuestData(User user) {
+        return new GuestData(
+                user.getId(),
+                user.getUsername(),
+                user.getPassword(),
+                user.getFirstName(),
+                user.getLastName()
+        );
+
     public MessageResponse report(String username,String reason){
         Optional<User> ret=userRepository.findByUsername(username);
         if(ret.isPresent()){

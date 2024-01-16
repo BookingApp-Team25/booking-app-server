@@ -5,12 +5,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.AccommodationResponse;
-import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.AccommodationSummaryCollectionResponse;
-import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.AccommodationSummaryResponse;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.*;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.AccommodationType;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.model.Accommodation;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.service.AccommodationService;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.service.UserServiceImplementation;
 
 import java.io.IOException;
 import java.time.OffsetDateTime;
@@ -27,6 +26,10 @@ import java.time.LocalDate;
 public class AccommodationController {
     @Autowired
     private AccommodationService accommodationService;
+
+    @Autowired
+    private UserServiceImplementation userService;
+
     @PostMapping(value = "/create")
     public ResponseEntity<String> createAccommodation (@RequestBody Accommodation accommodation){
         String answer = accommodationService.createAccommodation(accommodation);
@@ -122,5 +125,18 @@ public class AccommodationController {
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
+
+    @GetMapping(value = "/data/{hostId}") //morao sam u ovaj controller staviti jer nije drugde zbog corsa hteo nzm zasto cak i kad se doda cors da treba da radi on ne radi
+    public ResponseEntity<HostData> findHostById(@PathVariable("hostId") String hostIdString){
+        UUID hostId = UUID.fromString(hostIdString);
+        return ResponseEntity.ok(userService.getHostById(hostId));
+    }
+
+    @PreAuthorize("hasAuthority('ROLE_Guest')")
+    @GetMapping(value = "/guest/{guestId}")
+    public ResponseEntity<ReservationSummaryCollectionResponse> getGuestReservations(@PathVariable("guestId") UUID guestId, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10")int numberOfElements) throws IOException {
+        ReservationSummaryCollectionResponse reservations = accommodationService.getGuestReservations(guestId,page,numberOfElements);
+        return  ResponseEntity.ok(reservations);
     }
 }

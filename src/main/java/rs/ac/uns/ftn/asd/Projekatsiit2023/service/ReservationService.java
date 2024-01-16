@@ -22,4 +22,6 @@ public interface ReservationService {
     public boolean deleteReservation(UUID reservationId);
     public boolean cancelReservation(UUID reservationId);
 
+    public ReservationSummaryCollectionResponse getFilteredGuestReservations(UUID hostId, DatePeriod reservationPeriod, String reservationName, ReservationStatus reservationStatus, int page, int numberOfElements) throws IOException;
+
 }

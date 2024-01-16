@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.AccommodationType;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.model.Accommodation;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.model.Reservation;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -22,6 +23,15 @@ public interface AccommodationRepository extends JpaRepository<Accommodation, UU
     long countAllHostAccommodations(
             @Param("hostId") UUID hostId
     );
+
+    @Query(
+            "SELECT COUNT(r) FROM Reservation r " +
+                    "WHERE r.guest.id = :guestId"
+    )
+    long countAllGuestReservations(
+            @Param("guestId") UUID guestId
+    );
+
     @Query(
             "SELECT a FROM Accommodation a " +  // Add space after 'a'
                     "WHERE a.host.id = :hostId"
@@ -30,6 +40,23 @@ public interface AccommodationRepository extends JpaRepository<Accommodation, UU
             @Param("hostId") UUID hostId,
             Pageable pageable
     );
+
+    @Query(
+            "SELECT r FROM Reservation r " +  // Add space after 'a'
+                    "WHERE r.guest.id = :guestId"
+    )
+    Page<Reservation> findAllGuestReservations(
+            @Param("guestId") UUID guestId,
+            Pageable pageable
+    );
+
+    @Query(
+            "SELECT a FROM Accommodation a " +  // Add space after 'a'
+                    "WHERE a.id = :accommodationId"
+    )
+    Accommodation findAccommodationById(
+            @Param("accommodationId") UUID accommodationId);
+
     @Query("SELECT a FROM Accommodation a " +
             "WHERE a.location.city = :city " +
             "AND :guestNumber BETWEEN a.minGuests AND a.maxGuests " +
