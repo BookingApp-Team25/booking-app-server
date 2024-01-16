@@ -21,6 +21,10 @@ public class AccountEditRequest {
         return password;
     }
 
+    public void setPasswordRepeat(String passwordRepeat) {
+        this.passwordRepeat = passwordRepeat;
+    }
+
     public void setPassword(String password) {
         this.password = password;
     }

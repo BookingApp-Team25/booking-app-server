@@ -13,4 +13,6 @@ public interface HostService {
     public AccommodationLogCollection getLogsForPeriod(DatePeriod period, String hostUsername) throws IOException;
     public AccommodationMonthlyLogCollection getAnnualLog(UUID accommodationId) throws IOException;
     public Boolean editAccount(int hostId,AccountEditRequest accountEditRequest);
+
+    public Collection<AccountDetailsResponse> getGuestsForHost(String hostUsername);
 }

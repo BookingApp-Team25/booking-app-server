@@ -3,6 +3,7 @@ package rs.ac.uns.ftn.asd.Projekatsiit2023.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -21,6 +22,7 @@ import rs.ac.uns.ftn.asd.Projekatsiit2023.security.jwt.JwtRequestFilter;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
+@EnableAsync
 public class WebSecurityConfiguration {
 
     @Autowired
@@ -29,7 +31,7 @@ public class WebSecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf().disable().authorizeRequests() // csrf->disabled, pošto nam JWT odrađuje zaštitu od CSRF napada
-                .requestMatchers("/*").permitAll().requestMatchers("/api/auth/**","/api/accommodation/**").permitAll() // statički html i login mogu svi da pozovu
+                .requestMatchers("/*").permitAll().requestMatchers("/api/auth/**","/api/accommodation/**","/api/review/*","/api/user/host-details/*").permitAll() // statički html i login mogu svi da pozovu
                 .anyRequest().authenticated() // sav pristup API-ju mora da bude autentikovan
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class); // JWT procesiramo pre autentikacije
@@ -40,7 +42,6 @@ public class WebSecurityConfiguration {
     @Bean
     public PasswordEncoder passwordEncoder() {
         PasswordEncoder encoder = new BCryptPasswordEncoder();// PasswordEncoderFactories.createDelegatingPasswordEncoder();
-        //System.out.println(encoder.encode("admin"));
         return encoder;
     }
 

@@ -3,6 +3,7 @@ package rs.ac.uns.ftn.asd.Projekatsiit2023.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.*;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.ReservationStatus;
@@ -19,7 +20,7 @@ import java.util.Collection;
 import java.util.UUID;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:4200",allowedHeaders = "*")
 @RequestMapping("/api/host")
 public class HostController {
     @Autowired
@@ -50,10 +51,15 @@ public class HostController {
         return ResponseEntity.ok(annualLog);
     }
 
-//    @GetMapping(value = "/hosts")
-//    public ResponseEntity allHosts(){
-//        return ResponseEntity.ok(hostService.findAll());
-//    }
+    @PreAuthorize("hasAuthority('ROLE_Host')")
+    @GetMapping(value = "/myguests/{username}")
+    public ResponseEntity<Collection<AccountDetailsResponse>> getGuestsForHost(@PathVariable("username") String username){
+        Collection<AccountDetailsResponse> guests=hostService.getGuestsForHost(username);
+        if(!guests.isEmpty()) {
+            return  ResponseEntity.ok(guests);
+        }
+        return null;
+    }
 
     @GetMapping(value = "/guests")
     public ResponseEntity<Collection<Guest>> allGuests(){

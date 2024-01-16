@@ -5,6 +5,7 @@ import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.*;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.model.User;
 
 import java.util.Collection;
+import java.util.UUID;
 
 public interface UserService extends UserDetailsService {
     public MessageResponse editAccount(String username, AccountEditRequest accountEditRequest);
@@ -15,4 +16,7 @@ public interface UserService extends UserDetailsService {
     public MessageResponse activateAccount(String code);
     public MessageResponse deleteAccount(String username);
     public Boolean isBlocked(String username);
+    public AccountDetailsResponse getHostDetails(UUID hostId);
+    public MessageResponse report(String username,String reason);
+    public Boolean checkReportPermission(String guestUsername,String hostUsername);
 }
