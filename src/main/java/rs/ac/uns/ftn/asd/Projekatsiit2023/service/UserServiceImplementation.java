@@ -173,9 +173,9 @@ public class UserServiceImplementation implements UserService {
     public Boolean checkReportPermission(String guestUsername,String hostUsername) {
         Guest guest= (Guest) userRepository.findByUsername(guestUsername).get();
         Host host= (Host) userRepository.findByUsername(hostUsername).get();
-        Collection<Reservation> reservations= reservationRepository.findAllByHostId(host.getId());
+        Collection<Reservation> reservations= reservationRepository.findAllHostReservations(host.getId());
         for(Reservation reservation: reservations){
-            if(reservation.getGuestId()==guest.getId() && reservation.isFinished()){
+            if(reservation.getGuest().getId()==guest.getId() && reservation.isFinished()){
                 return true;
             }
         }

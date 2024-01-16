@@ -62,6 +62,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, UUID> 
     @Query("SELECT r FROM Reservation r WHERE r.accommodation.id = :accommodationId")
     List<Reservation> findAllByAccommodationId(@Param("accommodationId") UUID accommodationId);
 
-    @Query("SELECT r FROM Reservation r WHERE r.guestId = :guestId AND r.accommodation.id = :accommodationId")
+    @Query("SELECT r FROM Reservation r WHERE r.guest.id = :guestId AND r.accommodation.id = :accommodationId")
     List<Reservation> findAllByGuestAndAccommodationId(@Param("guestId") UUID guestId,@Param("accommodationId") UUID accommodationId);
 }

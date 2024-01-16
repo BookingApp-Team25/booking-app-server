@@ -76,7 +76,7 @@ public class Reservation {
     }
 
     public Boolean isFinished(){
-        if(reservationStatus.equals(ReservationStatus.Finished)){
+        if(reservationStatus.equals(ReservationStatus.FINISHED)){
             return true;
         }
         return false;

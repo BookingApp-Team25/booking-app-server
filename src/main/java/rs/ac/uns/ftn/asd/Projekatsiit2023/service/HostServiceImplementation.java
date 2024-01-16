@@ -70,10 +70,10 @@ public class HostServiceImplementation implements HostService{
     @Override
     public Collection<AccountDetailsResponse> getGuestsForHost(String hostUsername) {
         Host host = (Host) userRepository.findByUsername(hostUsername).get();
-        List<Reservation> reservations=reservationRepository.findAllByHostId(host.getId());
+        List<Reservation> reservations=reservationRepository.findAllHostReservations(host.getId());
         Collection<AccountDetailsResponse> accountDetailsResponses=new ArrayList<AccountDetailsResponse>();
         for(Reservation reservation : reservations){
-            User user=userRepository.getReferenceById(reservation.getGuestId());
+            User user=userRepository.getReferenceById(reservation.getGuest().getId());
             AccountDetailsResponse adr=new AccountDetailsResponse(user.getId().toString(),user.getUsername(),user.getFirstName(),
                     user.getLastName(),user.getAddress(),user.getPhoneNumber());
             accountDetailsResponses.add(adr);
