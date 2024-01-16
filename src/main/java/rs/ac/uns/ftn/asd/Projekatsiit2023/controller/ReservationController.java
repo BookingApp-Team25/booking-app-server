@@ -9,12 +9,13 @@ import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.*;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.ReservationStatus;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.model.DatePeriod;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.repository.AccommodationRepository;
-import rs.ac.uns.ftn.asd.Projekatsiit2023.service.AccommodationServiceImplementation;
-import rs.ac.uns.ftn.asd.Projekatsiit2023.service.DateManagementService;
-import rs.ac.uns.ftn.asd.Projekatsiit2023.service.ReservationServiceImplementation;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.service.*;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Collection;
 import java.util.Date;
@@ -31,6 +32,8 @@ public class ReservationController {
     private DateManagementService dateManagementService;
     @Autowired
     private AccommodationRepository accommodationRepository;
+    @Autowired
+    private UserServiceImplementation userService;
 
     @CrossOrigin(origins = "http://localhost:4200")
     @PostMapping(value = "/create")
@@ -90,6 +93,34 @@ public class ReservationController {
         return ResponseEntity.ok(reservations);
 
     }
+
+    @GetMapping(value = "{guestId}/filtered-guest")
+    public ResponseEntity<ReservationSummaryCollectionResponse> getFilteredGuestReservations(@PathVariable("guestId") UUID guestId,
+                                                                                         @RequestParam(required = false) String startDateStr,
+                                                                                         @RequestParam(required = false) String endDateStr,
+                                                                                         @RequestParam(required = false) String reservationName,
+                                                                                         @RequestParam ReservationStatus reservationStatus, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10")int numberOfElements) throws IOException {
+        if(reservationName == null){
+            reservationName = "";
+        }
+        LocalDate startDate;
+        LocalDate endDate;
+        if(startDateStr == null || endDateStr == null){
+            startDate = LocalDate.MIN;
+            endDate = LocalDate.MAX;
+        }else{
+            ZonedDateTime startDateTime = ZonedDateTime.parse(startDateStr, DateTimeFormatter.ISO_DATE_TIME);
+            ZonedDateTime endDateTime = ZonedDateTime.parse(endDateStr, DateTimeFormatter.ISO_DATE_TIME);
+
+            startDate = startDateTime.toLocalDate().plusDays(1);
+            endDate = endDateTime.toLocalDate().plusDays(1);
+        }
+        DatePeriod reservationPeriod= new DatePeriod(startDate,endDate);
+        ReservationSummaryCollectionResponse reservations = reservationService.getFilteredGuestReservations(guestId,reservationPeriod,reservationName,reservationStatus,page,numberOfElements);
+        return ResponseEntity.ok(reservations);
+
+    }
+
     @PostMapping(value = "/{reservationId}/resolve")
     public ResponseEntity<MessageResponse> resolveReservationRequest(@PathVariable("reservationId") UUID reservationId, @RequestParam boolean isAccepted){
         MessageResponse message = reservationService.resolveReservation(reservationId,isAccepted);
@@ -128,5 +159,11 @@ public class ReservationController {
         } catch (DateTimeParseException e) {
             return ResponseEntity.badRequest().body(-1L);
         }
+    }
+
+    @GetMapping(value = "/guest-id/{guestUsername}") //morao sam u ovaj controller staviti jer nije drugde zbog corsa hteo nzm zasto cak i kad se doda cors da treba da radi on ne radi
+    public ResponseEntity<GuestData> findGuestByUsername(@PathVariable("guestUsername") String guestUsername){
+        GuestData guestData = userService.getGuestByUsername(guestUsername);
+        return ResponseEntity.ok(guestData);
     }
 }

@@ -5,6 +5,8 @@ import rs.ac.uns.ftn.asd.Projekatsiit2023.config.UniqueDates;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.model.Accommodation;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.model.AccommodationDatePeriod;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.model.DatePeriod;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.repository.AccommodationRepository;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.repository.ReservationRepository;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -12,6 +14,13 @@ import java.util.ArrayList;
 import java.util.List;
 @Service
 public class DateManagementService {
+    ReservationRepository reservationRepository;
+    AccommodationRepository accommodationRepository;
+    public DateManagementService(ReservationRepository reservationRepository, AccommodationRepository accommodationRepository){
+        this.accommodationRepository = accommodationRepository;
+        this.reservationRepository = reservationRepository;
+    }
+
     private boolean isHoliday(LocalDate date){
         for(LocalDate holiday : UniqueDates.HOLIDAYS){
             if(date.getDayOfMonth() == holiday.getDayOfMonth() && date.getMonth() == holiday.getMonth()){
@@ -31,6 +40,12 @@ public class DateManagementService {
     private boolean isWeekend(LocalDate date) {
         DayOfWeek dayOfWeek = date.getDayOfWeek();
         return dayOfWeek == DayOfWeek.SATURDAY || dayOfWeek == DayOfWeek.SUNDAY;
+    }
+    public boolean isPeriodInside(DatePeriod insidePeriod, DatePeriod outsidePeriod){
+        if(insidePeriod.getStartDate().isBefore(outsidePeriod.getStartDate()) || insidePeriod.getEndDate().isAfter(outsidePeriod.getEndDate())){
+            return false;
+        }
+        return true;
     }
     public boolean isReservationPossible(DatePeriod reservationDatePeriod, List<AccommodationDatePeriod> availableDates){
 
