@@ -75,6 +75,13 @@ public class Reservation {
         this.reservationStatus = reservationStatus;
     }
 
+    public Boolean isFinished(){
+        if(reservationStatus.equals(ReservationStatus.FINISHED)){
+            return true;
+        }
+        return false;
+    }
+
     public void setReservedDate(DatePeriod reservedDate) {
         this.reservedDate = reservedDate;
     }

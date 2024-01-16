@@ -1,17 +1,28 @@
 package rs.ac.uns.ftn.asd.Projekatsiit2023.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.config.UniqueDates;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.AccommodationLog;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.AccommodationMonthlyLog;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.ReservationStatus;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.model.Accommodation;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.model.AccommodationDatePeriod;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.model.DatePeriod;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.model.Reservation;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.repository.AccommodationRepository;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.repository.ReservationRepository;
 
+import java.io.IOException;
+import java.lang.reflect.Array;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.time.format.TextStyle;
+import java.util.*;
+
 @Service
 public class DateManagementService {
     ReservationRepository reservationRepository;
@@ -116,13 +127,83 @@ public class DateManagementService {
                 int index = availableDates.indexOf(accommodationDatePeriod);
                 newAvailableDates.set(index,beforeReservedDate);
             }
-            else{ // ceo period je uzet
+            else if(reservationDatePeriod.getStartDate().isEqual(accommodationDatePeriod.getStartDate()) && reservationDatePeriod.getEndDate().isEqual(accommodationDatePeriod.getEndDate())){ // ceo period je uzet
                 newAvailableDates.remove(accommodationDatePeriod);
             }
         }
         System.out.println(newAvailableDates);
         return newAvailableDates;
+    }
+    Map<UUID, AccommodationLog> getHostLogsForPeriod(String hostUsername, DatePeriod reportPeriod) throws IOException {
+        List<Reservation> hostReservations = reservationRepository.findAllHostReservations(hostUsername);
+        Map<UUID, AccommodationLog> accommodationLogMap = new HashMap<>();
 
+        for(Accommodation accommodation : accommodationRepository.findAll()){
+            accommodationLogMap.put(accommodation.getId(),null);
+        }
+
+        for(Reservation reservation : hostReservations){
+            if(isPeriodInside(reservation.getReservedDate(),reportPeriod) && reservation.getReservationStatus() != ReservationStatus.REJECTED){ // OBAVEZNO PROMENITI NA rezervation status == finished!!!!!!!!!!
+                if(accommodationLogMap.get(reservation.getAccommodation().getId()) == null){ //ako za ovaj smestaj jos nije nadjena akomodacija prvo inicijalizujemo izvestaj
+                    AccommodationLog log = new AccommodationLog(reservation.getAccommodation().getId(),reservation.getAccommodation().getName(),reservation.getAccommodation().getPhotosEncoded().get(0),1,reservation.getPrice());
+                    accommodationLogMap.put(reservation.getAccommodation().getId(),log);
+                }
+                else{ // log vec postoji sad se samo povecava broj rezervacija i para
+                    accommodationLogMap.get(reservation.getAccommodation().getId()).increaseTotalProfit(reservation.getPrice());
+                    accommodationLogMap.get(reservation.getAccommodation().getId()).incrementNumberOfReservations();
+                }
+            }
+        }
+        return accommodationLogMap;
+    }
+    ArrayList<DatePeriod> generateMonths(){
+        LocalDate currentDate = LocalDate.now();
+        ArrayList<DatePeriod> months = new ArrayList<>();
+        for(int i=0;i<11;i++){
+            LocalDate firstDayOfMonth = currentDate.minusMonths(i).withDayOfMonth(1);
+
+            LocalDate lastDayOfMonth = currentDate.minusMonths(i).withDayOfMonth(
+                    currentDate.minusMonths(i).lengthOfMonth());
+            months.add(new DatePeriod(firstDayOfMonth,lastDayOfMonth));
+        }
+        return months;
+    }
+    public boolean doPeriodsOverlap(DatePeriod datePeriod1, DatePeriod datePeriod2){
+        LocalDate startDate1 = datePeriod1.getStartDate();
+        LocalDate endDate1 = datePeriod1.getEndDate();
+        LocalDate startDate2 = datePeriod2.getStartDate();
+        LocalDate endDate2 = datePeriod2.getEndDate();
+        return !(startDate1.isAfter(endDate2) || startDate2.isAfter(endDate1));
+    }
+    public int numberOfOverlappingDays(DatePeriod datePeriod1, DatePeriod datePeriod2){
+        if(!doPeriodsOverlap(datePeriod1,datePeriod2)){
+            return 0;
+        }
+        else{
+            LocalDate maxStartDate = datePeriod1.getStartDate().isAfter(datePeriod2.getStartDate()) ? datePeriod1.getStartDate() : datePeriod2.getStartDate();
+            LocalDate minEndDate = datePeriod1.getEndDate().isBefore(datePeriod2.getEndDate()) ? datePeriod1.getEndDate() : datePeriod2.getEndDate();
+            return (int) maxStartDate.until(minEndDate).getDays() + 1;
+        }
+    }
+    List<AccommodationMonthlyLog> getAnnualStatistics(UUID accommodationId){
+        List<AccommodationMonthlyLog> monthlyLogs = new ArrayList<>();
+        ArrayList<DatePeriod> months = generateMonths();
+        List<Reservation> accommodationReservations = reservationRepository.findAllByAccommodationId(accommodationId);
+        for(DatePeriod month : months){
+            String monthName = month.getStartDate().getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
+            int monthReservations = 0;
+            double monthProfit = 0;
+            for(Reservation reservation : accommodationReservations){
+                double reservationProfit = numberOfOverlappingDays(month, reservation.getReservedDate())*((double) reservation.getPrice() /reservation.getReservedDate().getDuration());
+                if(reservationProfit > 0){
+                    monthReservations +=1;
+                }
+                monthProfit += reservationProfit;
+            }
+            AccommodationMonthlyLog monthlyLog = new AccommodationMonthlyLog(monthName,monthProfit,monthReservations);
+            monthlyLogs.add(monthlyLog);
+        }
+        return monthlyLogs;
     }
 
 }

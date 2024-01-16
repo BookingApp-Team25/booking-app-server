@@ -16,6 +16,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
 @Entity
 public class Accommodation {
     @Id
@@ -29,6 +33,8 @@ public class Accommodation {
     private String name;
     @Column(name = "description", nullable = false)
     private String description;
+    @OneToMany(mappedBy = "accommodation", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<AccommodationUpdate> updates;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "location_id", referencedColumnName = "id")
     private Location location;
@@ -53,8 +59,13 @@ public class Accommodation {
     private AccommodationPricelist pricelist;
     @Column(name = "price", nullable = false)
     private double price;
+    @Column(name = "rating", nullable = false)
+    private double rating;
     @Column(name = "daysBefore", nullable = false)
     private int daysBefore;
+
+    @OneToMany(mappedBy = "accommodation", cascade = CascadeType.ALL,fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<AccommodationReview> reviews;
 
     @Enumerated(EnumType.STRING)
     private AccommodationReservationPolicy policy;
@@ -96,6 +107,8 @@ public class Accommodation {
         this.pricelist = pricelist;
         this.daysBefore = daysBefore;
         this.policy = policy;
+        this.reviews=new ArrayList<AccommodationReview>();
+        this.rating=0;
     }
     public List<String> getPhotosEncoded() throws IOException {
         List<String> encodedPhotos = new ArrayList<String>();
@@ -123,6 +136,10 @@ public class Accommodation {
 
     public void setOnHoldStatus(AccommodationOnHoldStatus onHoldStatus) {
         this.onHoldStatus = onHoldStatus;
+    }
+
+    public double getRating() {
+        return rating;
     }
 
     public String getName() {
@@ -246,6 +263,7 @@ public class Accommodation {
         this.pricelist = accommodationRequest.getPricelist();
         this.daysBefore = accommodationRequest.getDaysBefore();
         this.policy = accommodationRequest.getPolicy();
+        this.rating=0;
         this.priceCalculationMethod = accommodationRequest.getPriceCalculationMethod();
     }
 
@@ -258,6 +276,26 @@ public class Accommodation {
     }
 
     public List<AccommodationReview> getReviews() {
-        return null;
+        return this.reviews;
+    }
+
+    public void addReview(AccommodationReview review){
+        this.reviews.add(review);
+    }
+    public void removeReview(AccommodationReview review){
+        this.reviews.remove(review);
+    }
+    public void updateRating(){
+        int n=0;
+        double rating=0;
+        if(reviews.isEmpty()){
+            this.rating=0;
+        }else {
+            for (AccommodationReview review : reviews) {
+                rating = rating + review.getRating();
+                n++;
+            }
+            this.rating = rating / n;
+        }
     }
 }

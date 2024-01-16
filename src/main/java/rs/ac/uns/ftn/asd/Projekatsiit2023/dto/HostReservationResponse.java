@@ -13,6 +13,7 @@ public class HostReservationResponse {
     private String guestName;
     private UUID accommodationId;
     private String accommodationName;
+    private String accommodationPhoto;
     private ReservationStatus reservationStatus;
     private DatePeriod reservedDate;
 
@@ -21,7 +22,7 @@ public class HostReservationResponse {
     public HostReservationResponse() {
     }
 
-    public HostReservationResponse(UUID reservationId, String guestName, UUID accommodationId, String accommodationName, ReservationStatus reservationStatus,DatePeriod reservedDate, double price) {
+    public HostReservationResponse(UUID reservationId, String guestName, UUID accommodationId, String accommodationName,String accommodationPhoto ,ReservationStatus reservationStatus,DatePeriod reservedDate, double price) {
         this.reservationId = reservationId;
         this.guestName = guestName;
         this.accommodationId = accommodationId;
@@ -29,6 +30,15 @@ public class HostReservationResponse {
         this.reservationStatus = reservationStatus;
         this.reservedDate = reservedDate;
         this.price = price;
+        this.accommodationPhoto = accommodationPhoto;
+    }
+
+    public String getAccommodationPhoto() {
+        return accommodationPhoto;
+    }
+
+    public void setAccommodationPhoto(String accommodationPhoto) {
+        this.accommodationPhoto = accommodationPhoto;
     }
 
     public void setReservationId(UUID reservationId) {

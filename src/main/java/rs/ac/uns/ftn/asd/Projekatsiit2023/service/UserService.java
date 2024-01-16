@@ -18,4 +18,7 @@ public interface UserService extends UserDetailsService {
     public Boolean isBlocked(String username);
     public HostData getHostById(UUID hostId);
     public GuestData getGuestByUsername(String username);
+    public AccountDetailsResponse getHostDetails(UUID hostId);
+    public MessageResponse report(String username,String reason);
+    public Boolean checkReportPermission(String guestUsername,String hostUsername);
 }

@@ -2,12 +2,12 @@ package rs.ac.uns.ftn.asd.Projekatsiit2023.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import rs.ac.uns.ftn.asd.Projekatsiit2023.model.Review;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.model.AccommodationReview;
 
 import java.util.Collection;
 import java.util.UUID;
 
 @Repository
-public interface ReviewRepository extends JpaRepository<Review, UUID> {
-    Collection<Review> findByAccommodationId(UUID accommodationId);
+public interface ReviewRepository extends JpaRepository<AccommodationReview, UUID> {
+    Collection<AccommodationReview> findByAccommodationId(UUID accommodationId);
 }

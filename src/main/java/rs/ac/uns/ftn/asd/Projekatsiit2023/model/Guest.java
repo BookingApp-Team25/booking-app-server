@@ -3,9 +3,7 @@ package rs.ac.uns.ftn.asd.Projekatsiit2023.model;
 import jakarta.persistence.*;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.Role;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Table(name = "guest")

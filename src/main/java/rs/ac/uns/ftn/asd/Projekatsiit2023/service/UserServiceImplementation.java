@@ -9,12 +9,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.*;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.Role;
-import rs.ac.uns.ftn.asd.Projekatsiit2023.model.Guest;
-import rs.ac.uns.ftn.asd.Projekatsiit2023.model.Host;
-import rs.ac.uns.ftn.asd.Projekatsiit2023.model.User;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.model.*;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.repository.HostRepository;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.repository.ReservationRepository;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.repository.UserReportRepository;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.repository.UserRepository;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
@@ -24,7 +26,12 @@ public class UserServiceImplementation implements UserService {
 
     @Autowired
     UserRepository userRepository;
-
+    @Autowired
+    ReservationRepository reservationRepository;
+    @Autowired
+    HostRepository hostRepository;
+    @Autowired
+    UserReportRepository userReportRepository;
     public MessageResponse editAccount(String username, AccountEditRequest accountEditRequest) {
         Optional<User> ret=userRepository.findByUsername(username);
         if(!ret.isEmpty()){
@@ -63,12 +70,21 @@ public class UserServiceImplementation implements UserService {
         Optional<User> ret = userRepository.findByUsername(username);
         if(!ret.isEmpty()){
             User user=ret.get();
-            AccountDetailsResponse adr=new AccountDetailsResponse(user.getUsername(),user.getFirstName(),user.getLastName(),user.getAddress(),user.getPhoneNumber());
+            AccountDetailsResponse adr=new AccountDetailsResponse(user.getId().toString(),user.getUsername(),user.getFirstName(),user.getLastName(),user.getAddress(),user.getPhoneNumber());
             return adr;
         }
         return null;
     }
 
+    @Override
+    public AccountDetailsResponse getHostDetails(UUID hostId) {
+        Host user= hostRepository.getReferenceById(hostId);
+        if(user!=null){
+            AccountDetailsResponse adr=new AccountDetailsResponse(user.getId().toString(),user.getUsername(),user.getFirstName(),user.getLastName(),user.getAddress(),user.getPhoneNumber(),user.getRating());
+            return adr;
+        }
+        return null;
+    }
     @Override
     public MessageResponse activateAccount(String code) {
         UUID activationCode=UUID.fromString(code);
@@ -143,6 +159,7 @@ public class UserServiceImplementation implements UserService {
         return null;
     }
 
+
     public HostData getHostById(UUID hostId) {
         User user = userRepository.findUserById(hostId);
         return mapToHostData(user);
@@ -171,5 +188,27 @@ public class UserServiceImplementation implements UserService {
                 user.getFirstName(),
                 user.getLastName()
         );
+
+    public MessageResponse report(String username,String reason){
+        Optional<User> ret=userRepository.findByUsername(username);
+        if(ret.isPresent()){
+            UserReport userReport=new UserReport(ret.get(),reason);
+            userReportRepository.save(userReport);
+            return new MessageResponse(true,"User is successfully reported");
+        }
+        return new MessageResponse(false,"User not found");
+    }
+
+    @Override
+    public Boolean checkReportPermission(String guestUsername,String hostUsername) {
+        Guest guest= (Guest) userRepository.findByUsername(guestUsername).get();
+        Host host= (Host) userRepository.findByUsername(hostUsername).get();
+        Collection<Reservation> reservations= reservationRepository.findAllHostReservations(host.getId());
+        for(Reservation reservation: reservations){
+            if(reservation.getGuest().getId()==guest.getId() && reservation.isFinished()){
+                return true;
+            }
+        }
+        return false;
     }
 }

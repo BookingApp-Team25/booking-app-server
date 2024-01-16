@@ -27,7 +27,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
-
         if (!isPermitted(request)) {
             System.out.println("####" + request.getMethod() + ":" + request.getRequestURL());
             System.out.println("#### Authorization: " + request.getHeader("Authorization"));
@@ -46,7 +45,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 System.out.println(">>>>>JWT TOKEN: " + jwtToken);
                 try {
                     username = jwtTokenUtil.getUsernameFromToken(jwtToken);
-                    System.out.println(username);
                     UserDetails userDetails = this.jwtUserDetailsService.loadUserByUsername(username);
                     if (jwtTokenUtil.validateToken(jwtToken, userDetails)) {
                         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
@@ -73,7 +71,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     private boolean isPermitted(HttpServletRequest request){
         String rq=request.getMethod()+","+request.getRequestURL().toString();
         String[] permitted={"POST,api/auth/register","POST,api/auth/login","PUT,api/auth/activation","GET,api/accommodation/approved"
-        ,"GET,api/accommodation/results","GET,api/accommodation/filtered","GET,api/accommodation/details"};
+        ,"GET,api/accommodation/results","GET,api/accommodation/filtered","GET,api/accommodation/details","GET,api/review","GET,api/user/host-details/"};
         for(String s : permitted){
             String[] sentRequest=rq.split(",");
             String[] permittedURL=s.split(",");

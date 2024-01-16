@@ -79,7 +79,7 @@ public class ReservationServiceImplementation implements ReservationService{
     }
 
     @Override
-    public HostReservationCollectionResponse getAllUnresolvedHostReservations(UUID hostId, int page, int numberOfElements) {
+    public HostReservationCollectionResponse getAllUnresolvedHostReservations(UUID hostId, int page, int numberOfElements) throws IOException {
         long totalNumberOfReservations = reservationRepository.count();
         Pageable pageRequest = PageRequest.of(page, numberOfElements);
         ArrayList<Reservation> fullList = new ArrayList<Reservation>(reservationRepository.findAllUnresolvedHostReservations(hostId,pageRequest).getContent());
@@ -91,7 +91,7 @@ public class ReservationServiceImplementation implements ReservationService{
             String accommodationPhoto = "Random photo";
             UUID reservationId = reservation.getId();
             AccommodationReservationPolicy accommodationReservationPolicy = reservation.getAccommodation().getPolicy();
-            hostReservations.add(new HostReservationResponse(reservationId,guestName,accommodationId,accommodationName,reservation.getReservationStatus(),reservation.getReservedDate(),reservation.getPrice()));
+            hostReservations.add(new HostReservationResponse(reservationId,guestName,accommodationId,accommodationName,reservation.getAccommodation().getPhotosEncoded().get(0),reservation.getReservationStatus(),reservation.getReservedDate(),reservation.getPrice()));
 
         }
         return new HostReservationCollectionResponse(hostReservations,totalNumberOfReservations);
@@ -103,7 +103,7 @@ public class ReservationServiceImplementation implements ReservationService{
     }
 
     @Override
-    public HostReservationCollectionResponse getAllHostReservations(UUID hostId, int page, int numberOfElements) {
+    public HostReservationCollectionResponse getAllHostReservations(UUID hostId, int page, int numberOfElements) throws IOException {
         long totalNumberOfReservations = reservationRepository.count();
         Pageable pageRequest = PageRequest.of(page, numberOfElements);
         ArrayList<Reservation> fullList = new ArrayList<Reservation>(reservationRepository.findAllHostReservations(hostId,pageRequest).getContent());
@@ -115,15 +115,37 @@ public class ReservationServiceImplementation implements ReservationService{
                 String accommodationPhoto = "Random photo";
                 UUID reservationId = reservation.getId();
             AccommodationReservationPolicy accommodationReservationPolicy = reservation.getAccommodation().getPolicy();
-            hostReservations.add(new HostReservationResponse(reservationId,guestName,accommodationId,accommodationName,reservation.getReservationStatus(),reservation.getReservedDate(),reservation.getPrice()));
+            hostReservations.add(new HostReservationResponse(reservationId,guestName,accommodationId,accommodationName,reservation.getAccommodation().getPhotosEncoded().get(0),reservation.getReservationStatus(),reservation.getReservedDate(),reservation.getPrice()));
 
         }
         return new HostReservationCollectionResponse(hostReservations,totalNumberOfReservations);
 
     }
 
-    public Collection<ReservationResponse> getFilteredHostReservations(int hostId, DatePeriod reservationPeriod, String reservationName, ReservationStatus reservationStatus){
-        return null;
+    public HostReservationCollectionResponse getFilteredHostReservations(UUID hostId, DatePeriod reservationPeriod, String reservationName, ReservationStatus reservationStatus, int page, int numberOfElements) throws IOException {
+        Pageable pageRequest = PageRequest.of(page, numberOfElements);
+        List<Reservation> reservationsFilteredOnce = reservationRepository.findByIdAndAccommodationName(reservationName,hostId,pageRequest).getContent();
+        DateManagementService dateManagementService = new DateManagementService(reservationRepository,accommodationRepository);
+        List<Reservation> reservationsFilteredTwice = new ArrayList<>();
+        for(Reservation reservation : reservationsFilteredOnce){
+            if(dateManagementService.isPeriodInside(reservation.getReservedDate(),reservationPeriod) && reservation.getReservationStatus() == reservationStatus){
+                reservationsFilteredTwice.add(reservation);
+            }
+        }
+        long totalNumberOfReservations = reservationsFilteredTwice.size();
+        List<HostReservationResponse> hostReservationResponses = new ArrayList<>();
+        for(Reservation reservation: reservationsFilteredTwice){
+            HostReservationResponse hostReservationResponse = new HostReservationResponse();
+            hostReservationResponse.setReservationId(reservation.getId());
+            hostReservationResponse.setAccommodationPhoto(reservation.getAccommodation().getPhotosEncoded().get(0));
+            hostReservationResponse.setReservedDate(reservation.getReservedDate());
+            hostReservationResponse.setPrice(reservation.getPrice());
+            hostReservationResponse.setAccommodationId(reservation.getAccommodation().getId());
+            hostReservationResponse.setGuestName(reservation.getGuest().getUsername());
+            hostReservationResponses.add(hostReservationResponse);
+            hostReservationResponse.setAccommodationName(reservation.getAccommodation().getName());
+        }
+        return new HostReservationCollectionResponse(hostReservationResponses,totalNumberOfReservations);
     }
 
     public ReservationSummaryCollectionResponse getFilteredGuestReservations(UUID guestId, DatePeriod reservationPeriod, String reservationName, ReservationStatus reservationStatus, int page, int numberOfElements) throws IOException {
