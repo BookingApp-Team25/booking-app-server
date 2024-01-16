@@ -28,10 +28,11 @@ public class AccommodationResponse {
     private AccommodationOnHoldStatus accommodationOnHoldStatus;
     private UUID hostId;
     private String hostUsername;
+    private double rating;
     public AccommodationResponse() {
     }
 
-    public AccommodationResponse(UUID id,String name, String description, Location location, List<String> amenities, List<String> photos, int minGuests, int maxGuests, AccommodationType type, List<DatePeriod> availability, double price, AccommodationPricelist pricelist, int daysBefore, AccommodationReservationPolicy policy, AccommodationOnHoldStatus status,UUID hostId,String hostUsername) {
+    public AccommodationResponse(UUID id,String name, String description, Location location, List<String> amenities, List<String> photos, int minGuests, int maxGuests, AccommodationType type, List<DatePeriod> availability, double price, AccommodationPricelist pricelist, int daysBefore, AccommodationReservationPolicy policy, AccommodationOnHoldStatus status,UUID hostId,String hostUsername,double rating) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -49,6 +50,7 @@ public class AccommodationResponse {
         this.accommodationOnHoldStatus = status;
         this.hostId=hostId;
         this.hostUsername=hostUsername;
+        this.rating=rating;
     }
 
     public String getHostUsername() {
@@ -101,6 +103,26 @@ public class AccommodationResponse {
 
     public UUID getHostId() {
         return hostId;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public void setHostId(UUID hostId) {
+        this.hostId = hostId;
+    }
+
+    public void setHostUsername(String hostUsername) {
+        this.hostUsername = hostUsername;
+    }
+
+    public double getRating() {
+        return rating;
+    }
+
+    public void setRating(double rating) {
+        this.rating = rating;
     }
 
     public void setName(String name) {

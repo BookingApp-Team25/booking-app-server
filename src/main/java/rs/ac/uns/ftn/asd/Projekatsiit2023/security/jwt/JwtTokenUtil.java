@@ -66,17 +66,16 @@ public class JwtTokenUtil implements Serializable {
     // compaction of the JWT to a URL-safe string
     private String doGenerateToken(Map<String, Object> claims) {
         try {
+            byte[] secretBytes = this.secret.getBytes("UTF-8");
+
             return Jwts.builder()
                     .setClaims(claims)
                     .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
-                    .signWith(SignatureAlgorithm.HS512, this.secret.getBytes("UTF-8"))
+                    .signWith(SignatureAlgorithm.HS512, secretBytes)
                     .compact();
         } catch (UnsupportedEncodingException ex) {
-            return Jwts.builder()
-                    .setClaims(claims)
-                    .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
-                    .signWith(SignatureAlgorithm.HS512, this.secret)
-                    .compact();
+            // Handle the exception appropriately, log or throw a runtime exception
+            throw new RuntimeException("Error encoding the secret key", ex);
         }
     }
 

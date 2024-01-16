@@ -73,16 +73,19 @@ public class ReviewServiceImplementation implements ReviewService{
             review.setGuest(guest);
             review.setAccommodation(accommodation);
             accommodation.addReview(review);
+            accommodation.updateRating();
             accommodationRepository.save(accommodation);
         } else {
             HostReview hostReview=new HostReview(reviewRequest.getComment(),reviewRequest.getRating());
             Optional<User> hret= userRepository.findByUsername(reviewRequest.getReviewedEntity());
+            hostReview.setGuest(guest);
             if(hret.isPresent()){
                 Host host= (Host) hret.get();
                 hostReview.setHost(host);
+                host.addReview(hostReview);
+//                host.updateRating();
+                userRepository.save(host);
             }
-            hostReview.setGuest(guest);
-            hostReviewRepository.save(hostReview);
         }
         return new MessageResponse(true,"Review created");
     }
@@ -110,13 +113,19 @@ public class ReviewServiceImplementation implements ReviewService{
         if(flag) {
             AccommodationReview accommodationReview = reviewRepository.getReferenceById(UUID.fromString(id));
             if (accommodationReview != null) {
-                reviewRepository.delete(accommodationReview);
+                Accommodation accommodation=accommodationReview.getAccommodation();
+                accommodation.removeReview(accommodationReview);
+                accommodation.updateRating();
+                accommodationRepository.save(accommodation);
                 return true;
             }
         }else {
             HostReview hostReview = hostReviewRepository.getReferenceById(UUID.fromString((id)));
             if (hostReview != null) {
-                hostReviewRepository.delete(hostReview);
+                Host host=hostReview.getHost();
+                host.removeReview(hostReview);
+//                host.updateRating();
+                userRepository.save(host);
                 return true;
             }
         }

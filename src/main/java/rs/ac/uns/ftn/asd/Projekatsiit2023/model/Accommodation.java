@@ -22,6 +22,8 @@ public class Accommodation {
     private String name;
     @Column(name = "description", nullable = false)
     private String description;
+    @OneToMany(mappedBy = "accommodation", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<AccommodationUpdate> updates;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "location_id", referencedColumnName = "id")
     private Location location;
@@ -47,10 +49,12 @@ public class Accommodation {
     private AccommodationPricelist pricelist;
     @Column(name = "price", nullable = false)
     private double price;
+    @Column(name = "rating", nullable = false)
+    private double rating;
     @Column(name = "daysBefore", nullable = false)
     private int daysBefore;
 
-    @OneToMany(mappedBy = "accommodation",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "accommodation", cascade = CascadeType.ALL,fetch = FetchType.LAZY, orphanRemoval = true)
     private List<AccommodationReview> reviews;
 
     @Enumerated(EnumType.STRING)
@@ -91,6 +95,7 @@ public class Accommodation {
         this.daysBefore = daysBefore;
         this.policy = policy;
         this.reviews=new ArrayList<AccommodationReview>();
+        this.rating=0;
     }
 
     public Host getHost() {
@@ -107,6 +112,10 @@ public class Accommodation {
 
     public void setOnHoldStatus(AccommodationOnHoldStatus onHoldStatus) {
         this.onHoldStatus = onHoldStatus;
+    }
+
+    public double getRating() {
+        return rating;
     }
 
     public String getName() {
@@ -230,6 +239,7 @@ public class Accommodation {
         this.pricelist = accommodationRequest.getPricelist();
         this.daysBefore = accommodationRequest.getDaysBefore();
         this.policy = accommodationRequest.getPolicy();
+        this.rating=0;
     }
 
     public List<AccommodationReview> getReviews() {
@@ -238,5 +248,21 @@ public class Accommodation {
 
     public void addReview(AccommodationReview review){
         this.reviews.add(review);
+    }
+    public void removeReview(AccommodationReview review){
+        this.reviews.remove(review);
+    }
+    public void updateRating(){
+        int n=0;
+        double rating=0;
+        if(reviews.isEmpty()){
+            this.rating=0;
+        }else {
+            for (AccommodationReview review : reviews) {
+                rating = rating + review.getRating();
+                n++;
+            }
+            this.rating = rating / n;
+        }
     }
 }

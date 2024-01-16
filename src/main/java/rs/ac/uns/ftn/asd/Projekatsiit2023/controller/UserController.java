@@ -66,8 +66,8 @@ public class UserController {
 
     @PreAuthorize("hasAnyAuthority('ROLE_Guest','ROLE_Host')")
     @PutMapping(value="/report/{username}")
-    public ResponseEntity<MessageResponse> reportHost(@PathVariable("username") String username){
-        MessageResponse messageResponse=userService.report(username);
+    public ResponseEntity<MessageResponse> report(@PathVariable("username") String username,@RequestParam String reason){
+        MessageResponse messageResponse=userService.report(username,reason);
         return  ResponseEntity.ok(messageResponse);
     }
 

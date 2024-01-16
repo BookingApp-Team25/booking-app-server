@@ -27,7 +27,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
-
         if (!isPermitted(request)) {
             System.out.println("####" + request.getMethod() + ":" + request.getRequestURL());
             System.out.println("#### Authorization: " + request.getHeader("Authorization"));
@@ -46,7 +45,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 System.out.println(">>>>>JWT TOKEN: " + jwtToken);
                 try {
                     username = jwtTokenUtil.getUsernameFromToken(jwtToken);
-                    System.out.println(username);
                     UserDetails userDetails = this.jwtUserDetailsService.loadUserByUsername(username);
                     if (jwtTokenUtil.validateToken(jwtToken, userDetails)) {
                         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(

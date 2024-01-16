@@ -3,6 +3,7 @@ package rs.ac.uns.ftn.asd.Projekatsiit2023.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -21,6 +22,7 @@ import rs.ac.uns.ftn.asd.Projekatsiit2023.security.jwt.JwtRequestFilter;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
+@EnableAsync
 public class WebSecurityConfiguration {
 
     @Autowired
@@ -40,7 +42,6 @@ public class WebSecurityConfiguration {
     @Bean
     public PasswordEncoder passwordEncoder() {
         PasswordEncoder encoder = new BCryptPasswordEncoder();// PasswordEncoderFactories.createDelegatingPasswordEncoder();
-        //System.out.println(encoder.encode("admin"));
         return encoder;
     }
 

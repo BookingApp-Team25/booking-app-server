@@ -11,4 +11,6 @@ public interface HostService {
     public Collection<AccommodationLogDataResponse> getLogsForPeriod(DatePeriod period);
 
     public Boolean editAccount(int hostId,AccountEditRequest accountEditRequest);
+
+    public Collection<AccountDetailsResponse> getGuestsForHost(String hostUsername);
 }

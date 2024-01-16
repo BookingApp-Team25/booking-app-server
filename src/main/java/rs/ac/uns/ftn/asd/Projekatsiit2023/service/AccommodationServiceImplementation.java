@@ -55,7 +55,7 @@ public class AccommodationServiceImplementation implements AccommodationService{
                 accommodation.getPricelist(),
                 accommodation.getDaysBefore(),
                 accommodation.getPolicy(),
-                accommodation.getOnHoldStatus(),accommodation.getHost().getId(),accommodation.getHost().getUsername());
+                accommodation.getOnHoldStatus(),accommodation.getHost().getId(),accommodation.getHost().getUsername(),accommodation.getRating());
     }
 
     @Override

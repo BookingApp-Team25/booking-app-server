@@ -67,6 +67,7 @@ public class ReviewController {
         return ResponseEntity.ok(reviewResponses);
     }
 
+    @PreAuthorize("hasAuthority('ROLE_Guest')")
     @GetMapping(value = "check/{username}/{accommodationId}")
     public ResponseEntity<Boolean> checkPermission(
             @PathVariable("username") String username,

@@ -9,11 +9,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.*;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.Role;
-import rs.ac.uns.ftn.asd.Projekatsiit2023.model.Guest;
-import rs.ac.uns.ftn.asd.Projekatsiit2023.model.Host;
-import rs.ac.uns.ftn.asd.Projekatsiit2023.model.Reservation;
-import rs.ac.uns.ftn.asd.Projekatsiit2023.model.User;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.model.*;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.repository.HostRepository;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.repository.ReservationRepository;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.repository.UserReportRepository;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.repository.UserRepository;
 
 import java.time.LocalDateTime;
@@ -29,6 +28,10 @@ public class UserServiceImplementation implements UserService {
     UserRepository userRepository;
     @Autowired
     ReservationRepository reservationRepository;
+    @Autowired
+    HostRepository hostRepository;
+    @Autowired
+    UserReportRepository userReportRepository;
     public MessageResponse editAccount(String username, AccountEditRequest accountEditRequest) {
         Optional<User> ret=userRepository.findByUsername(username);
         if(!ret.isEmpty()){
@@ -75,9 +78,9 @@ public class UserServiceImplementation implements UserService {
 
     @Override
     public AccountDetailsResponse getHostDetails(UUID hostId) {
-        User user= userRepository.getReferenceById(hostId);
+        Host user= hostRepository.getReferenceById(hostId);
         if(user!=null){
-            AccountDetailsResponse adr=new AccountDetailsResponse(user.getId().toString(),user.getUsername(),user.getFirstName(),user.getLastName(),user.getAddress(),user.getPhoneNumber());
+            AccountDetailsResponse adr=new AccountDetailsResponse(user.getId().toString(),user.getUsername(),user.getFirstName(),user.getLastName(),user.getAddress(),user.getPhoneNumber(),user.getRating());
             return adr;
         }
         return null;
@@ -156,12 +159,11 @@ public class UserServiceImplementation implements UserService {
         return null;
     }
 
-    public MessageResponse report(String username){
+    public MessageResponse report(String username,String reason){
         Optional<User> ret=userRepository.findByUsername(username);
         if(ret.isPresent()){
-            User user=ret.get();
-            user.setReported(true);
-            userRepository.save(user);
+            UserReport userReport=new UserReport(ret.get(),reason);
+            userReportRepository.save(userReport);
             return new MessageResponse(true,"User is successfully reported");
         }
         return new MessageResponse(false,"User not found");

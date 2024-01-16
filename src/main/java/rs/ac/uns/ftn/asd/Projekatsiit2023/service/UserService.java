@@ -17,6 +17,6 @@ public interface UserService extends UserDetailsService {
     public MessageResponse deleteAccount(String username);
     public Boolean isBlocked(String username);
     public AccountDetailsResponse getHostDetails(UUID hostId);
-    public MessageResponse report(String username);
+    public MessageResponse report(String username,String reason);
     public Boolean checkReportPermission(String guestUsername,String hostUsername);
 }
