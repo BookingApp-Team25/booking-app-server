@@ -44,8 +44,7 @@ public class AccommodationServiceImplementation implements AccommodationService{
     @Override
     public AccommodationResponse getAccommodation(UUID accommodationId) throws IOException {
         Accommodation accommodation = accommodationRepository.getReferenceById(accommodationId);
-        return new AccommodationResponse(accommodation.getHost().getId(),
-                accommodation.getId(),
+        return new AccommodationResponse(accommodation.getId(),
                 accommodation.getName(),
                 accommodation.getDescription(),
                 accommodation.getLocation(),
@@ -55,11 +54,14 @@ public class AccommodationServiceImplementation implements AccommodationService{
                 accommodation.getMaxGuests(),
                 accommodation.getType(),
                 accommodation.getAvailabilityDatePeriods(),
-                accommodation.getPrice(),
                 accommodation.getPricelist(),
+                accommodation.getPrice(),
                 accommodation.getDaysBefore(),
                 accommodation.getPolicy(),
-                accommodation.getOnHoldStatus(),accommodation.getHost().getId(),accommodation.getHost().getUsername(),accommodation.getRating());
+                accommodation.getOnHoldStatus(),
+                accommodation.getHost().getId(),
+                accommodation.getHost().getUsername(),
+                accommodation.getRating());
     }
 
     @Override

@@ -150,7 +150,7 @@ public class ReservationServiceImplementation implements ReservationService{
 
     public ReservationSummaryCollectionResponse getFilteredGuestReservations(UUID guestId, DatePeriod reservationPeriod, String reservationName, ReservationStatus reservationStatus, int page, int numberOfElements) throws IOException {
         Pageable pageRequest = PageRequest.of(page, numberOfElements);
-        List<Reservation> reservationsFilteredOnce = reservationRepository.findByIdAndAccommodationName(reservationName,guestId,pageRequest).getContent();
+        List<Reservation> reservationsFilteredOnce = reservationRepository.findByIdAndAccommodationNameGuest(reservationName,guestId,pageRequest).getContent();
         DateManagementService dateManagementService = new DateManagementService(reservationRepository,accommodationRepository);
         List<Reservation> reservationsFilteredTwice = new ArrayList<>();
         for(Reservation reservation : reservationsFilteredOnce){

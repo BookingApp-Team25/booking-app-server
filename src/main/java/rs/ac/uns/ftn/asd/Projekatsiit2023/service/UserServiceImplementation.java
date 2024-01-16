@@ -188,6 +188,7 @@ public class UserServiceImplementation implements UserService {
                 user.getFirstName(),
                 user.getLastName()
         );
+    }
 
     public MessageResponse report(String username,String reason){
         Optional<User> ret=userRepository.findByUsername(username);

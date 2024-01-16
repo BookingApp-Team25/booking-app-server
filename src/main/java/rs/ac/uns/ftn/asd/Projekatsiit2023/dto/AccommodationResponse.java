@@ -31,7 +31,7 @@ public class AccommodationResponse {
     public AccommodationResponse() {
     }
 
-    public AccommodationResponse(UUID id,String name, String description, Location location, List<String> amenities, List<String> photos, int minGuests, int maxGuests, AccommodationType type, List<DatePeriod> availability, double price, AccommodationPricelist pricelist, int daysBefore, AccommodationReservationPolicy policy, AccommodationOnHoldStatus status) {
+    public AccommodationResponse(UUID id,String name, String description, Location location, List<String> amenities, List<String> photos, int minGuests, int maxGuests, AccommodationType type, List<DatePeriod> availability, AccommodationPricelist pricelist, double price, int daysBefore, AccommodationReservationPolicy policy, AccommodationOnHoldStatus status, UUID hostId, String hostUsername, double rating) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -42,8 +42,8 @@ public class AccommodationResponse {
         this.maxGuests = maxGuests;
         this.type = type;
         this.availability = availability;
-        this.price = price;
         this.pricelist = pricelist;
+        this.price = price;
         this.daysBefore = daysBefore;
         this.policy = policy;
         this.accommodationOnHoldStatus = status;
@@ -100,10 +100,6 @@ public class AccommodationResponse {
 
     public double getPrice() {
         return price;
-    }
-
-    public UUID getHostId() {
-        return hostId;
     }
 
     public void setId(UUID id) {

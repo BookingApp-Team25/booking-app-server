@@ -65,7 +65,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, UUID> 
     @Query("SELECT r FROM Reservation r WHERE " +
             "(:prefix IS NULL OR r.accommodation.name LIKE CONCAT('%', :prefix, '%')) " +
             "AND (r.guest.id = :id)")
-    Page<Reservation> findByIdAndAccommodationName(@Param("prefix") String prefix,
+    Page<Reservation> findByIdAndAccommodationNameGuest(@Param("prefix") String prefix,
                                                    @Param("id") UUID id,
                                                    Pageable pageable);
   
