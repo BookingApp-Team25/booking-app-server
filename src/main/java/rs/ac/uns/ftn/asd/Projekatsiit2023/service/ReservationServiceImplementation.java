@@ -219,13 +219,23 @@ public class ReservationServiceImplementation implements ReservationService{
             return new MessageResponse(false, "ERROR: reservation request could not be resolved");
         }
     }
-
+    private void cancelCollidingReservations(Reservation acceptedReservation){
+        DateManagementService dateManagementService = new DateManagementService(reservationRepository,accommodationRepository);
+        List<Reservation> allReservations = reservationRepository.findAllByAccommodationId(acceptedReservation.getAccommodation().getId());
+        for(Reservation reservation : allReservations){
+            if((reservation.getId() != acceptedReservation.getId()) && dateManagementService.doPeriodsOverlap(reservation.getReservedDate(),acceptedReservation.getReservedDate())){
+                reservation.setReservationStatus(ReservationStatus.REJECTED);
+                reservationRepository.save(reservation);
+            }
+        }
+    }
     @Override
     public boolean acceptReservation(UUID reservationId){
         Optional<Reservation> optionalReservation = reservationRepository.findById(reservationId);
         if (optionalReservation.isPresent()) {
             Reservation reservation = optionalReservation.get();
             reservation.setReservationStatus(ReservationStatus.ACCEPTED);
+            cancelCollidingReservations(reservation);
             reservationRepository.save(reservation);
             return true;
         }
