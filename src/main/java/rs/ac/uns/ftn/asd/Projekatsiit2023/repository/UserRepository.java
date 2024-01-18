@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.HostData;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.model.Accommodation;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.model.Guest;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.model.Host;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.model.User;
 import java.util.Optional;
@@ -36,6 +37,9 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 
     @Query("SELECT u FROM User u WHERE u.id = :userId")
     User findUserByUUID(@Param("userId") UUID userId);
+
+    @Query("SELECT g FROM Guest g WHERE g.id = :guestId")
+    Guest findGuestByUUID(@Param("guestId") UUID guestId);
 
     @Transactional
     @Modifying

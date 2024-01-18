@@ -116,15 +116,40 @@ public class AccommodationController {
     }
 
     @PreAuthorize("hasAuthority('ROLE_Guest')")
-    @PutMapping(value = "/favorite/{accommodationId}")
-    public ResponseEntity<Boolean> addFavoriteAccommodation(@PathVariable("accommodationId") int accommodationId) {//, @RequestBody AccommodationRequest accommodationRequest) {
-        Boolean isAdded = accommodationService.addFavoriteAccommodation(accommodationId);//, accommodationRequest);
+    @PutMapping(value = "/add-favourite/{guestId}/{accommodationId}")
+    public ResponseEntity<Boolean> addFavouriteAccommodation(
+            @PathVariable("guestId") String guestId,
+            @PathVariable("accommodationId") String accommodationId) {
 
-        if (isAdded != null) {
-            return ResponseEntity.ok(isAdded);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        Boolean isAdded = accommodationService.addFavouriteAccommodation(UUID.fromString(guestId), UUID.fromString(accommodationId));
+        return ResponseEntity.ok(isAdded);
+    }
+
+    @PreAuthorize("hasAuthority('ROLE_Guest')")
+    @PutMapping(value = "/remove-favourite/{guestId}/{accommodationId}")
+    public ResponseEntity<Boolean> removeFavouriteAccommodation(
+            @PathVariable("guestId") String guestId,
+            @PathVariable("accommodationId") String accommodationId) {
+
+        Boolean isAdded = accommodationService.removeFavouriteAccommodation(UUID.fromString(guestId), UUID.fromString(accommodationId));
+        return ResponseEntity.ok(isAdded);
+    }
+
+    @PreAuthorize("hasAuthority('ROLE_Guest')")
+    @GetMapping(value = "/is-favourite/{guestId}/{accommodationId}")
+    public ResponseEntity<Boolean> isFavouriteAccommodation(
+            @PathVariable("guestId") String guestId,
+            @PathVariable("accommodationId") String accommodationId) {
+
+        Boolean isAdded = accommodationService.isFavouriteAccommodation(UUID.fromString(guestId), UUID.fromString(accommodationId));
+        return ResponseEntity.ok(isAdded);
+    }
+
+    @PreAuthorize("hasAuthority('ROLE_Guest')")
+    @GetMapping(value = "/get-favourite/{guestId}")
+    public ResponseEntity<Collection<AccommodationSummaryResponse>> getFavouriteAccommodations(@PathVariable("guestId") String guestIdString) {
+        Collection<AccommodationSummaryResponse> favourites = accommodationService.getFavouriteAccommodations(UUID.fromString(guestIdString));
+        return ResponseEntity.ok(favourites);
     }
 
     @GetMapping(value = "/data/{hostId}") //morao sam u ovaj controller staviti jer nije drugde zbog corsa hteo nzm zasto cak i kad se doda cors da treba da radi on ne radi

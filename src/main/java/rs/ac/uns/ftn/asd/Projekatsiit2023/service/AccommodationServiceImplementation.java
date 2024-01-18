@@ -1,16 +1,19 @@
 package rs.ac.uns.ftn.asd.Projekatsiit2023.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.AccommodationType;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.model.Guest;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.model.Reservation;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.repository.AccommodationRepository;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.*;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.AccommodationOnHoldStatus;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.model.Accommodation;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.model.DatePeriod;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.repository.UserRepository;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -24,6 +27,9 @@ import java.util.stream.Collectors;
 public class AccommodationServiceImplementation implements AccommodationService{
     @Autowired
     private AccommodationRepository accommodationRepository;
+    @Autowired
+    private UserRepository userRepository;
+
     @Override
     public String createAccommodation(Accommodation accommodation){
         accommodationRepository.save(accommodation);
@@ -114,7 +120,42 @@ public class AccommodationServiceImplementation implements AccommodationService{
         return null;
     }
     @Override
-    public boolean addFavoriteAccommodation(int accommodationId) { return false; } //mozda treba menjati return tip
+    public Boolean addFavouriteAccommodation(UUID guestId, UUID accommodationId) {
+        try {
+            Guest guest = userRepository.findGuestByUUID(guestId);
+            Accommodation accommodation = accommodationRepository.findAccommodationById(accommodationId);
+
+            guest.addFavoriteAccommodation(accommodation);
+            userRepository.save(guest);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean removeFavouriteAccommodation(UUID guestId, UUID accommodationId) {
+        try {
+            Guest guest = userRepository.findGuestByUUID(guestId);
+            Accommodation accommodation = accommodationRepository.findAccommodationById(accommodationId);
+
+            guest.removeFavoriteAccommodation(accommodation);
+            userRepository.save(guest);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean isFavouriteAccommodation(UUID guestId, UUID accommodationId) {
+        return accommodationRepository.isAccommodationInFavorites(guestId, accommodationId);
+    }
+
+    public Collection<AccommodationSummaryResponse> getFavouriteAccommodations(UUID guestId) {
+        Collection<Accommodation> accommodations = accommodationRepository.getFavouriteAccommodations(guestId);
+        return mapToSummaryResponse(accommodations.stream().toList());
+    }
 
     private List<AccommodationSummaryResponse> mapToSummaryResponse(List<Accommodation> accommodations) { //dodato za searchAccommodations zajedno sa calculateAverageRating
         return accommodations.stream()

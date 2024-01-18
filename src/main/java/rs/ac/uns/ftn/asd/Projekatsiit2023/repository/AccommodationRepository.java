@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.Modifying;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.AccommodationType;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.model.Accommodation;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.model.Reservation;
@@ -92,4 +93,14 @@ public interface AccommodationRepository extends JpaRepository<Accommodation, UU
             @Param("minPrice") Double minPrice,
             @Param("maxPrice") Double maxPrice);
 
+    @Query("SELECT a FROM Guest g JOIN g.favoriteAccommodations a WHERE g.id = :guestId")
+    List<Accommodation> getFavouriteAccommodations(@Param("guestId") UUID guestId);
+
+//    @Modifying
+//    @Query("UPDATE Guest g SET g.favoriteAccommodations = :favouriteAccommodations WHERE g.id = :guestId")
+//    void addFavouriteAccommodation(@Param("guestId") UUID guestId, @Param("favouriteAccommodations") List<Accommodation> favouriteAccommodations);
+    
+
+    @Query("SELECT CASE WHEN COUNT(a) > 0 THEN true ELSE false END FROM Guest g JOIN g.favoriteAccommodations a WHERE g.id = :guestId AND a.id = :accommodationId")
+    boolean isAccommodationInFavorites(@Param("guestId") UUID guestId, @Param("accommodationId") UUID accommodationId);
 }
