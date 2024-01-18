@@ -1,7 +1,9 @@
 package rs.ac.uns.ftn.asd.Projekatsiit2023.repository;
 
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -30,4 +32,13 @@ public interface UserRepository extends JpaRepository<User, UUID> {
                     "WHERE u.username = :username"
     )
     User findGuestByUsername(@Param("username") String username);
+
+
+    @Query("SELECT u FROM User u WHERE u.id = :userId")
+    User findUserByUUID(@Param("userId") UUID userId);
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE User u SET u.blocked = true WHERE u.id = :userId")
+    void blockUser(@Param("userId") UUID userId);
 }

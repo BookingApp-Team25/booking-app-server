@@ -5,10 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.AccountDetailsResponse;
-import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.AccountEditRequest;
-import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.MessageResponse;
-import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.ReportedUserResponse;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.*;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.service.AccommodationUpdateService;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.service.UserService;
 
@@ -31,12 +28,18 @@ public class UserController {
         return ResponseEntity.ok(status);
     }
     @GetMapping(value = "/reported")
-    public ResponseEntity<Collection<ReportedUserResponse>> getAllReportedUsers(){
-        Collection<ReportedUserResponse> reportedUsers = userService.getAllReportedUsers();
-        if(reportedUsers == null){
-            return new ResponseEntity<Collection<ReportedUserResponse>>(HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<Collection<UserReportResponse>> getAllReportedUsers(){
+        Collection<UserReportResponse> reportedUsers = userService.getAllUserReports();
+//        if(reportedUsers == null){
+//            return new ResponseEntity<Collection<UserReportResponse>>(HttpStatus.NOT_FOUND);
+//        }
         return ResponseEntity.ok(reportedUsers);
+    }
+
+    @GetMapping(value = "/user-by-id/{userId}")
+    public ResponseEntity<UserResponse> getUserById(@PathVariable("userId") String userId){
+        UserResponse user = userService.getUserById(userId);
+        return ResponseEntity.ok(user);
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_Guest','ROLE_Host','ROLE_Admin')")
@@ -80,11 +83,11 @@ public class UserController {
 
     @PreAuthorize("hasAuthority('ROLE_Admin')")
     @PutMapping(value = "/blockUser/{userId}")
-    public ResponseEntity<Boolean> blockUser(@PathVariable("userId") int id){
-        Boolean blockedUser= userService.blockUser(id);
-        if(blockedUser == null){
-            return new ResponseEntity<Boolean>(HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<Boolean> blockUser(@PathVariable("userId") String userId){
+        Boolean blockedUser= userService.blockUser(UUID.fromString(userId));
+//        if(blockedUser == null){
+//            return new ResponseEntity<Boolean>(HttpStatus.NOT_FOUND);
+//        }
         return ResponseEntity.ok(blockedUser);
     }
 }

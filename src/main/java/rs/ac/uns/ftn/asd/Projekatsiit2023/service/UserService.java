@@ -9,9 +9,10 @@ import java.util.UUID;
 
 public interface UserService extends UserDetailsService {
     public MessageResponse editAccount(String username, AccountEditRequest accountEditRequest);
-    public Collection<ReportedUserResponse> getAllReportedUsers();
+    public Collection<UserReportResponse> getAllUserReports();
+    public UserResponse getUserById(String userId);
     public String createAccount(RegistrationRequest registrationRequest);
-    public Boolean blockUser(int id);
+    public Boolean blockUser(UUID userId);
     public AccountDetailsResponse getAccountDetails(String username);
     public MessageResponse activateAccount(String code);
     public MessageResponse deleteAccount(String username);
