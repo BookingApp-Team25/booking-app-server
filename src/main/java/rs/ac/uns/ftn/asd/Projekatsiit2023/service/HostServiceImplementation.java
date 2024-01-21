@@ -73,10 +73,12 @@ public class HostServiceImplementation implements HostService{
         List<Reservation> reservations=reservationRepository.findAllHostReservations(host.getId());
         Collection<AccountDetailsResponse> accountDetailsResponses=new ArrayList<AccountDetailsResponse>();
         for(Reservation reservation : reservations){
-            User user=userRepository.getReferenceById(reservation.getGuest().getId());
-            AccountDetailsResponse adr=new AccountDetailsResponse(user.getId().toString(),user.getUsername(),user.getFirstName(),
-                    user.getLastName(),user.getAddress(),user.getPhoneNumber());
-            accountDetailsResponses.add(adr);
+                User user = userRepository.getReferenceById(reservation.getGuest().getId());
+                AccountDetailsResponse adr = new AccountDetailsResponse(user.getId().toString(), user.getUsername(), user.getFirstName(),
+                        user.getLastName(), user.getAddress(), user.getPhoneNumber());
+                if(!accountDetailsResponses.contains(adr)) {
+                    accountDetailsResponses.add(adr);
+            }
         }
         return accountDetailsResponses;
     }
