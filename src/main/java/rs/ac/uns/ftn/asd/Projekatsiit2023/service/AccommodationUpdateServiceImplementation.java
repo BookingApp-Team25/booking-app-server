@@ -3,17 +3,12 @@ package rs.ac.uns.ftn.asd.Projekatsiit2023.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import rs.ac.uns.ftn.asd.Projekatsiit2023.model.Image;
-import rs.ac.uns.ftn.asd.Projekatsiit2023.repository.AccommodationRepository;
-import rs.ac.uns.ftn.asd.Projekatsiit2023.repository.AccommodationUpdateRepository;
-import rs.ac.uns.ftn.asd.Projekatsiit2023.repository.HostRepository;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.model.*;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.repository.*;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.*;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.AccommodationOnHoldStatus;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.AccommodationUpdateStatus;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.AccommodationUpdateType;
-import rs.ac.uns.ftn.asd.Projekatsiit2023.model.Accommodation;
-import rs.ac.uns.ftn.asd.Projekatsiit2023.model.AccommodationUpdate;
-import rs.ac.uns.ftn.asd.Projekatsiit2023.repository.ImageRepository;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -33,6 +28,10 @@ public class AccommodationUpdateServiceImplementation implements AccommodationUp
     HostRepository hostRepository;
     @Autowired
     ImageRepository imageRepository;
+    @Autowired
+    ReservationRepository reservationRepository;
+    @Autowired
+    DateManagementService dms;
     @Override
     public Collection<AccommodationUpdateSummaryResponse> getAllAccommodationUpdates() throws IOException {
         ArrayList<AccommodationUpdate> requests = new ArrayList<AccommodationUpdate>(accommodationUpdateRepository.findAll());
@@ -131,8 +130,17 @@ public class AccommodationUpdateServiceImplementation implements AccommodationUp
     public MessageResponse createEditRequest(UUID accommodationId, AccommodationRequest accommodationRequest) throws IOException {
         Accommodation accommodation = accommodationRepository.getReferenceById(accommodationId);
         accommodation.processAccommodationRequest(accommodationRequest);
+        List<DatePeriod> datePeriods=accommodation.getAvailabilityDatePeriods();
         accommodation.photos = new ArrayList<Image>();
-
+        Host host=accommodation.getHost();
+        List<Reservation> reservations=reservationRepository.findAllByHostAndAccommodationId(host.getId(),accommodationId);
+        for(Reservation r : reservations){
+            for(DatePeriod datePeriod: datePeriods){
+                if(dms.isPeriodInside(datePeriod,r.getReservedDate()) || dms.doPeriodsOverlap(datePeriod,r.getReservedDate())){
+                    return new MessageResponse(false,"Error editing accommodation");
+                }
+            }
+        }
         insertPhotos(accommodation,accommodationRequest.getPhotos());
 
         accommodation.setOnHoldStatus(AccommodationOnHoldStatus.WAITING_FOR_EDIT_APPROVAL);
