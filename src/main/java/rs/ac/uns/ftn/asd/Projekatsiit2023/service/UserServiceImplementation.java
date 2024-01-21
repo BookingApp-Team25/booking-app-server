@@ -10,16 +10,11 @@ import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.*;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.Role;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.model.*;
-import rs.ac.uns.ftn.asd.Projekatsiit2023.repository.HostRepository;
-import rs.ac.uns.ftn.asd.Projekatsiit2023.repository.ReservationRepository;
-import rs.ac.uns.ftn.asd.Projekatsiit2023.repository.UserReportRepository;
-import rs.ac.uns.ftn.asd.Projekatsiit2023.repository.UserRepository;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.repository.*;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImplementation implements UserService {
@@ -32,6 +27,9 @@ public class UserServiceImplementation implements UserService {
     HostRepository hostRepository;
     @Autowired
     UserReportRepository userReportRepository;
+    @Autowired
+    ReviewRepository reviewRepository;
+
     public MessageResponse editAccount(String username, AccountEditRequest accountEditRequest) {
         Optional<User> ret=userRepository.findByUsername(username);
         if(!ret.isEmpty()){
@@ -52,12 +50,26 @@ public class UserServiceImplementation implements UserService {
         }
         return (new MessageResponse(false,"Error: User doesn't exist"));
     }
-    public Collection<ReportedUserResponse> getAllReportedUsers() {
-        return null;
+    public Collection<UserReportResponse> getAllUserReports() {
+        Collection<UserReport> userReports = reviewRepository.getAllUserReports();
+        return mapToUserReportResponse(userReports);
     }
-  
-    public Boolean blockUser(int id) {
-        return null;
+
+    public UserResponse getUserById(String userIdString) {
+        UUID userId = UUID.fromString(userIdString);
+        User user = userRepository.findUserByUUID(userId);
+        return mapToUserResponse(user);
+    }
+
+    public Boolean blockUser(UUID userId) {
+        Boolean allOk = false;
+        try {
+            userRepository.blockUser(userId);
+            allOk = true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return allOk;
     }
 
     public Collection<User> findAll() {
@@ -211,5 +223,24 @@ public class UserServiceImplementation implements UserService {
             }
         }
         return false;
+    }
+
+    public Collection<UserReportResponse> mapToUserReportResponse(Collection<UserReport> userReports) {
+        return userReports.stream()
+                .map(userReport -> new UserReportResponse(
+                        userReport.getUser().getId(),
+                        userReport.getReason()
+                ))
+                .collect(Collectors.toList());
+    }
+
+    public UserResponse mapToUserResponse(User user) {
+        return new UserResponse(
+                user.getId().toString(),
+                user.getUsername(),
+                user.getPassword(),
+                user.getFirstName(),
+                user.getLastName()
+        );
     }
 }

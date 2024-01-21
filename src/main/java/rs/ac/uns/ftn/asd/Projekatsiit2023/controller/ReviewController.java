@@ -36,12 +36,13 @@ public class ReviewController {
         }
         return ResponseEntity.ok(reviewResponse);
     }
+
     @GetMapping(value = "/reported-reviews")
     public ResponseEntity<Collection<ReviewResponse>> getAllReportedReviews(){
         Collection<ReviewResponse> reviewResponses = reviewService.getAllReportedReviews();
-        if(reviewResponses == null){
-            return new ResponseEntity<Collection<ReviewResponse>>(HttpStatus.NOT_FOUND);
-        }
+//        if(reviewResponses == null){
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        }
         return ResponseEntity.ok(reviewResponses);
     }
 

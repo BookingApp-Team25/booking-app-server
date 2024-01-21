@@ -35,7 +35,24 @@ public class ReviewServiceImplementation implements ReviewService{
 
     @Override
     public Collection<ReviewResponse> getAllReportedReviews() {
-        return null;
+        Collection<AccommodationReview> reportedAccommodationReviews = reviewRepository.getAllReportedAccommodationReviews();
+        Collection<HostReview> reportedHostReviews = reviewRepository.getAllReportedHostReviews();
+
+        Collection<ReviewResponse> reviewResponses = new ArrayList<ReviewResponse>();
+
+        for (AccommodationReview review: reportedAccommodationReviews) {
+            ReviewResponse reviewResponse=new ReviewResponse(review.getId(),review.getComment(),review.getRating(),review.getGuest().getFirstName()
+                    ,review.getAccommodation().getName(),ReviewType.AccommodationReview,review.getDate(),review.getGuest().getUsername(),review.isReported());
+            reviewResponses.add(reviewResponse);
+        }
+
+        for (HostReview review: reportedHostReviews) {
+            ReviewResponse reviewResponse=new ReviewResponse(review.getId(),review.getComment(),review.getRating(),
+                    review.getGuest().getFirstName(),review.getHost().getUsername(),ReviewType.HostReview,review.getDate(),review.getGuest().getUsername(),review.isReported());
+            reviewResponses.add(reviewResponse);
+        }
+
+        return reviewResponses;
     }
 
     @Override
