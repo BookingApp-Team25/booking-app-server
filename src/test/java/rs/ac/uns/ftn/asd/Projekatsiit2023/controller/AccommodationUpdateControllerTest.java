@@ -22,8 +22,7 @@ import rs.ac.uns.ftn.asd.Projekatsiit2023.repository.*;
 import java.time.LocalDate;
 import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -148,5 +147,57 @@ public class AccommodationUpdateControllerTest {
         MessageResponse messageResponse=responseEntity.getBody();
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertFalse(messageResponse.getSuccessful());
+    }
+
+    @Test
+    @DisplayName("Should edit accommodation when making POST request to /api/accommodation-request/{accommodationId}")
+    public void shouldEditAccommodation(){
+        //Retrieving entities from database
+        Host host=hostRepository.findAll().get(0);
+        Accommodation accommodation=accommodationRepository.findAll().get(0);
+
+        //Retrieving jwt token for authorization
+        HttpHeaders headersLogin = new HttpHeaders();
+        LoginRequest loginRequest=new LoginRequest(host.getUsername(), "password");
+        HttpEntity<LoginRequest> requestEntityLogin = new HttpEntity<>(loginRequest);
+        ResponseEntity<LoginResponse> responseEntityLogin = restTemplate.exchange(
+                "/api/auth/login",
+                HttpMethod.POST,
+                requestEntityLogin,
+                LoginResponse.class
+        );
+        String token= Objects.requireNonNull(responseEntityLogin.getBody()).getJwt();
+
+        //Creating AccommodationRequest DTO that is sent to endpoint
+        UUID accommodationId=accommodation.getId();
+        DatePeriod datePeriod=new DatePeriod(LocalDate.of(2024, 6, 1),LocalDate.of(2024, 6, 30));
+        AccommodationDatePeriod accommodationDatePeriod=new AccommodationDatePeriod(datePeriod.getStartDate(),datePeriod.getEndDate(),null);
+        List<AccommodationDatePeriod> accommodationDatePeriods=new ArrayList<AccommodationDatePeriod>();
+        accommodationDatePeriods.add(accommodationDatePeriod);
+        Location location=new Location("USA","New York","7th Avenue",122);
+        List<String> amenities=new ArrayList<>();
+        List<String> photos=new ArrayList<>();
+        AccommodationRequest accommodationRequest=new AccommodationRequest(host.getId(),
+                "Hotel","Very good hotel",location,amenities,photos,1,4,AccommodationType.Apartment,50,accommodationDatePeriods,
+                new AccommodationPricelist(),7,AccommodationReservationPolicy.Auto, PriceCalculationMethod.PER_GUEST);
+
+        //Adding authorization header and request body
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer "+token);
+        HttpEntity<AccommodationRequest> requestEntity = new HttpEntity<>(accommodationRequest, headers);
+
+        //Sending request
+        ResponseEntity<MessageResponse> responseEntity = restTemplate.exchange(
+                "/api/accommodation-request/{accommodationId}",
+                HttpMethod.POST,
+                requestEntity,
+                MessageResponse.class,
+                accommodationId
+        );
+
+        //Asserting received values
+        MessageResponse messageResponse=responseEntity.getBody();
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertTrue(messageResponse.getSuccessful());
     }
 }
