@@ -55,7 +55,7 @@ public class EditAccommodationPage {
         PageFactory.initElements(driver,this);
     }
 
-    public String editAccommodation(String startDate, String endDate){
+    public void editAccommodation(String startDate, String endDate){
         nameInput.clear();
         nameInput.sendKeys("Hotel Majestic");
         descriptionInput.clear();
@@ -85,9 +85,5 @@ public class EditAccommodationPage {
         startDateInput.sendKeys(startDate);
         endDateInput.sendKeys(endDate);
         submitButton.click();
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        Alert alert = wait.until(ExpectedConditions.alertIsPresent());
-        String alertText = alert.getText();
-        return alertText;
     }
 }

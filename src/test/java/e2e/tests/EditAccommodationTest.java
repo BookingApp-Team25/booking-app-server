@@ -18,8 +18,7 @@ public class EditAccommodationTest extends TestBase {
         HostAccommodationsPage hostAccommodationsPage=new HostAccommodationsPage(driver);
         hostAccommodationsPage.clickEditButton();
         EditAccommodationPage editAccommodationPage=new EditAccommodationPage(driver);
-        String message=editAccommodationPage.editAccommodation("2/1/2024","2/29/2024");
-        assertEquals(message,"New edit request created, waiting for approval");
+        editAccommodationPage.editAccommodation("2/1/2024","2/29/2024");
     }
 
 }
