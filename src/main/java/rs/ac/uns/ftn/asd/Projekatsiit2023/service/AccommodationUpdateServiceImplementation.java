@@ -98,7 +98,7 @@ public class AccommodationUpdateServiceImplementation implements AccommodationUp
 
     @Override
     public void insertPhotos(Accommodation accommodation, List<String> photos) throws IOException {
-        String folderPath = "D:\\projekatBek\\src\\main\\resources\\images";
+        String folderPath = "src/main/resources/images";
         for(String image64 : photos){
             String[] parts = image64.split(",");
             String base64Data = parts[1];
