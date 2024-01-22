@@ -30,6 +30,13 @@ public class Reservation {
     public Reservation() {
     }
 
+    public Reservation(Accommodation accommodation, ReservationStatus reservationStatus, DatePeriod reservedDate, long price) {
+        this.accommodation = accommodation;
+        this.reservationStatus = reservationStatus;
+        this.reservedDate = reservedDate;
+        this.price = price;
+    }
+
     public Reservation(Guest guest, Host host, Accommodation accommodation, ReservationStatus reservationStatus, DatePeriod reservedDate, long price) {
         this.guest = guest;
         this.host = host;

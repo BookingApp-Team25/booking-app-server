@@ -92,6 +92,10 @@ public class Accommodation {
     public Accommodation() {
     }
 
+    public Accommodation(UUID id) {
+        this.id = id;
+    }
+
     public Accommodation(String name, String description, Location location, List<String> amenities, List<Image> photos, int minGuests, int maxGuests, AccommodationType type, double price, AccommodationPricelist pricelist, int daysBefore, AccommodationReservationPolicy policy) {
         this.id = UUID.randomUUID();
         this.name = name;

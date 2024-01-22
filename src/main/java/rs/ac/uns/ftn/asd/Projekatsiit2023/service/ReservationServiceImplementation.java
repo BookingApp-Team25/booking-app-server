@@ -48,7 +48,7 @@ public class ReservationServiceImplementation implements ReservationService{
                 .orElseThrow(() -> new EntityNotFoundException("Accommodation not found with id: " + reservationRequest.getAccommodationId()));
 
         DateManagementService dateManagementService = new DateManagementService(reservationRepository, accommodationRepository);
-        if(!dateManagementService.isReservationPossible(datePeriod, accommodation.getAvailability())){
+        if(!isReservationPossible(datePeriod, accommodation.getAvailability())){//dateManagementService.
             return new MessageResponse(false,"Reservation at that period is not possible");
         }
         long reservationPrice = reservationRequest.getPrice();//dateManagementService.calculatePriceForPeriod(datePeriod,accommodation);
@@ -75,7 +75,17 @@ public class ReservationServiceImplementation implements ReservationService{
         );
         reservationRepository.save(reservation);
         //return convertToDto(reservation);
-        return new MessageResponse(true,"succesfuly added new reservation");
+        return new MessageResponse(true,"succesfully added new reservation");
+    }
+
+    private boolean isReservationPossible(DatePeriod reservationDatePeriod, List<AccommodationDatePeriod> availableDates){
+
+        for( AccommodationDatePeriod accommodationDatePeriod : availableDates){
+            if(!(reservationDatePeriod.getStartDate().isBefore(accommodationDatePeriod.getStartDate()) || reservationDatePeriod.getEndDate().isAfter(accommodationDatePeriod.getEndDate()))){
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
