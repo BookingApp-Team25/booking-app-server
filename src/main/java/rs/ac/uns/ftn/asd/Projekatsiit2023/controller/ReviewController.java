@@ -13,7 +13,7 @@ import rs.ac.uns.ftn.asd.Projekatsiit2023.service.ReviewService;
 import java.util.Collection;
 import java.util.UUID;
 
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("api/review")
 public class ReviewController {

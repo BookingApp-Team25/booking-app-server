@@ -20,7 +20,7 @@ import java.util.Collection;
 import java.util.UUID;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200",allowedHeaders = "*")
+@CrossOrigin(origins = "*",allowedHeaders = "*")
 @RequestMapping("/api/host")
 public class HostController {
     @Autowired

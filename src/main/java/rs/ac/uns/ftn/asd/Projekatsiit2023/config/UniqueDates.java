@@ -1,9 +1,10 @@
 package rs.ac.uns.ftn.asd.Projekatsiit2023.config;
 
+import org.springframework.context.annotation.Bean;
+
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
-
 public class UniqueDates {
 
     public static final List<LocalDate> HOLIDAYS = Arrays.asList(

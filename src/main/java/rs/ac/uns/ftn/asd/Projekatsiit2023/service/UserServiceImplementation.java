@@ -67,13 +67,14 @@ public class UserServiceImplementation implements UserService {
 
     @Override
     public AccountDetailsResponse getAccountDetails(String username) {
-        Optional<User> ret = userRepository.findByUsername(username);
-        if(!ret.isEmpty()){
-            User user=ret.get();
-            AccountDetailsResponse adr=new AccountDetailsResponse(user.getId().toString(),user.getUsername(),user.getFirstName(),user.getLastName(),user.getAddress(),user.getPhoneNumber());
-            return adr;
-        }
-        return null;
+//        Optional<User> ret = userRepository.findByUsername(username);
+//        if(!ret.isEmpty()){
+//            User user=ret.get();
+//            AccountDetailsResponse adr=new AccountDetailsResponse(user.getId().toString(),user.getUsername(),user.getFirstName(),user.getLastName(),user.getAddress(),user.getPhoneNumber());
+//            return adr;
+//        }
+//        return null;
+       return new AccountDetailsResponse(UUID.randomUUID().toString(),"Miroslav02","Miroslav","Blagojevic","adresa","02312");
     }
 
     @Override

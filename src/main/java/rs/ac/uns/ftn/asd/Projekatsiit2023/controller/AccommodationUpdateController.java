@@ -13,7 +13,7 @@ import java.util.Collection;
 import java.util.UUID;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "*")
 @RequestMapping("api/accommodation-request")
 public class AccommodationUpdateController {
     @Autowired

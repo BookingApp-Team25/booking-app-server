@@ -21,7 +21,7 @@ import java.util.UUID;
 import java.time.LocalDate;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "https://localhost:4200")
 @RequestMapping("api/accommodation")
 public class AccommodationController {
     @Autowired
@@ -29,7 +29,10 @@ public class AccommodationController {
 
     @Autowired
     private UserServiceImplementation userService;
-
+    @GetMapping(value = "/test")
+    public String test(){
+       return "application is working";
+   }
     @PostMapping(value = "/create")
     public ResponseEntity<String> createAccommodation (@RequestBody Accommodation accommodation){
         String answer = accommodationService.createAccommodation(accommodation);

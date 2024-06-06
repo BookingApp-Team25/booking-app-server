@@ -18,13 +18,13 @@ import java.util.UUID;
 import static org.springframework.security.authorization.AuthorityReactiveAuthorizationManager.hasAnyAuthority;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200",allowedHeaders = "*")
+@CrossOrigin(origins = "https://localhost:4200", allowedHeaders = "*")
 @RequestMapping("api/user")
 public class UserController {
     @Autowired
     private UserService userService;
 
-    @PreAuthorize("hasAnyAuthority('ROLE_Guest','ROLE_Host','ROLE_Admin')")
+    //@PreAuthorize("hasAnyAuthority('ROLE_Guest','ROLE_Host','ROLE_Admin')")
     @PutMapping(value = "/{username}")
     public ResponseEntity<MessageResponse> editAccount(@PathVariable("username") String username, @RequestBody AccountEditRequest accountEditRequest){
         MessageResponse status = userService.editAccount(username,accountEditRequest);
@@ -39,7 +39,7 @@ public class UserController {
         return ResponseEntity.ok(reportedUsers);
     }
 
-    @PreAuthorize("hasAnyAuthority('ROLE_Guest','ROLE_Host','ROLE_Admin')")
+    //@PreAuthorize("hasAnyAuthority('ROLE_Guest','ROLE_Host','ROLE_Admin')")
     @GetMapping(value="/details/{username}")
     public ResponseEntity<AccountDetailsResponse> getAccountDetails(@PathVariable("username") String username){
         AccountDetailsResponse adr=userService.getAccountDetails(username);
@@ -64,21 +64,21 @@ public class UserController {
         return ResponseEntity.ok(messageResponse);
     }
 
-    @PreAuthorize("hasAnyAuthority('ROLE_Guest','ROLE_Host')")
+    //@PreAuthorize("hasAnyAuthority('ROLE_Guest','ROLE_Host')")
     @PutMapping(value="/report/{username}")
     public ResponseEntity<MessageResponse> report(@PathVariable("username") String username,@RequestParam String reason){
         MessageResponse messageResponse=userService.report(username,reason);
         return  ResponseEntity.ok(messageResponse);
     }
 
-    @PreAuthorize("hasAnyAuthority('ROLE_Guest','ROLE_Host')")
+    //@PreAuthorize("hasAnyAuthority('ROLE_Guest','ROLE_Host')")
     @GetMapping(value="/check/{guestUsername}/{hostUsername}")
     public ResponseEntity<Boolean> check(@PathVariable("guestUsername") String guestUsername,@PathVariable("hostUsername") String hostUsername){
         Boolean status=userService.checkReportPermission(guestUsername,hostUsername);
         return ResponseEntity.ok(status);
     }
 
-    @PreAuthorize("hasAuthority('ROLE_Admin')")
+    //@PreAuthorize("hasAuthority('ROLE_Admin')")
     @PutMapping(value = "/blockUser/{userId}")
     public ResponseEntity<Boolean> blockUser(@PathVariable("userId") int id){
         Boolean blockedUser= userService.blockUser(id);

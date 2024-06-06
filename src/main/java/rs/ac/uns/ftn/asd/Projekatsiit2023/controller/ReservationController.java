@@ -23,7 +23,7 @@ import java.util.UUID;
 import java.time.Instant;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "*")
 @RequestMapping("api/reservation")
 public class ReservationController {
     @Autowired
@@ -136,18 +136,19 @@ public class ReservationController {
     }
 
     @PostMapping(value = "/{reservationId}/resolve")
+    @PreAuthorize("hasAuthority('ROLE_Host')")
     public ResponseEntity<MessageResponse> resolveReservationRequest(@PathVariable("reservationId") UUID reservationId, @RequestParam boolean isAccepted){
         MessageResponse message = reservationService.resolveReservation(reservationId,isAccepted);
         return ResponseEntity.ok(message);
     }
-    @PutMapping(value= "/{reservationId}/accept")
-    public ResponseEntity<Boolean> acceptReservation(@PathVariable("reservationId") UUID reservationId){
-        boolean reservationResponse = reservationService.acceptReservation(reservationId);
-        if(!reservationResponse){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return ResponseEntity.ok(reservationResponse);
-    }
+//    @PutMapping(value= "/{reservationId}/accept")
+//    public ResponseEntity<Boolean> acceptReservation(@PathVariable("reservationId") UUID reservationId){
+//        boolean reservationResponse = reservationService.acceptReservation(reservationId);
+//        if(!reservationResponse){
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        }
+//        return ResponseEntity.ok(reservationResponse);
+//    }
 
     @GetMapping(value = "/price")
     public ResponseEntity<Long> calculatePrice(

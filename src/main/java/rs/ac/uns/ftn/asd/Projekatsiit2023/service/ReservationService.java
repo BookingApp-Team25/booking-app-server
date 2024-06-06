@@ -2,7 +2,9 @@ package rs.ac.uns.ftn.asd.Projekatsiit2023.service;
 
 import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.*;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.ReservationStatus;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.model.Accommodation;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.model.DatePeriod;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.model.Reservation;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -17,7 +19,7 @@ public interface ReservationService {
     public Collection<ReservationResponse> getAllAccommodationReservations(UUID accommodationId);
     public Collection<ReservationResponse> getAllGuestReservations(int guestId);
     public HostReservationCollectionResponse getFilteredHostReservations(UUID hostId, DatePeriod reservationPeriod, String reservationName, ReservationStatus reservationStatus, int page, int numberOfElements) throws IOException;
-    public boolean acceptReservation(UUID reservationId);
+    public void acceptReservation(Reservation reservation, Accommodation accommodation);
     public boolean rejectReservation(UUID reservationId);
     public boolean deleteReservation(UUID reservationId);
     public boolean cancelReservation(UUID reservationId);

@@ -1,6 +1,7 @@
 package rs.ac.uns.ftn.asd.Projekatsiit2023.service;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.dto.*;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.AccommodationOnHoldStatus;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.AccommodationReservationPolicy;
+import rs.ac.uns.ftn.asd.Projekatsiit2023.exceptions.ReservationNotPossibleException;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.model.AccommodationDatePeriod;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.repository.*;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.ReservationStatus;
@@ -16,6 +18,7 @@ import rs.ac.uns.ftn.asd.Projekatsiit2023.model.DatePeriod;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.model.Reservation;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -51,29 +54,20 @@ public class ReservationServiceImplementation implements ReservationService{
         if(!dateManagementService.isReservationPossible(datePeriod, accommodation.getAvailability())){
             return new MessageResponse(false,"Reservation at that period is not possible");
         }
-        long reservationPrice = reservationRequest.getPrice();//dateManagementService.calculatePriceForPeriod(datePeriod,accommodation);
-        ReservationStatus reservationStatus;
-        if(accommodation.getPolicy() == AccommodationReservationPolicy.Auto){
-            reservationStatus = ReservationStatus.ACCEPTED;
-            List<AccommodationDatePeriod> newAvailability = dateManagementService.calculateAvailabilityAfterReservation(reservationRequest.getReservedDate(),accommodation.getAvailability());
-            accommodation.availability.clear();
-            accommodation.availability.addAll(newAvailability);
-            accommodationRepository.save(accommodation);
-
-        }
-        else{
-            reservationStatus = ReservationStatus.WAITING_FOR_APPROVAL;
-        }
         datePeriodRepository.save(datePeriod);
+        long reservationPrice = reservationRequest.getPrice();//dateManagementService.calculatePriceForPeriod(datePeriod,accommodation);
         Reservation reservation = new Reservation(
                 guestRepository.getReferenceById(reservationRequest.getGuestId()),
                 hostRepository.getReferenceById(reservationRequest.getHostId()),
                 accommodation,
-                reservationStatus,
+                ReservationStatus.WAITING_FOR_APPROVAL,
                 datePeriod,
                 reservationPrice
         );
         reservationRepository.save(reservation);
+        if(accommodation.getPolicy() == AccommodationReservationPolicy.Auto){
+            acceptReservation(reservation,accommodation);
+        }
         //return convertToDto(reservation);
         return new MessageResponse(true,"succesfuly added new reservation");
     }
@@ -204,20 +198,19 @@ public class ReservationServiceImplementation implements ReservationService{
         return false;
     }
     @Override
+    @Transactional
     public MessageResponse resolveReservation(UUID reservationId, boolean isAccepted){
         boolean isValid;
         if(isAccepted){
-            isValid = acceptReservation(reservationId);
+            Reservation reservation = reservationRepository.getReferenceById(reservationId);
+            Accommodation accommodation = reservation.getAccommodation();
+            acceptReservation(reservation,accommodation);
         }
         else{
             isValid = rejectReservation(reservationId);
         }
-        if(isValid){
-            return  new MessageResponse(true,"Succesfuly resolved reservation request");
-        }
-        else{
-            return new MessageResponse(false, "ERROR: reservation request could not be resolved");
-        }
+        return new MessageResponse(true,"Succesfuly resolved reservation request");
+
     }
     private void cancelCollidingReservations(Reservation acceptedReservation){
         DateManagementService dateManagementService = new DateManagementService(reservationRepository,accommodationRepository);
@@ -230,16 +223,22 @@ public class ReservationServiceImplementation implements ReservationService{
         }
     }
     @Override
-    public boolean acceptReservation(UUID reservationId){
-        Optional<Reservation> optionalReservation = reservationRepository.findById(reservationId);
-        if (optionalReservation.isPresent()) {
-            Reservation reservation = optionalReservation.get();
+    @Transactional
+    public void acceptReservation(Reservation reservation, Accommodation accommodation){
+            DateManagementService dateManagementService = new DateManagementService(reservationRepository,accommodationRepository);
+            if(!dateManagementService.isReservationPossible(reservation.getReservedDate(),accommodation.getAvailability())){
+                throw  new ReservationNotPossibleException("Invalid reservation date");
+            }
+            if(reservation.getReservedDate().getStartDate().isBefore(LocalDate.now())){
+                throw  new ReservationNotPossibleException("Reservation has expired");
+            }
             reservation.setReservationStatus(ReservationStatus.ACCEPTED);
+            List<AccommodationDatePeriod> newAvailability = dateManagementService.calculateAvailabilityAfterReservation(reservation.getReservedDate(),accommodation.getAvailability());
+            accommodation.availability.clear();
+            accommodation.availability.addAll(newAvailability);
+            accommodationRepository.save(accommodation);
             cancelCollidingReservations(reservation);
             reservationRepository.save(reservation);
-            return true;
-        }
-        return false;
     }
     @Override
     public boolean rejectReservation(UUID reservationId){
