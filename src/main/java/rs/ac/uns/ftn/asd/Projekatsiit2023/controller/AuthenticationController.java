@@ -37,6 +37,7 @@ public class AuthenticationController {
     private EmailService emailService;
     @PostMapping(value = "/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest){
+        System.out.println("Logging in...");
         UsernamePasswordAuthenticationToken authReq = new UsernamePasswordAuthenticationToken(loginRequest.getUsername(),
                 loginRequest.getPassword());
         Authentication auth = authenticationManager.authenticate(authReq);

@@ -2,6 +2,7 @@ package rs.ac.uns.ftn.asd.Projekatsiit2023.dto;
 
 import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.AccommodationOnHoldStatus;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 public class AccommodationSummaryResponse {
@@ -11,12 +12,14 @@ public class AccommodationSummaryResponse {
     String description;
     double price;
     double rating;
+
+    LocalDate earliestAvailableDate;
     AccommodationOnHoldStatus onHoldStatus;
 
     public AccommodationSummaryResponse() {
     }
 
-    public AccommodationSummaryResponse(UUID accommodationId, String name, String photo, String description, double price, double rating, AccommodationOnHoldStatus onHoldStatus) {
+    public AccommodationSummaryResponse(UUID accommodationId, String name, String photo, String description, double price, double rating, AccommodationOnHoldStatus onHoldStatus, LocalDate earliestAvailableDate) {
         this.accommodationId = accommodationId;
         this.name = name;
         this.photo = photo;
@@ -24,6 +27,7 @@ public class AccommodationSummaryResponse {
         this.price = price;
         this.rating = rating;
         this.onHoldStatus = onHoldStatus;
+        this.earliestAvailableDate = earliestAvailableDate;
     }
 
     public AccommodationOnHoldStatus getOnHoldStatus() {
@@ -80,5 +84,13 @@ public class AccommodationSummaryResponse {
 
     public void setRating(double rating) {
         this.rating = rating;
+    }
+
+    public LocalDate getEarliestAvailableDate() {
+        return earliestAvailableDate;
+    }
+
+    public void setEarliestAvailableDate(LocalDate earliestAvailableDate) {
+        this.earliestAvailableDate = earliestAvailableDate;
     }
 }

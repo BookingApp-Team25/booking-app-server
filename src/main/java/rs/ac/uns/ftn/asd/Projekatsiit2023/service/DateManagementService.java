@@ -31,6 +31,17 @@ public class DateManagementService {
         this.accommodationRepository = accommodationRepository;
         this.reservationRepository = reservationRepository;
     }
+    public LocalDate findEarliestDate(Accommodation accommodation){
+        LocalDate earliestDate = accommodation.availability.get(0).getStartDate();
+        for(AccommodationDatePeriod datePeriod : accommodation.availability){
+            LocalDate startDate = datePeriod.getStartDate();
+            if(startDate.isBefore(earliestDate)){
+                earliestDate = startDate;
+            }
+        }
+        return earliestDate;
+
+    }
 
     private boolean isHoliday(LocalDate date){
         for(LocalDate holiday : UniqueDates.HOLIDAYS){

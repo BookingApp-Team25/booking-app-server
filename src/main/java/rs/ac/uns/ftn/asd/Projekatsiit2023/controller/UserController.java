@@ -51,7 +51,6 @@ public class UserController {
         }
         return ResponseEntity.ok(adr);
     }
-
     @GetMapping(value="/host-details/{hostId}")
     public ResponseEntity<AccountDetailsResponse> getHostDetails(@PathVariable("hostId") String hostId){
         AccountDetailsResponse adr=userService.getHostDetails(UUID.fromString(hostId));

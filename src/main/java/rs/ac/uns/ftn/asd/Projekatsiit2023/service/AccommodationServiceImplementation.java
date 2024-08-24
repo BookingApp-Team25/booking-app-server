@@ -16,10 +16,7 @@ import rs.ac.uns.ftn.asd.Projekatsiit2023.model.DatePeriod;
 import rs.ac.uns.ftn.asd.Projekatsiit2023.repository.UserRepository;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.time.LocalDate;
 import java.util.stream.Collectors;
 
@@ -37,12 +34,13 @@ public class AccommodationServiceImplementation implements AccommodationService{
     }
     @Override
     public List<AccommodationSummaryResponse> getAllAccommodations() throws IOException {
+        DateManagementService dateManagementService = new DateManagementService(null,null);
         ArrayList<Accommodation> fullList = new ArrayList<Accommodation>(accommodationRepository.findAll());
         ArrayList<AccommodationSummaryResponse> summary = new ArrayList<>();
         for (Accommodation accommodation : fullList){
             summary.add(new AccommodationSummaryResponse(accommodation.getId(),accommodation.getName(),
                     accommodation.getPhotos().get(0).getEncodedImage(),accommodation.getDescription(),accommodation.getPrice(),
-                    5,accommodation.getOnHoldStatus()));
+                    5,accommodation.getOnHoldStatus(),dateManagementService.findEarliestDate(accommodation)));
         }
        return summary;
     }
@@ -73,6 +71,7 @@ public class AccommodationServiceImplementation implements AccommodationService{
     @Override
     public AccommodationSummaryCollectionResponse getAllApprovedAccommodations(int page, int numberOfElements) throws IOException {
         long totalNumberOfAccommodations = accommodationRepository.count();
+        DateManagementService dateManagementService = new DateManagementService(null,null);
         Pageable pageRequest = PageRequest.of(page, numberOfElements);
         ArrayList<Accommodation> fullList = new ArrayList<Accommodation>(accommodationRepository.findAll(pageRequest).getContent());
         ArrayList<AccommodationSummaryResponse> summary = new ArrayList<>();
@@ -80,7 +79,7 @@ public class AccommodationServiceImplementation implements AccommodationService{
             if(accommodation.getOnHoldStatus() == AccommodationOnHoldStatus.APPROVED){
                 summary.add(new AccommodationSummaryResponse(accommodation.getId(),accommodation.getName(),
                         accommodation.getPhotos().get(0).getEncodedImage(),accommodation.getDescription(),accommodation.getPricelist().getDailyPrice(),
-                        5,accommodation.getOnHoldStatus()));
+                        5,accommodation.getOnHoldStatus(),dateManagementService.findEarliestDate(accommodation)));
             }
         }
         return new AccommodationSummaryCollectionResponse(summary,totalNumberOfAccommodations);
@@ -90,13 +89,14 @@ public class AccommodationServiceImplementation implements AccommodationService{
     @Override
     public AccommodationSummaryCollectionResponse getHostAccommodations(UUID hostId,int page, int numberOfElements) throws IOException {
         long totalNumberOfAccommodations = accommodationRepository.countAllHostAccommodations(hostId);
+        DateManagementService dateManagementService = new DateManagementService(null,null);
         Pageable pageRequest = PageRequest.of(page, numberOfElements);
         ArrayList<Accommodation> fullList = new ArrayList<Accommodation>(accommodationRepository.findAllHostAccommodations(hostId,pageRequest).getContent());
         ArrayList<AccommodationSummaryResponse> summary = new ArrayList<>();
         for (Accommodation accommodation : fullList){
                 summary.add(new AccommodationSummaryResponse(accommodation.getId(),accommodation.getName(),
                         accommodation.getPhotos().get(0).getEncodedImage(),accommodation.getDescription(),accommodation.getPrice(),
-                        5,accommodation.getOnHoldStatus()));
+                        5,accommodation.getOnHoldStatus(),dateManagementService.findEarliestDate(accommodation)));
         }
         return new AccommodationSummaryCollectionResponse(summary,totalNumberOfAccommodations);
     }
@@ -120,9 +120,9 @@ public class AccommodationServiceImplementation implements AccommodationService{
         return null;
     }
     @Override
-    public Boolean addFavouriteAccommodation(UUID guestId, UUID accommodationId) {
+    public Boolean addFavouriteAccommodation(String guestUsername, UUID accommodationId) {
         try {
-            Guest guest = userRepository.findGuestByUUID(guestId);
+            Guest guest = userRepository.findGuestByUsername(guestUsername);
             Accommodation accommodation = accommodationRepository.findAccommodationById(accommodationId);
 
             guest.addFavoriteAccommodation(accommodation);
@@ -134,9 +134,9 @@ public class AccommodationServiceImplementation implements AccommodationService{
     }
 
     @Override
-    public Boolean removeFavouriteAccommodation(UUID guestId, UUID accommodationId) {
+    public Boolean removeFavouriteAccommodation(String guestUsername, UUID accommodationId) {
         try {
-            Guest guest = userRepository.findGuestByUUID(guestId);
+            Guest guest = userRepository.findGuestByUsername(guestUsername);
             Accommodation accommodation = accommodationRepository.findAccommodationById(accommodationId);
 
             guest.removeFavoriteAccommodation(accommodation);
@@ -152,12 +152,13 @@ public class AccommodationServiceImplementation implements AccommodationService{
         return accommodationRepository.isAccommodationInFavorites(guestId, accommodationId);
     }
 
-    public Collection<AccommodationSummaryResponse> getFavouriteAccommodations(UUID guestId) {
-        Collection<Accommodation> accommodations = accommodationRepository.getFavouriteAccommodations(guestId);
+    public Collection<AccommodationSummaryResponse> getFavouriteAccommodations(String guestUsername) {
+        Collection<Accommodation> accommodations = accommodationRepository.getFavouriteAccommodations(guestUsername);
         return mapToSummaryResponse(accommodations.stream().toList());
     }
 
     private List<AccommodationSummaryResponse> mapToSummaryResponse(List<Accommodation> accommodations) { //dodato za searchAccommodations zajedno sa calculateAverageRating
+        DateManagementService dateManagementService = new DateManagementService(null,null);
         return accommodations.stream()
                 .map(accommodation -> {
                     // Calculate average rating
@@ -171,7 +172,9 @@ public class AccommodationServiceImplementation implements AccommodationService{
                                 //accommodation.getPrice(),
                                 accommodation.getPricelist().getDailyPrice(),
                                 averageRating,
-                                accommodation.getOnHoldStatus()
+                                accommodation.getOnHoldStatus(),
+                                dateManagementService.findEarliestDate(accommodation)
+
                         );
                     } catch (IOException e) {
                         throw new RuntimeException(e);
@@ -209,10 +212,10 @@ public class AccommodationServiceImplementation implements AccommodationService{
     }
 
     @Override
-    public ReservationSummaryCollectionResponse getGuestReservations(UUID guestId,int page, int numberOfElements) throws IOException {
-        long totalNumberOfAccommodations = accommodationRepository.countAllGuestReservations(guestId);
+    public ReservationSummaryCollectionResponse getGuestReservations(String guestUsername,int page, int numberOfElements) throws IOException {
+        long totalNumberOfAccommodations = accommodationRepository.countAllGuestReservations(guestUsername);
         Pageable pageRequest = PageRequest.of(page, numberOfElements);
-        ArrayList<Reservation> fullList = new ArrayList<Reservation>(accommodationRepository.findAllGuestReservations(guestId,pageRequest).getContent());
+        ArrayList<Reservation> fullList = new ArrayList<Reservation>(accommodationRepository.findAllGuestReservations(guestUsername,pageRequest).getContent());
         ArrayList<ReservationRequest> summary = new ArrayList<>();
         for (Reservation reservation : fullList){
             summary.add(new ReservationRequest(reservation.getId() , reservation.getGuest().getId(), reservation.getHost().getId(),

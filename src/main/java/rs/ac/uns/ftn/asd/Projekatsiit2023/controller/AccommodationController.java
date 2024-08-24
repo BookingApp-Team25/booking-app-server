@@ -116,22 +116,22 @@ public class AccommodationController {
     }
 
     @PreAuthorize("hasAuthority('ROLE_Guest')")
-    @PutMapping(value = "/add-favourite/{guestId}/{accommodationId}")
+    @PutMapping(value = "/add-favourite/{guestUsername}/{accommodationId}")
     public ResponseEntity<Boolean> addFavouriteAccommodation(
-            @PathVariable("guestId") String guestId,
+            @PathVariable("guestUsername") String guestUsername,
             @PathVariable("accommodationId") String accommodationId) {
 
-        Boolean isAdded = accommodationService.addFavouriteAccommodation(UUID.fromString(guestId), UUID.fromString(accommodationId));
+        Boolean isAdded = accommodationService.addFavouriteAccommodation(guestUsername, UUID.fromString(accommodationId));
         return ResponseEntity.ok(isAdded);
     }
 
     @PreAuthorize("hasAuthority('ROLE_Guest')")
-    @PutMapping(value = "/remove-favourite/{guestId}/{accommodationId}")
+    @PutMapping(value = "/remove-favourite/{guestUsername}/{accommodationId}")
     public ResponseEntity<Boolean> removeFavouriteAccommodation(
-            @PathVariable("guestId") String guestId,
+            @PathVariable("guestUsername") String guestUsername,
             @PathVariable("accommodationId") String accommodationId) {
 
-        Boolean isAdded = accommodationService.removeFavouriteAccommodation(UUID.fromString(guestId), UUID.fromString(accommodationId));
+        Boolean isAdded = accommodationService.removeFavouriteAccommodation(guestUsername, UUID.fromString(accommodationId));
         return ResponseEntity.ok(isAdded);
     }
 
@@ -146,9 +146,9 @@ public class AccommodationController {
     }
 
     @PreAuthorize("hasAuthority('ROLE_Guest')")
-    @GetMapping(value = "/get-favourite/{guestId}")
-    public ResponseEntity<Collection<AccommodationSummaryResponse>> getFavouriteAccommodations(@PathVariable("guestId") String guestIdString) {
-        Collection<AccommodationSummaryResponse> favourites = accommodationService.getFavouriteAccommodations(UUID.fromString(guestIdString));
+    @GetMapping(value = "/get-favourite/{guestUsername}")
+    public ResponseEntity<Collection<AccommodationSummaryResponse>> getFavouriteAccommodations(@PathVariable("guestUsername") String guestUsername) {
+        Collection<AccommodationSummaryResponse> favourites = accommodationService.getFavouriteAccommodations(guestUsername);
         return ResponseEntity.ok(favourites);
     }
 
@@ -159,9 +159,9 @@ public class AccommodationController {
     }
 
     @PreAuthorize("hasAuthority('ROLE_Guest')")
-    @GetMapping(value = "/guest/{guestId}")
-    public ResponseEntity<ReservationSummaryCollectionResponse> getGuestReservations(@PathVariable("guestId") UUID guestId, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10")int numberOfElements) throws IOException {
-        ReservationSummaryCollectionResponse reservations = accommodationService.getGuestReservations(guestId,page,numberOfElements);
+    @GetMapping(value = "/guest/{guestUsername}")
+    public ResponseEntity<ReservationSummaryCollectionResponse> getGuestReservations(@PathVariable("guestUsername") String guestUsername, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10")int numberOfElements) throws IOException {
+        ReservationSummaryCollectionResponse reservations = accommodationService.getGuestReservations(guestUsername,page,numberOfElements);
         return  ResponseEntity.ok(reservations);
     }
 }

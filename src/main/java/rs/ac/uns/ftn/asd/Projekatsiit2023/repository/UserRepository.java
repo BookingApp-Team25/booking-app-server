@@ -29,10 +29,10 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     User findUserById(@Param("userId") UUID userId);
 
     @Query(
-            "SELECT u FROM User u " +
+            "SELECT u FROM Guest u " +
                     "WHERE u.username = :username"
     )
-    User findGuestByUsername(@Param("username") String username);
+    Guest findGuestByUsername(@Param("username") String username);
 
 
     @Query("SELECT u FROM User u WHERE u.id = :userId")

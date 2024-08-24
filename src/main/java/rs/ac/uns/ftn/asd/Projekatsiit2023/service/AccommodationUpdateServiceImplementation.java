@@ -99,10 +99,16 @@ public class AccommodationUpdateServiceImplementation implements AccommodationUp
 
     @Override
     public void insertPhotos(Accommodation accommodation, List<String> photos) throws IOException {
-        String folderPath = "D:\\Documents\\BookingApp\\booking-app-server\\src\\main\\resources\\images";
+        String folderPath = "D:\\projekatBek\\src\\main\\resources\\images";
         for(String image64 : photos){
-            String[] parts = image64.split(",");
-            String base64Data = parts[1];
+            image64 = image64.trim();
+            image64 = image64.replace("\n", "");
+            String base64Data;
+            if (image64.contains(",")) {
+                base64Data = image64.split(",")[1]; // Extract the data after the comma
+            } else {
+                base64Data = image64; // No comma, assume it's raw base64
+            }
             byte[] decodedBytes = Base64.getDecoder().decode(base64Data);
             String randomImageName = UUID.randomUUID().toString();
             String filePath = folderPath + "/" + randomImageName + ".png";

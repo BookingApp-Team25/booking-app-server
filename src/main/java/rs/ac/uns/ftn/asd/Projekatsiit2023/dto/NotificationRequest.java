@@ -4,27 +4,24 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class NotificationRequest {
-    UUID reciever;
-    UUID sender;
+    String receiver;
     String information;
     LocalDateTime sendTime;
+    Boolean seen;
 
     public NotificationRequest() {
+
     }
 
-    public NotificationRequest(UUID reciever, UUID sender, String information, LocalDateTime sendTime) {
-        this.reciever = reciever;
-        this.sender = sender;
+    public NotificationRequest(String receiver, String information, LocalDateTime sendTime,Boolean seen) {
+        this.receiver = receiver;
         this.information = information;
         this.sendTime = sendTime;
+        this.seen = seen;
     }
 
-    public UUID getReciever() {
-        return reciever;
-    }
-
-    public UUID getSender() {
-        return sender;
+    public String getReceiver() {
+        return receiver;
     }
 
     public String getInformation() {
@@ -35,12 +32,8 @@ public class NotificationRequest {
         return sendTime;
     }
 
-    public void setReciever(UUID reciever) {
-        this.reciever = reciever;
-    }
-
-    public void setSender(UUID sender) {
-        this.sender = sender;
+    public void setReceiver(String receiver) {
+        this.receiver = receiver;
     }
 
     public void setInformation(String information) {
@@ -49,5 +42,13 @@ public class NotificationRequest {
 
     public void setSendTime(LocalDateTime sendTime) {
         this.sendTime = sendTime;
+    }
+
+    public Boolean getSeen() {
+        return seen;
+    }
+
+    public void setSeen(Boolean seen) {
+        this.seen = seen;
     }
 }

@@ -21,12 +21,12 @@ public interface AccommodationService {
     public Collection<AccommodationSummaryResponse> searchAccommodations(String city, LocalDate dateStart, LocalDate dateEnd, int guestNumber);
 
     public Collection<AccommodationSummaryResponse> searchAccommodationsFiltered(String city,DatePeriod datePeriod,int guestNumber,AccommodationFilteredSearchRequest accommodationFilteredSearchRequest);
-    public Boolean addFavouriteAccommodation(UUID guestId, UUID accommodationId);
-    public Boolean removeFavouriteAccommodation(UUID guestId, UUID accommodationId);
+    public Boolean addFavouriteAccommodation(String guestUsername, UUID accommodationId);
+    public Boolean removeFavouriteAccommodation(String guestUsername, UUID accommodationId);
     public Boolean isFavouriteAccommodation(UUID guestId, UUID accommodationId);
 
-    public Collection<AccommodationSummaryResponse> getFavouriteAccommodations(UUID guestId);
+    public Collection<AccommodationSummaryResponse> getFavouriteAccommodations(String guestUsername);
 
     Collection<AccommodationSummaryResponse> filterAccommodations(String city, LocalDate startDate, LocalDate endDate, int guestNumber, List<String> amenities, AccommodationType accommodationType, double minPrice, double maxPrice);
-    public ReservationSummaryCollectionResponse getGuestReservations(UUID guestId,int page, int numberOfElements) throws IOException;
+    public ReservationSummaryCollectionResponse getGuestReservations(String guestUsername,int page, int numberOfElements) throws IOException;
 }

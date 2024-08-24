@@ -27,10 +27,10 @@ public interface AccommodationRepository extends JpaRepository<Accommodation, UU
 
     @Query(
             "SELECT COUNT(r) FROM Reservation r " +
-                    "WHERE r.guest.id = :guestId"
+                    "WHERE r.guest.username = :guestUsername"
     )
     long countAllGuestReservations(
-            @Param("guestId") UUID guestId
+            @Param("guestUsername") String guestUsername
     );
 
     @Query(
@@ -44,10 +44,10 @@ public interface AccommodationRepository extends JpaRepository<Accommodation, UU
 
     @Query(
             "SELECT r FROM Reservation r " +  // Add space after 'a'
-                    "WHERE r.guest.id = :guestId"
+                    "WHERE r.guest.username = :guestUsername"
     )
     Page<Reservation> findAllGuestReservations(
-            @Param("guestId") UUID guestId,
+            @Param("guestUsername") String guestUsername,
             Pageable pageable
     );
 
@@ -59,7 +59,7 @@ public interface AccommodationRepository extends JpaRepository<Accommodation, UU
             @Param("accommodationId") UUID accommodationId);
 
     @Query("SELECT a FROM Accommodation a " +
-            "WHERE a.location.city = :city " +
+            "WHERE a.location.city LIKE %:city% " +
             "AND :guestNumber BETWEEN a.minGuests AND a.maxGuests " +
             "AND EXISTS (SELECT 1 FROM AccommodationDatePeriod adp " +
             "WHERE adp.accommodation = a " +
@@ -93,8 +93,8 @@ public interface AccommodationRepository extends JpaRepository<Accommodation, UU
             @Param("minPrice") Double minPrice,
             @Param("maxPrice") Double maxPrice);
 
-    @Query("SELECT a FROM Guest g JOIN g.favoriteAccommodations a WHERE g.id = :guestId")
-    List<Accommodation> getFavouriteAccommodations(@Param("guestId") UUID guestId);
+    @Query("SELECT a FROM Guest g JOIN g.favoriteAccommodations a WHERE g.username = :guestUsername")
+    List<Accommodation> getFavouriteAccommodations(@Param("guestUsername") String username);
 
 //    @Modifying
 //    @Query("UPDATE Guest g SET g.favoriteAccommodations = :favouriteAccommodations WHERE g.id = :guestId")

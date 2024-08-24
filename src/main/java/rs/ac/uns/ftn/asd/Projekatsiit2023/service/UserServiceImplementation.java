@@ -229,7 +229,9 @@ public class UserServiceImplementation implements UserService {
         return userReports.stream()
                 .map(userReport -> new UserReportResponse(
                         userReport.getUser().getId(),
-                        userReport.getReason()
+                        userReport.getReason(),
+                        userReport.getUser().getUsername(),
+                        userReport.getUser().getRole().toString()
                 ))
                 .collect(Collectors.toList());
     }

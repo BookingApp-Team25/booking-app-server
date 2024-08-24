@@ -5,6 +5,7 @@ import rs.ac.uns.ftn.asd.Projekatsiit2023.enums.Role;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -14,6 +15,9 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "receiver", orphanRemoval = true)
+    private List<Notification> notifications;
     private String username;
     private String password;
     private Boolean blocked;

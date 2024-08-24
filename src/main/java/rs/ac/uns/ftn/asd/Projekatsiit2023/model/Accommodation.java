@@ -258,7 +258,12 @@ public class Accommodation {
         this.minGuests = accommodationRequest.getMinGuests();
         this.maxGuests = accommodationRequest.getMaxGuests();
         this.type = accommodationRequest.getType();
-        this.availability = createAccommodationDatePeriods(accommodationRequest.getAvailability());
+        List<AccommodationDatePeriod> newDatePeriods = createAccommodationDatePeriods(accommodationRequest.getAvailability());
+        if(this.availability == null){
+            this.availability = new ArrayList<>();
+        }
+        this.availability.clear();
+        this.availability.addAll(newDatePeriods);
         this.price = accommodationRequest.getPrice();
         this.pricelist = accommodationRequest.getPricelist();
         this.daysBefore = accommodationRequest.getDaysBefore();
